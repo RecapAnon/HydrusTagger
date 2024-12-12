@@ -21,6 +21,7 @@ type RootCommand = CommandLine.RootCommand
 type AppSettings =
     { BaseUrl: string
       HydrusClientAPIAccessKey: string
+      ServiceKey: string
       ResnetModelPath: string }
 
 type FileIdsResponse =
@@ -164,10 +165,11 @@ let identify (session: InferenceSession) (imageBytes: byte array) =
 let handler appSettings tags : Task =
     let tagsJson = JsonSerializer.Serialize(tags)
     let encodedTags = Uri.EscapeDataString(tagsJson)
-    let baseUrl = appSettings.BaseUrl
-    let getFilesUrl = $"{baseUrl}search_files?tags={encodedTags}"
+    let filesUrl = "/get_files/"
+    let getFilesUrl = $"{filesUrl}search_files?tags={encodedTags}"
 
     let httpClient = new HttpClient()
+    httpClient.BaseAddress <- new Uri(appSettings.BaseUrl)
     httpClient.DefaultRequestHeaders.Add("Hydrus-Client-API-Access-Key", appSettings.HydrusClientAPIAccessKey)
 
     let session = new InferenceSession(appSettings.ResnetModelPath)
@@ -178,7 +180,8 @@ let handler appSettings tags : Task =
         match fileIdsResponse with
         | Some response ->
             for fileId in response.file_ids do
-                let filePathUrl = $"{baseUrl}file_path?file_id={fileId}"
+                let filePathUrl = $"{filesUrl}file_path?file_id={fileId}"
+
                 let! filePathResponse = getJsonAsync<FilePathResponse> httpClient filePathUrl
 
                 match filePathResponse with
@@ -189,13 +192,12 @@ let handler appSettings tags : Task =
 
                     let requestData =
                         { file_id = fileId
-                          service_keys_to_tags = Map.ofList [ ("", newTags) ] }
+                          service_keys_to_tags = Map.ofList [ (appSettings.ServiceKey, newTags) ] }
 
-                    let postUrl = "http://localhost:45869/add_tags/add_tags"
-                    printfn "%s" postUrl
+                    let postUrl = "/add_tags/add_tags"
                     do! postJsonAsync httpClient postUrl requestData
                 | None ->
-                    let fileUrl = $"{baseUrl}file?file_id={fileId}"
+                    let fileUrl = $"{filesUrl}file?file_id={fileId}"
                     let! fileBytes = downloadFileAsync httpClient fileUrl
 
                     if fileBytes.Length > 0 then
@@ -205,10 +207,9 @@ let handler appSettings tags : Task =
 
                         let requestData =
                             { file_id = fileId
-                              service_keys_to_tags = Map.ofList [ ("", newTags) ] }
+                              service_keys_to_tags = Map.ofList [ (appSettings.ServiceKey, newTags) ] }
 
-                        let postUrl = "http://localhost:45869/add_tags/add_tags"
-                        printfn "%s" postUrl
+                        let postUrl = "/add_tags/add_tags"
                         do! postJsonAsync httpClient postUrl requestData
         | None -> printfn "Failed to retrieve file ids."
     }
@@ -230,6 +231,7 @@ let main argv =
     |> addGlobalOption (Option<string> "--BaseUrl")
     |> addGlobalOption (Option<string> "--HydrusClientAPIAccessKey")
     |> addGlobalOption (Option<string> "--ResNetModelPath")
+    |> addGlobalOption (Option<string> "--ServiceKey")
     |> addGlobalArgument argument1
     |> setGlobalHandler handler1 argument1
     |> invoke argv
