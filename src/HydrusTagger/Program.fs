@@ -10,6 +10,7 @@ open System.IO
 open System.Linq
 open System.Net.Http
 open System.Reflection
+open System.Text
 open System.Text.Json
 open System.Threading.Tasks
 
@@ -33,6 +34,25 @@ type FilePathResponse =
       size: int
       version: int
       hydrus_version: int }
+
+type AddTagsRequest =
+    { file_id: int
+      service_keys_to_tags: Map<string, string list> }
+
+let postJsonAsync (httpClient: HttpClient) (url: string) (data: AddTagsRequest) : Task<unit> =
+    task {
+        try
+            let json = JsonSerializer.Serialize(data)
+            let content = new StringContent(json, Encoding.UTF8, "application/json")
+            let! response = httpClient.PostAsync(url, content)
+
+            if response.IsSuccessStatusCode then
+                printfn "Tags added successfully for file ID: %d" data.file_id
+            else
+                printfn "Failed to add tags for file ID: %d. Status code: %d" data.file_id (int response.StatusCode)
+        with ex ->
+            printfn "Error posting JSON to %s: %s" url ex.Message
+    }
 
 let getJsonAsync<'T> (httpClient: HttpClient) (url: string) : Task<'T option> =
     task {
@@ -136,7 +156,10 @@ let identify (session: InferenceSession) (imageBytes: byte array) =
         session.ModelMetadata.CustomMetadataMap["tags"]
         |> JsonSerializer.Deserialize<string[]>
 
-    Array.zip tags probs |> Array.filter (fun (_, score) -> score >= 0.5f)
+    Array.zip tags probs
+    |> Array.filter (fun (_, score) -> score >= 0.5f)
+    |> Array.map fst
+    |> Array.toList
 
 let handler appSettings tags : Task =
     let tagsJson = JsonSerializer.Serialize(tags)
@@ -161,14 +184,32 @@ let handler appSettings tags : Task =
                 match filePathResponse with
                 | Some pathResponse ->
                     printfn "Path for file_id %i: %s" fileId pathResponse.path
-                    printfn "Tags: %A" (identify session (File.ReadAllBytes(pathResponse.path)))
+                    let newTags = identify session (File.ReadAllBytes(pathResponse.path))
+                    printfn "Tags: %A" newTags
+
+                    let requestData =
+                        { file_id = fileId
+                          service_keys_to_tags = Map.ofList [ ("", newTags) ] }
+
+                    let postUrl = "http://localhost:45869/add_tags/add_tags"
+                    printfn "%s" postUrl
+                    do! postJsonAsync httpClient postUrl requestData
                 | None ->
                     let fileUrl = $"{baseUrl}file?file_id={fileId}"
                     let! fileBytes = downloadFileAsync httpClient fileUrl
 
                     if fileBytes.Length > 0 then
                         printfn "File downloaded for file_id %i. Size: %i bytes" fileId fileBytes.Length
-                        printfn "Tags: %A" (identify session fileBytes)
+                        let newTags = identify session fileBytes
+                        printfn "Tags: %A" newTags
+
+                        let requestData =
+                            { file_id = fileId
+                              service_keys_to_tags = Map.ofList [ ("", newTags) ] }
+
+                        let postUrl = "http://localhost:45869/add_tags/add_tags"
+                        printfn "%s" postUrl
+                        do! postJsonAsync httpClient postUrl requestData
         | None -> printfn "Failed to retrieve file ids."
     }
 
