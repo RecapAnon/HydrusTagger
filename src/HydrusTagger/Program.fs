@@ -17,37 +17,34 @@ type Command = CommandLine.Command
 type Argument<'T> = CommandLine.Argument<'T>
 type RootCommand = CommandLine.RootCommand
 
-type AppSettings = {
-    BaseUrl: string
-    HydrusClientAPIAccessKey: string
-    ResnetModelPath: string
-}
+type AppSettings =
+    { BaseUrl: string
+      HydrusClientAPIAccessKey: string
+      ResnetModelPath: string }
 
-type FileIdsResponse = {
-    file_ids: int list
-    version: int
-    hydrus_version: int
-}
+type FileIdsResponse =
+    { file_ids: int list
+      version: int
+      hydrus_version: int }
 
-type FilePathResponse = {
-    path: string
-    filetype: string
-    size: int
-    version: int
-    hydrus_version: int
-}
+type FilePathResponse =
+    { path: string
+      filetype: string
+      size: int
+      version: int
+      hydrus_version: int }
 
 let getJsonAsync<'T> (httpClient: HttpClient) (url: string) : Task<'T option> =
     task {
         try
             let! response = httpClient.GetAsync(url)
+
             if response.IsSuccessStatusCode then
                 let! content = response.Content.ReadAsStringAsync()
                 return Some(JsonSerializer.Deserialize<'T>(content))
             else
                 return None
-        with
-        | ex ->
+        with ex ->
             printfn "Error fetching JSON from %s: %s" url ex.Message
             return None
     }
@@ -56,14 +53,14 @@ let downloadFileAsync (httpClient: HttpClient) (url: string) : Task<byte[]> =
     task {
         try
             let! response = httpClient.GetAsync(url)
+
             if response.IsSuccessStatusCode then
                 let! content = response.Content.ReadAsByteArrayAsync()
                 return content
             else
                 printfn "Failed to download file from %s with status code %i" url (int response.StatusCode)
                 return Array.empty
-        with
-        | ex ->
+        with ex ->
             printfn "Error downloading file from %s: %s" url ex.Message
             return Array.empty
     }
@@ -139,10 +136,9 @@ let identify (session: InferenceSession) (imageBytes: byte array) =
         session.ModelMetadata.CustomMetadataMap["tags"]
         |> JsonSerializer.Deserialize<string[]>
 
-    Array.zip tags probs
-    |> Array.filter (fun (_, score) -> score >= 0.5f)
+    Array.zip tags probs |> Array.filter (fun (_, score) -> score >= 0.5f)
 
-let handler appSettings tags: Task =
+let handler appSettings tags : Task =
     let tagsJson = JsonSerializer.Serialize(tags)
     let encodedTags = Uri.EscapeDataString(tagsJson)
     let baseUrl = appSettings.BaseUrl
@@ -155,6 +151,7 @@ let handler appSettings tags: Task =
 
     task {
         let! fileIdsResponse = getJsonAsync<FileIdsResponse> httpClient getFilesUrl
+
         match fileIdsResponse with
         | Some response ->
             for fileId in response.file_ids do
@@ -168,6 +165,7 @@ let handler appSettings tags: Task =
                 | None ->
                     let fileUrl = $"{baseUrl}file?file_id={fileId}"
                     let! fileBytes = downloadFileAsync httpClient fileUrl
+
                     if fileBytes.Length > 0 then
                         printfn "File downloaded for file_id %i. Size: %i bytes" fileId fileBytes.Length
                         printfn "Tags: %A" (identify session fileBytes)
