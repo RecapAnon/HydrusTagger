@@ -1,7 +1,12 @@
 ﻿open System
+open System.CommandLine
 open System.Net.Http
 open System.Text.Json
 open System.Threading.Tasks
+
+type Command = CommandLine.Command
+type Argument<'T> = CommandLine.Argument<'T>
+type RootCommand = CommandLine.RootCommand
 
 type FileIdsResponse = {
     file_ids: int list
@@ -48,38 +53,53 @@ let downloadFileAsync (httpClient: HttpClient) (url: string) : Task<byte[]> =
             return Array.empty
     }
 
+let addGlobalOption option (command: RootCommand) =
+    command.AddGlobalOption option
+    command
+
+let addGlobalArgument argument (command: RootCommand) =
+    command.AddArgument argument
+    command
+
+let setGlobalHandler<'a> (handler: 'a -> unit) argument (command: RootCommand) =
+    command.SetHandler(handler, argument)
+    command
+
+let invoke (argv: string array) (rc: RootCommand) = rc.Invoke argv
+
+let handler tags =
+    let tagsJson = JsonSerializer.Serialize(tags)
+    let encodedTags = Uri.EscapeDataString(tagsJson)
+    let baseUrl = "http://localhost:45869/get_files/"
+    let getFilesUrl = $"{baseUrl}search_files?tags={encodedTags}"
+
+    let httpClient = new HttpClient()
+    httpClient.DefaultRequestHeaders.Add("Hydrus-Client-API-Access-Key", "")
+
+    task {
+        let! fileIdsResponse = getJsonAsync<FileIdsResponse> httpClient getFilesUrl
+        match fileIdsResponse with
+        | Some response ->
+            for fileId in response.file_ids do
+                let filePathUrl = $"{baseUrl}file_path?file_id={fileId}"
+                let! filePathResponse = getJsonAsync<FilePathResponse> httpClient filePathUrl
+
+                match filePathResponse with
+                | Some pathResponse ->
+                    printfn "Path for file_id %i: %s" fileId pathResponse.path
+                | None ->
+                    let fileUrl = $"{baseUrl}file?file_id={fileId}"
+                    let! fileBytes = downloadFileAsync httpClient fileUrl
+                    if fileBytes.Length > 0 then
+                        printfn "File downloaded for file_id %i. Size: %i bytes" fileId fileBytes.Length
+        | None -> printfn "Failed to retrieve file ids."
+    } |> Async.AwaitTask |> Async.RunSynchronously
+
 [<EntryPoint>]
 let main argv =
-    let tags = if argv.Length > 0 then Array.toList argv else []
-    if List.isEmpty tags then
-        printfn "No tags provided."
-        1
-    else
-        let tagsJson = JsonSerializer.Serialize(tags)
-        let encodedTags = Uri.EscapeDataString(tagsJson)
-        let baseUrl = "http://localhost:45869/get_files/"
-        let getFilesUrl = $"{baseUrl}search_files?tags={encodedTags}"
+    let argument1 = Argument<string[]> "tags"
 
-        let httpClient = new HttpClient()
-        httpClient.DefaultRequestHeaders.Add("Hydrus-Client-API-Access-Key", "")
-
-        task {
-            let! fileIdsResponse = getJsonAsync<FileIdsResponse> httpClient getFilesUrl
-            match fileIdsResponse with
-            | Some response ->
-                for fileId in response.file_ids do
-                    let filePathUrl = $"{baseUrl}file_path?file_id={fileId}"
-                    let! filePathResponse = getJsonAsync<FilePathResponse> httpClient filePathUrl
-
-                    match filePathResponse with
-                    | Some pathResponse ->
-                        printfn "Path for file_id %i: %s" fileId pathResponse.path
-                    | None ->
-                        let fileUrl = $"{baseUrl}file?file_id={fileId}"
-                        let! fileBytes = downloadFileAsync httpClient fileUrl
-                        if fileBytes.Length > 0 then
-                            printfn "File downloaded for file_id %i. Size: %i bytes" fileId fileBytes.Length
-            | None -> printfn "Failed to retrieve file ids."
-        } |> Async.AwaitTask |> Async.RunSynchronously
-
-        0
+    RootCommand()
+    |> addGlobalArgument argument1
+    |> setGlobalHandler handler argument1
+    |> invoke argv
