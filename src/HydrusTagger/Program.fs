@@ -1,12 +1,19 @@
-﻿open System
+﻿open Microsoft.Extensions.Configuration
+open System
 open System.CommandLine
 open System.Net.Http
 open System.Text.Json
 open System.Threading.Tasks
+open System.Reflection
 
 type Command = CommandLine.Command
 type Argument<'T> = CommandLine.Argument<'T>
 type RootCommand = CommandLine.RootCommand
+
+type AppSettings = {
+    BaseUrl: string
+    HydrusClientAPIAccessKey: string
+}
 
 type FileIdsResponse = {
     file_ids: int list
@@ -61,20 +68,20 @@ let addGlobalArgument argument (command: RootCommand) =
     command.AddArgument argument
     command
 
-let setGlobalHandler<'a> (handler: 'a -> unit) argument (command: RootCommand) =
+let setGlobalHandler handler argument (command: RootCommand) =
     command.SetHandler(handler, argument)
     command
 
 let invoke (argv: string array) (rc: RootCommand) = rc.Invoke argv
 
-let handler tags =
+let handler appSettings tags: Task =
     let tagsJson = JsonSerializer.Serialize(tags)
     let encodedTags = Uri.EscapeDataString(tagsJson)
-    let baseUrl = "http://localhost:45869/get_files/"
+    let baseUrl = appSettings.BaseUrl
     let getFilesUrl = $"{baseUrl}search_files?tags={encodedTags}"
 
     let httpClient = new HttpClient()
-    httpClient.DefaultRequestHeaders.Add("Hydrus-Client-API-Access-Key", "")
+    httpClient.DefaultRequestHeaders.Add("Hydrus-Client-API-Access-Key", appSettings.HydrusClientAPIAccessKey)
 
     task {
         let! fileIdsResponse = getJsonAsync<FileIdsResponse> httpClient getFilesUrl
@@ -93,13 +100,24 @@ let handler tags =
                     if fileBytes.Length > 0 then
                         printfn "File downloaded for file_id %i. Size: %i bytes" fileId fileBytes.Length
         | None -> printfn "Failed to retrieve file ids."
-    } |> Async.AwaitTask |> Async.RunSynchronously
+    }
 
 [<EntryPoint>]
 let main argv =
+    let appSettings =
+        (new ConfigurationBuilder())
+            .AddJsonFile("appsettings.json")
+            .AddUserSecrets(Assembly.GetExecutingAssembly())
+            .AddCommandLine(argv)
+            .Build()
+            .Get<AppSettings>()
+
     let argument1 = Argument<string[]> "tags"
+    let handler1 = handler appSettings
 
     RootCommand()
+    |> addGlobalOption (Option<string> "--BaseUrl")
+    |> addGlobalOption (Option<string> "--HydrusClientAPIAccessKey")
     |> addGlobalArgument argument1
-    |> setGlobalHandler handler argument1
+    |> setGlobalHandler handler1 argument1
     |> invoke argv
