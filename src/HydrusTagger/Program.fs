@@ -1,6 +1,7 @@
 ﻿open Microsoft.Extensions.Configuration
 open Microsoft.ML.OnnxRuntime
 open Microsoft.ML.OnnxRuntime.Tensors
+open Microsoft.ML.OnnxRuntimeGenAI
 open SixLabors.ImageSharp
 open SixLabors.ImageSharp.PixelFormats
 open SixLabors.ImageSharp.Processing
@@ -39,6 +40,59 @@ type FilePathResponse =
 type AddTagsRequest =
     { file_id: int
       service_keys_to_tags: Map<string, string list> }
+
+type Phi3Model =
+    { Path: string
+      SystemPrompt: string
+      UserPrompt: string
+      FullPrompt: string
+      Model: Model
+      Processor: MultiModalProcessor
+      TokenizerStream: TokenizerStream }
+
+    static member New() =
+        let path = @"D:\_models\Phi-3-vision-128k-instruct-onnx-cuda\cuda-int4-rtn-block-32"
+
+        let systemPrompt =
+            "You are an AI assistant that helps people find information. Answer questions using a direct style."
+
+        let userPrompt =
+            "Describe what is in the image. If the image is a chatlog with an AI chatbot, either as an assistant or a character in a roleplay, use the word chatlog in your description. Otherwise don't mention it."
+
+        let model = new Model(path)
+        let processor = new MultiModalProcessor(model)
+
+        { Path = path
+          SystemPrompt = systemPrompt
+          UserPrompt = userPrompt
+          FullPrompt = $"<|system|>{systemPrompt}<|end|><|user|><|image_1|>{userPrompt}<|end|><|assistant|>"
+          Model = model
+          Processor = processor
+          TokenizerStream = processor.CreateStream() }
+
+let captionNodePhi3 phi3Model imagePath =
+    let img = Images.Load imagePath
+
+    printfn "Start processing image and prompt ..."
+    let inputTensors = phi3Model.Processor.ProcessImages(phi3Model.FullPrompt, img)
+
+    use generatorParams = new GeneratorParams(phi3Model.Model)
+    generatorParams.SetSearchOption("max_length", 3072)
+    generatorParams.SetInputs(inputTensors)
+
+    printfn "Generating response ..."
+    let mutable response = new StringBuilder()
+    use generator = new Generator(phi3Model.Model, generatorParams)
+
+    while not (generator.IsDone()) do
+        generator.ComputeLogits()
+        generator.GenerateNextToken()
+        let seq = generator.GetSequence(0UL)
+        let lastElement = phi3Model.TokenizerStream.Decode seq[seq.Length - 1]
+        response <- response.Append(lastElement)
+
+    printfn "Generation complete: %A" response
+    response.ToString().Trim()
 
 let postJsonAsync (httpClient: HttpClient) (url: string) (data: AddTagsRequest) : Task<unit> =
     task {
@@ -173,6 +227,7 @@ let handler appSettings tags : Task =
     httpClient.DefaultRequestHeaders.Add("Hydrus-Client-API-Access-Key", appSettings.HydrusClientAPIAccessKey)
 
     let session = new InferenceSession(appSettings.ResnetModelPath)
+    let phi3Model = Phi3Model.New()
 
     task {
         let! fileIdsResponse = getJsonAsync<FileIdsResponse> httpClient getFilesUrl
@@ -187,7 +242,9 @@ let handler appSettings tags : Task =
                 match filePathResponse with
                 | Some pathResponse ->
                     printfn "Path for file_id %i: %s" fileId pathResponse.path
-                    let newTags = identify session (File.ReadAllBytes(pathResponse.path))
+                    let ddbTags = identify session (File.ReadAllBytes(pathResponse.path))
+                    let phiTags = captionNodePhi3 phi3Model (pathResponse.path)
+                    let newTags = List.concat [| ddbTags; phiTags.Split(',') |> Array.toList |]
                     printfn "Tags: %A" newTags
 
                     let requestData =
