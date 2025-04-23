@@ -27,30 +27,25 @@ let handler appSettings (tags: string[]) : Task =
             for fileId in response.file_ids do
                 let! filePathResponse = hydrusClient.GetFilePath(fileId)
 
-                match filePathResponse with
-                | Some pathResponse ->
-                    printfn "Path for file_id %i: %s" fileId pathResponse.path
-                    let newTags = tagger.Identify(File.ReadAllBytes pathResponse.path)
-                    printfn "Tags: %A" newTags
+                let! fileBytes =
+                    match filePathResponse with
+                    | Some pathResponse ->
+                        printfn "Path for file_id %i: %s" fileId pathResponse.path
+                        File.ReadAllBytesAsync pathResponse.path
+                    | None ->
+                        hydrusClient.DownloadFile(fileId)
 
-                    let request =
-                        { AddTagsRequest.file_id = fileId
-                          service_keys_to_tags = Map.ofList [ (appSettings.ServiceKey, newTags) ] }
+                if not (Array.isEmpty fileBytes) then
+                    printfn "File downloaded for file_id %i. Size: %i bytes" fileId fileBytes.Length
 
-                    do! hydrusClient.AddTags(request)
-                | None ->
-                    let! fileBytes = hydrusClient.DownloadFile(fileId)
+                let newTags = tagger.Identify fileBytes
+                printfn "Tags: %A" newTags
 
-                    if not (Array.isEmpty fileBytes) then
-                        printfn "File downloaded for file_id %i. Size: %i bytes" fileId fileBytes.Length
-                        let newTags = tagger.Identify fileBytes
-                        printfn "Tags: %A" newTags
+                let request =
+                    { AddTagsRequest.file_id = fileId
+                      service_keys_to_tags = Map.ofList [ (appSettings.ServiceKey, newTags) ] }
 
-                        let request =
-                            { AddTagsRequest.file_id = fileId
-                              service_keys_to_tags = Map.ofList [ (appSettings.ServiceKey, newTags) ] }
-
-                        do! hydrusClient.AddTags(request)
+                do! hydrusClient.AddTags(request)
         | None -> printfn "Failed to retrieve file ids."
     }
 
