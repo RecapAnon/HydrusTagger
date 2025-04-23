@@ -1,4 +1,5 @@
-﻿open Microsoft.Extensions.Configuration
+﻿open HydrusApi
+open Microsoft.Extensions.Configuration
 open Microsoft.ML.OnnxRuntime
 open Microsoft.ML.OnnxRuntime.Tensors
 open SixLabors.ImageSharp
@@ -8,9 +9,7 @@ open System
 open System.CommandLine
 open System.IO
 open System.Linq
-open System.Net.Http
 open System.Reflection
-open System.Text
 open System.Text.Json
 open System.Threading.Tasks
 
@@ -23,68 +22,6 @@ type AppSettings =
       HydrusClientAPIAccessKey: string
       ServiceKey: string
       ResnetModelPath: string }
-
-type FileIdsResponse =
-    { file_ids: int list
-      version: int
-      hydrus_version: int }
-
-type FilePathResponse =
-    { path: string
-      filetype: string
-      size: int
-      version: int
-      hydrus_version: int }
-
-type AddTagsRequest =
-    { file_id: int
-      service_keys_to_tags: Map<string, string list> }
-
-let postJsonAsync (httpClient: HttpClient) (url: string) (data: AddTagsRequest) : Task<unit> =
-    task {
-        try
-            let json = JsonSerializer.Serialize(data)
-            let content = new StringContent(json, Encoding.UTF8, "application/json")
-            let! response = httpClient.PostAsync(url, content)
-
-            if response.IsSuccessStatusCode then
-                printfn "Tags added successfully for file ID: %d" data.file_id
-            else
-                printfn "Failed to add tags for file ID: %d. Status code: %d" data.file_id (int response.StatusCode)
-        with ex ->
-            printfn "Error posting JSON to %s: %s" url ex.Message
-    }
-
-let getJsonAsync<'T> (httpClient: HttpClient) (url: string) : Task<'T option> =
-    task {
-        try
-            let! response = httpClient.GetAsync(url)
-
-            if response.IsSuccessStatusCode then
-                let! content = response.Content.ReadAsStringAsync()
-                return Some(JsonSerializer.Deserialize<'T>(content))
-            else
-                return None
-        with ex ->
-            printfn "Error fetching JSON from %s: %s" url ex.Message
-            return None
-    }
-
-let downloadFileAsync (httpClient: HttpClient) (url: string) : Task<byte[]> =
-    task {
-        try
-            let! response = httpClient.GetAsync(url)
-
-            if response.IsSuccessStatusCode then
-                let! content = response.Content.ReadAsByteArrayAsync()
-                return content
-            else
-                printfn "Failed to download file from %s with status code %i" url (int response.StatusCode)
-                return Array.empty
-        with ex ->
-            printfn "Error downloading file from %s: %s" url ex.Message
-            return Array.empty
-    }
 
 let addGlobalOption option (command: RootCommand) =
     command.AddGlobalOption option
@@ -162,27 +99,19 @@ let identify (session: InferenceSession) (imageBytes: byte array) =
     |> Array.map fst
     |> Array.toList
 
-let handler appSettings tags : Task =
-    let tagsJson = JsonSerializer.Serialize(tags)
-    let encodedTags = Uri.EscapeDataString(tagsJson)
-    let filesUrl = "/get_files/"
-    let getFilesUrl = $"{filesUrl}search_files?tags={encodedTags}"
-
-    let httpClient = new HttpClient()
-    httpClient.BaseAddress <- new Uri(appSettings.BaseUrl)
-    httpClient.DefaultRequestHeaders.Add("Hydrus-Client-API-Access-Key", appSettings.HydrusClientAPIAccessKey)
+let handler appSettings (tags: string[]) : Task =
+    let hydrusClient =
+        HydrusApiClient(appSettings.BaseUrl, appSettings.HydrusClientAPIAccessKey)
 
     let session = new InferenceSession(appSettings.ResnetModelPath)
 
     task {
-        let! fileIdsResponse = getJsonAsync<FileIdsResponse> httpClient getFilesUrl
+        let! fileIdsResponse = hydrusClient.GetFiles(List.ofArray tags)
 
         match fileIdsResponse with
         | Some response ->
             for fileId in response.file_ids do
-                let filePathUrl = $"{filesUrl}file_path?file_id={fileId}"
-
-                let! filePathResponse = getJsonAsync<FilePathResponse> httpClient filePathUrl
+                let! filePathResponse = hydrusClient.GetFilePath(fileId)
 
                 match filePathResponse with
                 | Some pathResponse ->
@@ -190,27 +119,24 @@ let handler appSettings tags : Task =
                     let newTags = identify session (File.ReadAllBytes pathResponse.path)
                     printfn "Tags: %A" newTags
 
-                    let requestData =
-                        { file_id = fileId
+                    let request =
+                        { HydrusApi.AddTagsRequest.file_id = fileId
                           service_keys_to_tags = Map.ofList [ (appSettings.ServiceKey, newTags) ] }
 
-                    let postUrl = "/add_tags/add_tags"
-                    do! postJsonAsync httpClient postUrl requestData
+                    do! hydrusClient.AddTags(request)
                 | None ->
-                    let fileUrl = $"{filesUrl}file?file_id={fileId}"
-                    let! fileBytes = downloadFileAsync httpClient fileUrl
+                    let! fileBytes = hydrusClient.DownloadFile(fileId)
 
-                    if fileBytes.Length > 0 then
+                    if not (Array.isEmpty fileBytes) then
                         printfn "File downloaded for file_id %i. Size: %i bytes" fileId fileBytes.Length
                         let newTags = identify session fileBytes
                         printfn "Tags: %A" newTags
 
-                        let requestData =
-                            { file_id = fileId
+                        let request =
+                            { HydrusApi.AddTagsRequest.file_id = fileId
                               service_keys_to_tags = Map.ofList [ (appSettings.ServiceKey, newTags) ] }
 
-                        let postUrl = "/add_tags/add_tags"
-                        do! postJsonAsync httpClient postUrl requestData
+                        do! hydrusClient.AddTags(request)
         | None -> printfn "Failed to retrieve file ids."
     }
 
