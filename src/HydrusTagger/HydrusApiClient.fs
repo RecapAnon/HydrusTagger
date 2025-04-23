@@ -1,4 +1,4 @@
-module HydrusApi
+namespace HydrusTagger
 
 open System
 open System.Net.Http

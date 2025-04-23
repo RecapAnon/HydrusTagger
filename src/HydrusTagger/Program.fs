@@ -1,15 +1,11 @@
-﻿open HydrusApi
-open DeepdanbooruTagger
+﻿module HydrusTagger.Program
+
+open CommandLineExtensions
 open Microsoft.Extensions.Configuration
-open System
 open System.CommandLine
 open System.IO
 open System.Reflection
 open System.Threading.Tasks
-
-type Command = CommandLine.Command
-type Argument<'T> = CommandLine.Argument<'T>
-type RootCommand = CommandLine.RootCommand
 
 type AppSettings =
     { BaseUrl: string
@@ -17,25 +13,11 @@ type AppSettings =
       ServiceKey: string
       ResnetModelPath: string }
 
-let addGlobalOption option (command: RootCommand) =
-    command.AddGlobalOption option
-    command
-
-let addGlobalArgument argument (command: RootCommand) =
-    command.AddArgument argument
-    command
-
-let setGlobalHandler handler argument (command: RootCommand) =
-    command.SetHandler(handler, argument)
-    command
-
-let invoke (argv: string array) (rc: RootCommand) = rc.Invoke argv
-
 let handler appSettings (tags: string[]) : Task =
     let hydrusClient =
         HydrusApiClient(appSettings.BaseUrl, appSettings.HydrusClientAPIAccessKey)
 
-    let tagger = Tagger.Create(appSettings.ResnetModelPath)
+    let tagger = DeepdanbooruTagger.Create(appSettings.ResnetModelPath)
 
     task {
         let! fileIdsResponse = hydrusClient.GetFiles(List.ofArray tags)
@@ -52,7 +34,7 @@ let handler appSettings (tags: string[]) : Task =
                     printfn "Tags: %A" newTags
 
                     let request =
-                        { HydrusApi.AddTagsRequest.file_id = fileId
+                        { AddTagsRequest.file_id = fileId
                           service_keys_to_tags = Map.ofList [ (appSettings.ServiceKey, newTags) ] }
 
                     do! hydrusClient.AddTags(request)
@@ -65,7 +47,7 @@ let handler appSettings (tags: string[]) : Task =
                         printfn "Tags: %A" newTags
 
                         let request =
-                            { HydrusApi.AddTagsRequest.file_id = fileId
+                            { AddTagsRequest.file_id = fileId
                               service_keys_to_tags = Map.ofList [ (appSettings.ServiceKey, newTags) ] }
 
                         do! hydrusClient.AddTags(request)

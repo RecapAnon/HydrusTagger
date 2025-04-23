@@ -1,4 +1,4 @@
-module DeepdanbooruTagger
+namespace HydrusTagger
 
 open Microsoft.ML.OnnxRuntime
 open Microsoft.ML.OnnxRuntime.Tensors
@@ -9,7 +9,7 @@ open System.IO
 open System.Linq
 open System.Text.Json
 
-type Tagger(session: InferenceSession, tags: string[]) =
+type DeepdanbooruTagger(session: InferenceSession, tags: string[]) =
     let imageToOnnx (imageBytes: byte array) (size: int) =
         use stream = new MemoryStream(imageBytes)
         use image = Image.Load<Rgb24>(stream)
@@ -70,7 +70,9 @@ type Tagger(session: InferenceSession, tags: string[]) =
 
     static member Create(modelPath: string) =
         let session = new InferenceSession(modelPath)
+
         let tags =
             session.ModelMetadata.CustomMetadataMap["tags"]
             |> JsonSerializer.Deserialize<string[]>
-        Tagger(session, tags)
+
+        DeepdanbooruTagger(session, tags)
