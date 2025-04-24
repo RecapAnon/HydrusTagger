@@ -9,6 +9,7 @@ open Microsoft.SemanticKernel.ChatCompletion
 open OpenAI
 open System
 open System.CommandLine
+open System.CommandLine.Binding
 open System.IO
 open System.Reflection
 open System.Threading.Tasks
@@ -55,7 +56,7 @@ let captionNodeApi (kernel: Kernel) (bytes: byte array) =
 
     Some result.Content
 
-let handler kernel appSettings (tags: string[]) : Task =
+let handler appSettings (logger: ILogger) (tags: string[]) : Task =
     let hydrusClient =
         HydrusApiClient(appSettings.BaseUrl, appSettings.HydrusClientAPIAccessKey)
 
@@ -121,8 +122,14 @@ let main argv =
 
         builder.Build()
 
+    let loggerBinder =
+        { new BinderBase<ILogger>() with
+            override _.GetBoundValue(bindingContext) =
+                let loggerFactory = kernel.Services.GetRequiredService<ILoggerFactory>()
+                loggerFactory.CreateLogger() }
+
     let argument1 = Argument<string[]> "tags"
-    let handler1 = handler kernel appSettings
+    let handler1 = handler appSettings
 
     RootCommand()
     |> addGlobalOption (Option<string> "--BaseUrl")
@@ -131,5 +138,5 @@ let main argv =
     |> addGlobalOption (Option<string> "--ServiceKey")
     |> addGlobalOption (Option<LogLevel> "--Logging:LogLevel:Default")
     |> addGlobalArgument argument1
-    |> setGlobalHandler handler1 argument1
+    |> setGlobalHandler2 handler1 loggerBinder argument1
     |> invoke argv
