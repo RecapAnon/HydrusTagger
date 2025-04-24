@@ -14,7 +14,8 @@ open System.Reflection
 open System.Threading.Tasks
 
 type Service =
-    { Endpoint: string
+    { Name: string
+      Endpoint: string
       Key: string
       Model: string }
 
@@ -28,8 +29,7 @@ type AppSettings =
       ServiceKey: string
       ResnetModelPath: string
       Logging: LoggingConfig
-      Multimodal: Service
-      Completion: Service }
+      Services: Service array }
 
 let captionNodeApi (kernel: Kernel) (bytes: byte array) =
     let loggerFactory = kernel.Services.GetRequiredService<ILoggerFactory>()
@@ -114,10 +114,10 @@ let main argv =
             c.AddConsole().SetMinimumLevel(appSettings.Logging.LogLevel.Default) |> ignore)
         |> ignore
 
-        builder
-            .AddOpenAIChatCompletion(appSettings.Completion.Model, aiClient appSettings.Completion, "Completion")
-            .AddOpenAIChatCompletion(appSettings.Multimodal.Model, aiClient appSettings.Multimodal, "Multimodal")
-        |> ignore
+        appSettings.Services
+        |> Array.iter (fun service ->
+            builder.AddOpenAIChatCompletion(service.Model, aiClient service, service.Name)
+            |> ignore)
 
         builder.Build()
 
