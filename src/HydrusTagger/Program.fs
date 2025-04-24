@@ -1,19 +1,52 @@
 ﻿module HydrusTagger.Program
 
 open CommandLineExtensions
+open Microsoft.Extensions.DependencyInjection
 open Microsoft.Extensions.Configuration
+open Microsoft.SemanticKernel
+open Microsoft.SemanticKernel.ChatCompletion
+open OpenAI
+open System
 open System.CommandLine
 open System.IO
 open System.Reflection
 open System.Threading.Tasks
 
+type Service =
+    { Endpoint: string
+      Key: string
+      Model: string }
+
 type AppSettings =
     { BaseUrl: string
       HydrusClientAPIAccessKey: string
       ServiceKey: string
-      ResnetModelPath: string }
+      ResnetModelPath: string
+      Multimodal: Service
+      Completion: Service }
 
-let handler appSettings (tags: string[]) : Task =
+let captionNodeApi (kernel: Kernel) (bytes: byte array) =
+    let chat =
+        kernel.Services.GetRequiredKeyedService<IChatCompletionService>("Multimodal")
+
+    let history = new ChatHistory()
+    history.AddSystemMessage("You are a friendly and helpful assistant that responds to questions directly.")
+
+    let message = new ChatMessageContentItemCollection()
+    message.Add(new TextContent("Describe what is in the image."))
+
+    // TODO:
+    // let mimeType = getMimeType file
+    let mimeType = "temp"
+    message.Add(new ImageContent(bytes, mimeType))
+    history.AddUserMessage(message)
+
+    let result = chat.GetChatMessageContentAsync(history).Result
+    // globalLogger.LogInformation("Generation complete: {GeneratorResponse}", result.Content)
+
+    Some result.Content
+
+let handler kernel appSettings (tags: string[]) : Task =
     let hydrusClient =
         HydrusApiClient(appSettings.BaseUrl, appSettings.HydrusClientAPIAccessKey)
 
@@ -59,8 +92,28 @@ let main argv =
             .Build()
             .Get<AppSettings>()
 
+    let kernel =
+        let aiClient service =
+            let clientOptions = new OpenAIClientOptions()
+            clientOptions.Endpoint <- new Uri(service.Endpoint)
+            clientOptions.NetworkTimeout <- new TimeSpan(2, 0, 0)
+
+            new OpenAIClient(new ClientModel.ApiKeyCredential(service.Key), clientOptions)
+
+        let builder = Kernel.CreateBuilder()
+
+        // builder.Services.AddSingleton(loggerFactory appSettings.Logging.LogLevel.Default)
+        // |> ignore
+
+        builder
+            .AddOpenAIChatCompletion(appSettings.Completion.Model, aiClient appSettings.Completion, "Completion")
+            .AddOpenAIChatCompletion(appSettings.Multimodal.Model, aiClient appSettings.Multimodal, "Multimodal")
+        |> ignore
+
+        builder.Build()
+
     let argument1 = Argument<string[]> "tags"
-    let handler1 = handler appSettings
+    let handler1 = handler kernel appSettings
 
     RootCommand()
     |> addGlobalOption (Option<string> "--BaseUrl")
