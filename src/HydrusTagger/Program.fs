@@ -1,8 +1,9 @@
 ﻿module HydrusTagger.Program
 
 open CommandLineExtensions
-open Microsoft.Extensions.DependencyInjection
 open Microsoft.Extensions.Configuration
+open Microsoft.Extensions.DependencyInjection
+open Microsoft.Extensions.Logging
 open Microsoft.SemanticKernel
 open Microsoft.SemanticKernel.ChatCompletion
 open OpenAI
@@ -17,15 +18,23 @@ type Service =
       Key: string
       Model: string }
 
+type LogLevelConfig = { Default: LogLevel }
+
+type LoggingConfig = { LogLevel: LogLevelConfig }
+
 type AppSettings =
     { BaseUrl: string
       HydrusClientAPIAccessKey: string
       ServiceKey: string
       ResnetModelPath: string
+      Logging: LoggingConfig
       Multimodal: Service
       Completion: Service }
 
 let captionNodeApi (kernel: Kernel) (bytes: byte array) =
+    let loggerFactory = kernel.Services.GetRequiredService<ILoggerFactory>()
+    let logger = loggerFactory.CreateLogger()
+
     let chat =
         kernel.Services.GetRequiredKeyedService<IChatCompletionService>("Multimodal")
 
@@ -42,7 +51,7 @@ let captionNodeApi (kernel: Kernel) (bytes: byte array) =
     history.AddUserMessage(message)
 
     let result = chat.GetChatMessageContentAsync(history).Result
-    // globalLogger.LogInformation("Generation complete: {GeneratorResponse}", result.Content)
+    logger.LogInformation("Generation complete: {GeneratorResponse}", result.Content)
 
     Some result.Content
 
@@ -65,8 +74,7 @@ let handler kernel appSettings (tags: string[]) : Task =
                     | Some pathResponse ->
                         printfn "Path for file_id %i: %s" fileId pathResponse.path
                         File.ReadAllBytesAsync pathResponse.path
-                    | None ->
-                        hydrusClient.DownloadFile(fileId)
+                    | None -> hydrusClient.DownloadFile(fileId)
 
                 if not (Array.isEmpty fileBytes) then
                     printfn "File downloaded for file_id %i. Size: %i bytes" fileId fileBytes.Length
@@ -102,8 +110,9 @@ let main argv =
 
         let builder = Kernel.CreateBuilder()
 
-        // builder.Services.AddSingleton(loggerFactory appSettings.Logging.LogLevel.Default)
-        // |> ignore
+        builder.Services.AddLogging(fun c ->
+            c.AddConsole().SetMinimumLevel(appSettings.Logging.LogLevel.Default) |> ignore)
+        |> ignore
 
         builder
             .AddOpenAIChatCompletion(appSettings.Completion.Model, aiClient appSettings.Completion, "Completion")
@@ -120,6 +129,7 @@ let main argv =
     |> addGlobalOption (Option<string> "--HydrusClientAPIAccessKey")
     |> addGlobalOption (Option<string> "--ResNetModelPath")
     |> addGlobalOption (Option<string> "--ServiceKey")
+    |> addGlobalOption (Option<LogLevel> "--Logging:LogLevel:Default")
     |> addGlobalArgument argument1
     |> setGlobalHandler handler1 argument1
     |> invoke argv
