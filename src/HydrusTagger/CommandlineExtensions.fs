@@ -19,4 +19,16 @@ module CommandLineExtensions =
         command.SetHandler(handler, argument1, argument2)
         command
 
+    let setGlobalHandler3 handler argument1 argument2 argument3 (command: RootCommand) =
+        command.SetHandler(handler, argument1, argument2, argument3)
+        command
+
     let invoke (argv: string array) (rc: RootCommand) = rc.Invoke argv
+
+    open System.CommandLine.Binding
+    open Microsoft.Extensions.Hosting
+    open Microsoft.Extensions.DependencyInjection
+    let srvBinder<'T> (host: IHost) =
+        { new BinderBase<'T>() with
+            override _.GetBoundValue(bindingContext) =
+                host.Services.GetRequiredService<'T>() }

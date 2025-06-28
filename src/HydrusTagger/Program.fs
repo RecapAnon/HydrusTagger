@@ -1,8 +1,12 @@
 ﻿module HydrusTagger.Program
 
 open CommandLineExtensions
+open HydrusAPI.NET.Client
+open HydrusAPI.NET.Extensions
+open HydrusAPI.NET.Api
 open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.DependencyInjection
+open Microsoft.Extensions.Hosting
 open Microsoft.Extensions.Logging
 open Microsoft.SemanticKernel
 open Microsoft.SemanticKernel.ChatCompletion
@@ -11,6 +15,7 @@ open System
 open System.CommandLine
 open System.CommandLine.Binding
 open System.IO
+open System.Linq
 open System.Reflection
 open System.Threading.Tasks
 
@@ -56,18 +61,19 @@ let captionNodeApi (kernel: Kernel) (bytes: byte array) =
 
     Some result.Content
 
-let handler appSettings (logger: ILogger) (tags: string[]) : Task =
+let handler appSettings (logger: ILogger) (tags: string[]) (api: IGetFilesApi) : Task =
     let hydrusClient =
         HydrusApiClient(appSettings.BaseUrl, appSettings.HydrusClientAPIAccessKey)
 
     let tagger = DeepdanbooruTagger.Create(appSettings.ResnetModelPath)
 
     task {
-        let! fileIdsResponse = hydrusClient.GetFiles(List.ofArray tags)
+        let! response = api.GetFilesSearchFilesAsync(tags.ToList())
 
-        match fileIdsResponse with
-        | Some response ->
-            for fileId in response.file_ids do
+        if response.IsSuccessStatusCode then
+            let data = response.Ok()
+
+            for fileId in data.FileIds do
                 let! filePathResponse = hydrusClient.GetFilePath(fileId)
 
                 let! fileBytes =
@@ -88,7 +94,9 @@ let handler appSettings (logger: ILogger) (tags: string[]) : Task =
                       service_keys_to_tags = Map.ofList [ (appSettings.ServiceKey, newTags) ] }
 
                 do! hydrusClient.AddTags(request)
-        | None -> printfn "Failed to retrieve file ids."
+                ()
+        else
+            printfn "Failed to retrieve file ids."
     }
 
 [<EntryPoint>]
@@ -100,6 +108,37 @@ let main argv =
             .AddCommandLine(argv)
             .Build()
             .Get<AppSettings>()
+
+    let host =
+        Host
+            .CreateDefaultBuilder(argv)
+            .ConfigureHydrusApi(fun context collection options ->
+                let accessToken =
+                    new ApiKeyToken(
+                        appSettings.HydrusClientAPIAccessKey,
+                        ClientUtils.ApiKeyHeader.Hydrus_Client_API_Access_Key,
+                        ""
+                    )
+
+                let sessionToken =
+                    new ApiKeyToken("", ClientUtils.ApiKeyHeader.Hydrus_Client_API_Session_Key, "")
+
+                options.AddTokens<ApiKeyToken>([| accessToken; sessionToken |]) |> ignore
+                options.UseProvider<CustomTokenProvider<ApiKeyToken>, ApiKeyToken>() |> ignore
+
+                options.AddHydrusApiHttpClients(
+                    (fun client -> client.BaseAddress <- new Uri(appSettings.BaseUrl)),
+                    (fun builder ->
+                        builder
+                            .AddRetryPolicy(2)
+                            .AddTimeoutPolicy(TimeSpan.FromSeconds(5L))
+                            .AddCircuitBreakerPolicy(10, TimeSpan.FromSeconds(30L))
+                        |> ignore)
+                )
+                |> ignore
+
+                ())
+            .Build()
 
     let kernel =
         let aiClient service =
@@ -138,5 +177,5 @@ let main argv =
     |> addGlobalOption (Option<string> "--ServiceKey")
     |> addGlobalOption (Option<LogLevel> "--Logging:LogLevel:Default")
     |> addGlobalArgument argument1
-    |> setGlobalHandler2 handler1 loggerBinder argument1
+    |> setGlobalHandler3 handler1 loggerBinder argument1 (srvBinder<IGetFilesApi> host)
     |> invoke argv
