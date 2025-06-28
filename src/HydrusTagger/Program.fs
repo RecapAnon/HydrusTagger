@@ -8,6 +8,7 @@ open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.DependencyInjection
 open Microsoft.Extensions.Hosting
 open Microsoft.Extensions.Logging
+open Microsoft.Extensions.Options
 open Microsoft.SemanticKernel
 open Microsoft.SemanticKernel.ChatCompletion
 open OpenAI
@@ -16,7 +17,6 @@ open System.CommandLine
 open System.CommandLine.Binding
 open System.IO
 open System.Linq
-open System.Reflection
 open System.Threading.Tasks
 
 type Service =
@@ -29,6 +29,7 @@ type LogLevelConfig = { Default: LogLevel }
 
 type LoggingConfig = { LogLevel: LogLevelConfig }
 
+[<CLIMutable>]
 type AppSettings =
     { BaseUrl: string
       HydrusClientAPIAccessKey: string
@@ -61,7 +62,9 @@ let captionNodeApi (kernel: Kernel) (bytes: byte array) =
 
     Some result.Content
 
-let handler appSettings (logger: ILogger) (tags: string[]) (api: IGetFilesApi) : Task =
+let handler (options: IOptions<AppSettings>) (logger: ILogger) (tags: string[]) (api: IGetFilesApi) : Task =
+    let appSettings = options.Value
+
     let hydrusClient =
         HydrusApiClient(appSettings.BaseUrl, appSettings.HydrusClientAPIAccessKey)
 
@@ -101,18 +104,14 @@ let handler appSettings (logger: ILogger) (tags: string[]) (api: IGetFilesApi) :
 
 [<EntryPoint>]
 let main argv =
-    let appSettings =
-        (new ConfigurationBuilder())
-            .AddJsonFile("appsettings.json")
-            .AddUserSecrets(Assembly.GetExecutingAssembly())
-            .AddCommandLine(argv)
-            .Build()
-            .Get<AppSettings>()
-
     let host =
         Host
             .CreateDefaultBuilder(argv)
+            .ConfigureServices(fun context collection ->
+                collection.Configure<AppSettings>(context.Configuration) |> ignore)
             .ConfigureHydrusApi(fun context collection options ->
+                let appSettings = context.Configuration.Get<AppSettings>()
+
                 let accessToken =
                     new ApiKeyToken(
                         appSettings.HydrusClientAPIAccessKey,
@@ -141,6 +140,9 @@ let main argv =
             .Build()
 
     let kernel =
+        let appSettings = host.Services.GetRequiredService<IOptions<AppSettings>>().Value
+        printfn "%A" appSettings.BaseUrl
+
         let aiClient service =
             let clientOptions = new OpenAIClientOptions()
             clientOptions.Endpoint <- new Uri(service.Endpoint)
@@ -168,7 +170,6 @@ let main argv =
                 loggerFactory.CreateLogger() }
 
     let argument1 = Argument<string[]> "tags"
-    let handler1 = handler appSettings
 
     RootCommand()
     |> addGlobalOption (Option<string> "--BaseUrl")
@@ -177,5 +178,10 @@ let main argv =
     |> addGlobalOption (Option<string> "--ServiceKey")
     |> addGlobalOption (Option<LogLevel> "--Logging:LogLevel:Default")
     |> addGlobalArgument argument1
-    |> setGlobalHandler3 handler1 loggerBinder argument1 (srvBinder<IGetFilesApi> host)
+    |> setGlobalHandler4
+        handler
+        (srvBinder<IOptions<AppSettings>> host)
+        loggerBinder
+        argument1
+        (srvBinder<IGetFilesApi> host)
     |> invoke argv
