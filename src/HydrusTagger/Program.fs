@@ -61,7 +61,7 @@ let captionNodeApi (kernel: Kernel) (bytes: byte array) =
 
     Some result.Content
 
-let handler (options: IOptions<AppSettings>) (logger: ILogger) (tags: string[]) (api: IGetFilesApi) : Task =
+let handler (tags: string[]) (options: IOptions<AppSettings>) (logger: ILogger) (api: IGetFilesApi) : Task =
     let appSettings = options.Value
 
     let hydrusClient =
@@ -171,8 +171,8 @@ let main argv =
     |> addGlobalArgument argument1
     |> setGlobalHandler4
         handler
+        argument1
         (srvBinder<IOptions<AppSettings>> host)
         (srvBinder<ILogger<AppSettings>> host)
-        argument1
         (srvBinder<IGetFilesApi> host)
     |> invoke argv
