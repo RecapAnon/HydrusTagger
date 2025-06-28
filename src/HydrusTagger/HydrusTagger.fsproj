@@ -33,6 +33,7 @@
     <Compile Include="CommandlineExtensions.fs" />
     <Compile Include="DeepdanbooruTagger.fs" />
     <Compile Include="HydrusApiClient.fs" />
+    <Compile Include="SimpleTokenProvider.fs" />
     <Compile Include="Program.fs" />
     <Content Include="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -40,5 +41,8 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="FSharp.Core" Version="9.0.202" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HydrusAPI.NET\HydrusAPI.NET.csproj" />
   </ItemGroup>
 </Project>
