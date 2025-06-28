@@ -14,7 +14,6 @@ open Microsoft.SemanticKernel.ChatCompletion
 open OpenAI
 open System
 open System.CommandLine
-open System.CommandLine.Binding
 open System.IO
 open System.Linq
 open System.Threading.Tasks
@@ -107,8 +106,12 @@ let main argv =
     let host =
         Host
             .CreateDefaultBuilder(argv)
-            .ConfigureServices(fun context collection ->
-                collection.Configure<AppSettings>(context.Configuration) |> ignore)
+            .ConfigureServices(fun context services ->
+                let appSettings = context.Configuration.Get<AppSettings>()
+                services.Configure<AppSettings>(context.Configuration) |> ignore
+                services.AddLogging(fun c ->
+                    c.AddConsole().SetMinimumLevel(appSettings.Logging.LogLevel.Default) |> ignore)
+                    |> ignore)
             .ConfigureHydrusApi(fun context collection options ->
                 let appSettings = context.Configuration.Get<AppSettings>()
 
@@ -141,7 +144,6 @@ let main argv =
 
     let kernel =
         let appSettings = host.Services.GetRequiredService<IOptions<AppSettings>>().Value
-        printfn "%A" appSettings.BaseUrl
 
         let aiClient service =
             let clientOptions = new OpenAIClientOptions()
@@ -152,22 +154,12 @@ let main argv =
 
         let builder = Kernel.CreateBuilder()
 
-        builder.Services.AddLogging(fun c ->
-            c.AddConsole().SetMinimumLevel(appSettings.Logging.LogLevel.Default) |> ignore)
-        |> ignore
-
         appSettings.Services
         |> Array.iter (fun service ->
             builder.AddOpenAIChatCompletion(service.Model, aiClient service, service.Name)
             |> ignore)
 
         builder.Build()
-
-    let loggerBinder =
-        { new BinderBase<ILogger>() with
-            override _.GetBoundValue(bindingContext) =
-                let loggerFactory = kernel.Services.GetRequiredService<ILoggerFactory>()
-                loggerFactory.CreateLogger() }
 
     let argument1 = Argument<string[]> "tags"
 
@@ -181,7 +173,7 @@ let main argv =
     |> setGlobalHandler4
         handler
         (srvBinder<IOptions<AppSettings>> host)
-        loggerBinder
+        (srvBinder<ILogger<AppSettings>> host)
         argument1
         (srvBinder<IGetFilesApi> host)
     |> invoke argv
