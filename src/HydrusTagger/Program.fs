@@ -109,9 +109,27 @@ let main argv =
             .ConfigureServices(fun context services ->
                 let appSettings = context.Configuration.Get<AppSettings>()
                 services.Configure<AppSettings>(context.Configuration) |> ignore
+
                 services.AddLogging(fun c ->
                     c.AddConsole().SetMinimumLevel(appSettings.Logging.LogLevel.Default) |> ignore)
+                |> ignore
+
+                appSettings.Services
+                |> Array.iter (fun service ->
+                    let client =
+                        let clientOptions = new OpenAIClientOptions()
+                        clientOptions.Endpoint <- new Uri(service.Endpoint)
+                        clientOptions.NetworkTimeout <- new TimeSpan(2, 0, 0)
+
+                        new OpenAIClient(new ClientModel.ApiKeyCredential(service.Key), clientOptions)
+
+                    services.AddOpenAIChatCompletion(service.Model, client, service.Name)
                     |> ignore)
+
+                services.AddTransient<Kernel>(fun (serviceProvider) ->
+                    let pluginCollection = serviceProvider.GetRequiredService<KernelPluginCollection>()
+                    new Kernel(serviceProvider, pluginCollection))
+                |> ignore)
             .ConfigureHydrusApi(fun context collection options ->
                 let appSettings = context.Configuration.Get<AppSettings>()
 
@@ -141,25 +159,6 @@ let main argv =
 
                 ())
             .Build()
-
-    let kernel =
-        let appSettings = host.Services.GetRequiredService<IOptions<AppSettings>>().Value
-
-        let aiClient service =
-            let clientOptions = new OpenAIClientOptions()
-            clientOptions.Endpoint <- new Uri(service.Endpoint)
-            clientOptions.NetworkTimeout <- new TimeSpan(2, 0, 0)
-
-            new OpenAIClient(new ClientModel.ApiKeyCredential(service.Key), clientOptions)
-
-        let builder = Kernel.CreateBuilder()
-
-        appSettings.Services
-        |> Array.iter (fun service ->
-            builder.AddOpenAIChatCompletion(service.Model, aiClient service, service.Name)
-            |> ignore)
-
-        builder.Build()
 
     let argument1 = Argument<string[]> "tags"
 
