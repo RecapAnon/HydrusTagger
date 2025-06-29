@@ -76,17 +76,40 @@ let handler (tags: string[]) (options: IOptions<AppSettings>) (logger: ILogger) 
             let data = response.Ok()
 
             for fileId in data.FileIds do
-                let! filePathResponse = hydrusClient.GetFilePath(fileId)
+                let! filePathResponse = api.GetFilesFilePathOrDefaultAsync(fileId)
 
                 let! fileBytes =
-                    match filePathResponse with
-                    | Some pathResponse ->
-                        logger.LogInformation("Path for file_id {FileId}: {Path}", fileId, pathResponse.path)
-                        File.ReadAllBytesAsync pathResponse.path
-                    | None -> hydrusClient.DownloadFile(fileId)
+                    if filePathResponse.IsSuccessStatusCode then
+                        let pathResponse = filePathResponse.Ok()
+                        logger.LogInformation("Path for file_id {FileId}: {Path}", fileId, pathResponse.Path)
+
+                        logger.LogInformation(
+                            "Content Type for file_id {FileId}: {ContentType}",
+                            fileId,
+                            pathResponse.Filetype
+                        )
+
+                        File.ReadAllBytesAsync pathResponse.Path
+                    else
+                        task {
+                            let! resp = api.GetFilesFileAsync(new HydrusAPI.NET.Client.Option<Nullable<int>>(fileId))
+                            let r = resp :?> GetFilesApi.GetFilesFileApiResponse
+
+                            logger.LogInformation(
+                                "Content Type for file_id {FileId}: {ContentType}",
+                                fileId,
+                                r.ContentHeaders.ContentType
+                            )
+
+                            return r.ContentBytes
+                        }
 
                 if not (Array.isEmpty fileBytes) then
-                    logger.LogInformation("File downloaded for file_id {FileId}. Size: {Size} bytes", fileId, fileBytes.Length)
+                    logger.LogInformation(
+                        "File downloaded for file_id {FileId}. Size: {Size} bytes",
+                        fileId,
+                        fileBytes.Length
+                    )
 
                 let newTags = tagger.Identify fileBytes
                 logger.LogInformation("Tags: {Tags}", newTags)
@@ -95,7 +118,7 @@ let handler (tags: string[]) (options: IOptions<AppSettings>) (logger: ILogger) 
                     { AddTagsRequest.file_id = fileId
                       service_keys_to_tags = Map.ofList [ (appSettings.ServiceKey, newTags) ] }
 
-                // do! hydrusClient.AddTags(request)
+                do! hydrusClient.AddTags(request)
                 ()
         else
             logger.LogError("Failed to retrieve file ids.")
@@ -123,8 +146,7 @@ let main argv =
 
                         new OpenAIClient(new ClientModel.ApiKeyCredential(service.Key), clientOptions)
 
-                    services.AddOpenAIChatCompletion(service.Model, client, service.Name)
-                    |> ignore)
+                    services.AddOpenAIChatCompletion(service.Model, client, service.Name) |> ignore)
 
                 services.AddTransient<Kernel>(fun (serviceProvider) ->
                     let pluginCollection = serviceProvider.GetRequiredService<KernelPluginCollection>()
