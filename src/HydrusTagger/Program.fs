@@ -81,24 +81,24 @@ let handler (tags: string[]) (options: IOptions<AppSettings>) (logger: ILogger) 
                 let! fileBytes =
                     match filePathResponse with
                     | Some pathResponse ->
-                        printfn "Path for file_id %i: %s" fileId pathResponse.path
+                        logger.LogInformation("Path for file_id {FileId}: {Path}", fileId, pathResponse.path)
                         File.ReadAllBytesAsync pathResponse.path
                     | None -> hydrusClient.DownloadFile(fileId)
 
                 if not (Array.isEmpty fileBytes) then
-                    printfn "File downloaded for file_id %i. Size: %i bytes" fileId fileBytes.Length
+                    logger.LogInformation("File downloaded for file_id {FileId}. Size: {Size} bytes", fileId, fileBytes.Length)
 
                 let newTags = tagger.Identify fileBytes
-                printfn "Tags: %A" newTags
+                logger.LogInformation("Tags: {Tags}", newTags)
 
                 let request =
                     { AddTagsRequest.file_id = fileId
                       service_keys_to_tags = Map.ofList [ (appSettings.ServiceKey, newTags) ] }
 
-                do! hydrusClient.AddTags(request)
+                // do! hydrusClient.AddTags(request)
                 ()
         else
-            printfn "Failed to retrieve file ids."
+            logger.LogError("Failed to retrieve file ids.")
     }
 
 [<EntryPoint>]
