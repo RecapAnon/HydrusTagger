@@ -1,9 +1,10 @@
 ﻿module HydrusTagger.Program
 
 open CommandLineExtensions
+open HydrusAPI.NET.Api
 open HydrusAPI.NET.Client
 open HydrusAPI.NET.Extensions
-open HydrusAPI.NET.Api
+open HydrusAPI.NET.Model
 open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.DependencyInjection
 open Microsoft.Extensions.Hosting
@@ -13,9 +14,11 @@ open Microsoft.SemanticKernel
 open Microsoft.SemanticKernel.ChatCompletion
 open OpenAI
 open System
+open System.Collections.Generic
 open System.CommandLine
 open System.IO
 open System.Linq
+open System.Threading
 open System.Threading.Tasks
 
 type Service =
@@ -61,22 +64,25 @@ let captionNodeApi (kernel: Kernel) (bytes: byte array) =
 
     Some result.Content
 
-let handler (tags: string[]) (options: IOptions<AppSettings>) (logger: ILogger) (api: IGetFilesApi) : Task =
+let handler
+    (tags: string[])
+    (options: IOptions<AppSettings>)
+    (logger: ILogger)
+    (getFilesApi: IGetFilesApi)
+    (addTagsApi: IAddTagsApi)
+    : Task =
     let appSettings = options.Value
-
-    let hydrusClient =
-        HydrusApiClient(appSettings.BaseUrl, appSettings.HydrusClientAPIAccessKey)
 
     let tagger = DeepdanbooruTagger.Create(appSettings.ResnetModelPath)
 
     task {
-        let! response = api.GetFilesSearchFilesAsync(tags.ToList())
+        let! response = getFilesApi.GetFilesSearchFilesAsync(tags.ToList())
 
         if response.IsSuccessStatusCode then
             let data = response.Ok()
 
             for fileId in data.FileIds do
-                let! filePathResponse = api.GetFilesFilePathOrDefaultAsync(fileId)
+                let! filePathResponse = getFilesApi.GetFilesFilePathOrDefaultAsync(fileId)
 
                 let! fileBytes =
                     if filePathResponse.IsSuccessStatusCode then
@@ -92,7 +98,9 @@ let handler (tags: string[]) (options: IOptions<AppSettings>) (logger: ILogger) 
                         File.ReadAllBytesAsync pathResponse.Path
                     else
                         task {
-                            let! resp = api.GetFilesFileAsync(new HydrusAPI.NET.Client.Option<Nullable<int>>(fileId))
+                            let! resp =
+                                getFilesApi.GetFilesFileAsync(new HydrusAPI.NET.Client.Option<Nullable<int>>(fileId))
+
                             let r = resp :?> GetFilesApi.GetFilesFileApiResponse
 
                             logger.LogInformation(
@@ -114,11 +122,17 @@ let handler (tags: string[]) (options: IOptions<AppSettings>) (logger: ILogger) 
                 let newTags = tagger.Identify fileBytes
                 logger.LogInformation("Tags: {Tags}", newTags)
 
-                let request =
-                    { AddTagsRequest.file_id = fileId
-                      service_keys_to_tags = Map.ofList [ (appSettings.ServiceKey, newTags) ] }
+                let serviceKeysToTags = new Dictionary<string, List<string>>()
+                serviceKeysToTags[appSettings.ServiceKey] <- newTags.ToList()
 
-                do! hydrusClient.AddTags(request)
+                let request =
+                    AddTagsAddTagsRequest(
+                        fileId = new HydrusAPI.NET.Client.Option<Nullable<int>>(fileId),
+                        serviceKeysToTags =
+                            new HydrusAPI.NET.Client.Option<Dictionary<string, List<string>>>(serviceKeysToTags)
+                    )
+
+                let! _ = addTagsApi.AddTagsAddTagsAsync(request, CancellationToken.None)
                 ()
         else
             logger.LogError("Failed to retrieve file ids.")
@@ -191,10 +205,11 @@ let main argv =
     |> addGlobalOption (Option<string> "--ServiceKey")
     |> addGlobalOption (Option<LogLevel> "--Logging:LogLevel:Default")
     |> addGlobalArgument argument1
-    |> setGlobalHandler4
+    |> setGlobalHandler5
         handler
         argument1
         (srvBinder<IOptions<AppSettings>> host)
         (srvBinder<ILogger<AppSettings>> host)
         (srvBinder<IGetFilesApi> host)
+        (srvBinder<IAddTagsApi> host)
     |> invoke argv

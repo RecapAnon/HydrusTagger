@@ -27,6 +27,10 @@ module CommandLineExtensions =
         command.SetHandler(handler, argument1, argument2, argument3, argument4)
         command
 
+    let setGlobalHandler5 handler argument1 argument2 argument3 argument4 argument5 (command: RootCommand) =
+        command.SetHandler(handler, argument1, argument2, argument3, argument4, argument5)
+        command
+
     let invoke (argv: string array) (rc: RootCommand) = rc.Invoke argv
 
     open System.CommandLine.Binding
