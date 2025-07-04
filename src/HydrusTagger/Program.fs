@@ -20,6 +20,7 @@ open System.CommandLine
 open System.IO
 open System.Linq
 open System.Threading.Tasks
+open VideoFrameExtractor
 
 type ApiOption<'T> = HydrusAPI.NET.Client.Option<'T>
 
@@ -106,14 +107,24 @@ let handler
                         fileBytes.Length
                     )
 
-                let newTags = tagger.Identify fileBytes
+                let actualBytes =
+                    if fileType.Contains("video") then
+                        let tmp = Path.GetTempFileName()
+                        File.WriteAllBytes(tmp, fileBytes)
+                        let bytes = getMiddleFrameBytes tmp
+                        File.Delete(tmp)
+                        bytes
+                    else
+                        fileBytes
+
+                let newTags = tagger.Identify actualBytes
                 logger.LogInformation("DeepDanbooru Tags: {Tags}", newTags)
 
                 let! captions =
                     appSettings.Services
                     |> Array.map (fun service ->
                         task {
-                            let! caption = captionApi kernel service logger fileBytes fileType
+                            let! caption = captionApi kernel service logger actualBytes fileType
                             logger.LogInformation("{ServiceName} Tags: {Tags}", service.Name, caption)
 
                             return
