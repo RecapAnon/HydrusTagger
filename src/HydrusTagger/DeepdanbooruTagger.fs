@@ -66,7 +66,6 @@ type DeepdanbooruTagger(session: InferenceSession, tags: string[]) =
         Array.zip tags probs
         |> Array.filter (fun (_, score) -> score >= 0.5f)
         |> Array.map fst
-        |> Array.toList
 
     static member Create(modelPath: string) =
         let session = new InferenceSession(modelPath)

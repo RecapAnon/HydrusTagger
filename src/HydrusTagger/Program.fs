@@ -12,20 +12,25 @@ open Microsoft.Extensions.Logging
 open Microsoft.Extensions.Options
 open Microsoft.SemanticKernel
 open Microsoft.SemanticKernel.ChatCompletion
+open Microsoft.SemanticKernel.Connectors.OpenAI
 open OpenAI
 open System
 open System.Collections.Generic
 open System.CommandLine
 open System.IO
 open System.Linq
-open System.Threading
 open System.Threading.Tasks
+
+type ApiOption<'T> = HydrusAPI.NET.Client.Option<'T>
 
 type Service =
     { Name: string
       Endpoint: string
       Key: string
-      Model: string }
+      Model: string
+      SystemPrompt: string
+      UserPrompt: string
+      ExecutionSettings: OpenAIPromptExecutionSettings }
 
 type LogLevelConfig = { Default: LogLevel }
 
@@ -40,39 +45,33 @@ type AppSettings =
       Logging: LoggingConfig
       Services: Service array }
 
-let captionNodeApi (kernel: Kernel) (bytes: byte array) =
-    let loggerFactory = kernel.Services.GetRequiredService<ILoggerFactory>()
-    let logger = loggerFactory.CreateLogger()
+let captionApi (kernel: Kernel) (service: Service) (logger: ILogger) (bytes: byte array) (mimeType: string) =
+    task {
+        let chat =
+            kernel.Services.GetRequiredKeyedService<IChatCompletionService>(service.Name)
 
-    let chat =
-        kernel.Services.GetRequiredKeyedService<IChatCompletionService>("Multimodal")
+        let history = new ChatHistory()
+        history.AddSystemMessage(service.SystemPrompt)
 
-    let history = new ChatHistory()
-    history.AddSystemMessage("You are a friendly and helpful assistant that responds to questions directly.")
+        let message = new ChatMessageContentItemCollection()
+        message.Add(new TextContent(service.UserPrompt))
+        message.Add(new ImageContent(bytes, mimeType))
+        history.AddUserMessage(message)
 
-    let message = new ChatMessageContentItemCollection()
-    message.Add(new TextContent("Describe what is in the image."))
-
-    // TODO:
-    // let mimeType = getMimeType file
-    let mimeType = "temp"
-    message.Add(new ImageContent(bytes, mimeType))
-    history.AddUserMessage(message)
-
-    let result = chat.GetChatMessageContentAsync(history).Result
-    logger.LogInformation("Generation complete: {GeneratorResponse}", result.Content)
-
-    Some result.Content
+        let! result = chat.GetChatMessageContentAsync(history, service.ExecutionSettings)
+        logger.LogInformation("Generation complete: {GeneratorResponse}", result.Content)
+        return result.Content
+    }
 
 let handler
     (tags: string[])
     (options: IOptions<AppSettings>)
     (logger: ILogger)
+    (kernel: Kernel)
     (getFilesApi: IGetFilesApi)
     (addTagsApi: IAddTagsApi)
     : Task =
     let appSettings = options.Value
-
     let tagger = DeepdanbooruTagger.Create(appSettings.ResnetModelPath)
 
     task {
@@ -84,55 +83,57 @@ let handler
             for fileId in data.FileIds do
                 let! filePathResponse = getFilesApi.GetFilesFilePathOrDefaultAsync(fileId)
 
-                let! fileBytes =
+                let! fileBytes, fileType =
                     if filePathResponse.IsSuccessStatusCode then
-                        let pathResponse = filePathResponse.Ok()
-                        logger.LogInformation("Path for file_id {FileId}: {Path}", fileId, pathResponse.Path)
-
-                        logger.LogInformation(
-                            "Content Type for file_id {FileId}: {ContentType}",
-                            fileId,
-                            pathResponse.Filetype
-                        )
-
-                        File.ReadAllBytesAsync pathResponse.Path
+                        task {
+                            let pathResponse = filePathResponse.Ok()
+                            logger.LogInformation("Path for file_id {FileId}: {Path}", fileId, pathResponse.Path)
+                            let! bytes = File.ReadAllBytesAsync(pathResponse.Path)
+                            return bytes, pathResponse.Filetype
+                        }
                     else
                         task {
-                            let! resp =
-                                getFilesApi.GetFilesFileAsync(new HydrusAPI.NET.Client.Option<Nullable<int>>(fileId))
-
+                            let! resp = getFilesApi.GetFilesFileAsync(new ApiOption<Nullable<int>>(fileId))
                             let r = resp :?> GetFilesApi.GetFilesFileApiResponse
-
-                            logger.LogInformation(
-                                "Content Type for file_id {FileId}: {ContentType}",
-                                fileId,
-                                r.ContentHeaders.ContentType
-                            )
-
-                            return r.ContentBytes
+                            return r.ContentBytes, r.ContentHeaders.ContentType.ToString()
                         }
 
                 if not (Array.isEmpty fileBytes) then
                     logger.LogInformation(
-                        "File downloaded for file_id {FileId}. Size: {Size} bytes",
+                        "File downloaded for file_id {FileId}. Type: {Type} Size: {Size} bytes",
                         fileId,
+                        fileType,
                         fileBytes.Length
                     )
 
                 let newTags = tagger.Identify fileBytes
-                logger.LogInformation("Tags: {Tags}", newTags)
+                logger.LogInformation("DeepDanbooru Tags: {Tags}", newTags)
 
-                let serviceKeysToTags = new Dictionary<string, List<string>>()
-                serviceKeysToTags[appSettings.ServiceKey] <- newTags.ToList()
+                let! captions =
+                    appSettings.Services
+                    |> Array.map (fun service ->
+                        task {
+                            let! caption = captionApi kernel service logger fileBytes fileType
+                            logger.LogInformation("{ServiceName} Tags: {Tags}", service.Name, caption)
+
+                            return
+                                caption.Split([| ',' |], StringSplitOptions.RemoveEmptyEntries)
+                                |> Array.map (fun s -> s.Trim())
+                        })
+                    |> Task.WhenAll
+
+                let allTags = captions |> Array.collect id |> Array.append newTags |> Array.distinct
+
+                let serviceKeysToTags = Dictionary<string, List<string>>()
+                serviceKeysToTags[appSettings.ServiceKey] <- allTags.ToList()
 
                 let request =
                     AddTagsAddTagsRequest(
-                        fileId = new HydrusAPI.NET.Client.Option<Nullable<int>>(fileId),
-                        serviceKeysToTags =
-                            new HydrusAPI.NET.Client.Option<Dictionary<string, List<string>>>(serviceKeysToTags)
+                        fileId = new ApiOption<Nullable<int>>(fileId),
+                        serviceKeysToTags = new ApiOption<Dictionary<string, List<string>>>(serviceKeysToTags)
                     )
 
-                let! _ = addTagsApi.AddTagsAddTagsAsync(request, CancellationToken.None)
+                let! _ = addTagsApi.AddTagsAddTagsAsync(request)
                 ()
         else
             logger.LogError("Failed to retrieve file ids.")
@@ -146,10 +147,7 @@ let main argv =
             .ConfigureServices(fun context services ->
                 let appSettings = context.Configuration.Get<AppSettings>()
                 services.Configure<AppSettings>(context.Configuration) |> ignore
-
-                services.AddLogging(fun c ->
-                    c.AddConsole().SetMinimumLevel(appSettings.Logging.LogLevel.Default) |> ignore)
-                |> ignore
+                services.AddLogging(fun c -> c.AddConsole() |> ignore) |> ignore
 
                 appSettings.Services
                 |> Array.iter (fun service ->
@@ -162,7 +160,10 @@ let main argv =
 
                     services.AddOpenAIChatCompletion(service.Model, client, service.Name) |> ignore)
 
-                services.AddTransient<Kernel>(fun (serviceProvider) ->
+                services.AddSingleton<KernelPluginCollection>(fun serviceProvider -> new KernelPluginCollection())
+                |> ignore
+
+                services.AddTransient<Kernel>(fun serviceProvider ->
                     let pluginCollection = serviceProvider.GetRequiredService<KernelPluginCollection>()
                     new Kernel(serviceProvider, pluginCollection))
                 |> ignore)
@@ -205,11 +206,12 @@ let main argv =
     |> addGlobalOption (Option<string> "--ServiceKey")
     |> addGlobalOption (Option<LogLevel> "--Logging:LogLevel:Default")
     |> addGlobalArgument argument1
-    |> setGlobalHandler5
+    |> setGlobalHandler6
         handler
         argument1
         (srvBinder<IOptions<AppSettings>> host)
         (srvBinder<ILogger<AppSettings>> host)
+        (srvBinder<Kernel> host)
         (srvBinder<IGetFilesApi> host)
         (srvBinder<IAddTagsApi> host)
     |> invoke argv
