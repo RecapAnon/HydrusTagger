@@ -157,8 +157,6 @@ let main argv =
             .CreateDefaultBuilder(argv)
             .ConfigureServices(fun context services ->
                 let appSettings = context.Configuration.Get<AppSettings>()
-                services.Configure<AppSettings>(context.Configuration) |> ignore
-                services.AddLogging(fun c -> c.AddConsole() |> ignore) |> ignore
 
                 appSettings.Services
                 |> Array.iter (fun service ->
@@ -171,12 +169,13 @@ let main argv =
 
                     services.AddOpenAIChatCompletion(service.Model, client, service.Name) |> ignore)
 
-                services.AddSingleton<KernelPluginCollection>(fun serviceProvider -> new KernelPluginCollection())
-                |> ignore
-
-                services.AddTransient<Kernel>(fun serviceProvider ->
-                    let pluginCollection = serviceProvider.GetRequiredService<KernelPluginCollection>()
-                    new Kernel(serviceProvider, pluginCollection))
+                services
+                    .Configure<AppSettings>(context.Configuration)
+                    .AddLogging(fun c -> c.AddConsole() |> ignore)
+                    .AddSingleton<KernelPluginCollection>(fun serviceProvider -> new KernelPluginCollection())
+                    .AddTransient<Kernel>(fun serviceProvider ->
+                        let pluginCollection = serviceProvider.GetRequiredService<KernelPluginCollection>()
+                        new Kernel(serviceProvider, pluginCollection))
                 |> ignore)
             .ConfigureHydrusApi(fun context collection options ->
                 let appSettings = context.Configuration.Get<AppSettings>()
@@ -191,18 +190,18 @@ let main argv =
                 let sessionToken =
                     new ApiKeyToken("", ClientUtils.ApiKeyHeader.Hydrus_Client_API_Session_Key, "")
 
-                options.AddTokens<ApiKeyToken>([| accessToken; sessionToken |]) |> ignore
-                options.UseProvider<CustomTokenProvider<ApiKeyToken>, ApiKeyToken>() |> ignore
-
-                options.AddHydrusApiHttpClients(
-                    (fun client -> client.BaseAddress <- new Uri(appSettings.BaseUrl)),
-                    (fun builder ->
-                        builder
-                            .AddRetryPolicy(2)
-                            .AddTimeoutPolicy(TimeSpan.FromSeconds(5L))
-                            .AddCircuitBreakerPolicy(10, TimeSpan.FromSeconds(30L))
-                        |> ignore)
-                )
+                options
+                    .AddTokens<ApiKeyToken>([| accessToken; sessionToken |])
+                    .UseProvider<CustomTokenProvider<ApiKeyToken>, ApiKeyToken>()
+                    .AddHydrusApiHttpClients(
+                        (fun client -> client.BaseAddress <- new Uri(appSettings.BaseUrl)),
+                        (fun builder ->
+                            builder
+                                .AddRetryPolicy(2)
+                                .AddTimeoutPolicy(TimeSpan.FromSeconds(5L))
+                                .AddCircuitBreakerPolicy(10, TimeSpan.FromSeconds(30L))
+                            |> ignore)
+                    )
                 |> ignore
 
                 ())
