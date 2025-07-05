@@ -73,7 +73,7 @@ let handler
     (addTagsApi: IAddTagsApi)
     : Task =
     let appSettings = options.Value
-    let tagger = DeepdanbooruTagger.Create(appSettings.ResnetModelPath)
+    use tagger = DeepdanbooruTagger.Create(appSettings.ResnetModelPath)
 
     task {
         let! response = getFilesApi.GetFilesSearchFilesAsync(tags.ToList())

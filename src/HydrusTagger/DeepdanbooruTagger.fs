@@ -67,6 +67,10 @@ type DeepdanbooruTagger(session: InferenceSession, tags: string[]) =
         |> Array.filter (fun (_, score) -> score >= 0.5f)
         |> Array.map fst
 
+    interface System.IDisposable with
+        member _.Dispose() =
+            session.Dispose()
+
     static member Create(modelPath: string) =
         let session = new InferenceSession(modelPath)
 
@@ -74,4 +78,4 @@ type DeepdanbooruTagger(session: InferenceSession, tags: string[]) =
             session.ModelMetadata.CustomMetadataMap["tags"]
             |> JsonSerializer.Deserialize<string[]>
 
-        DeepdanbooruTagger(session, tags)
+        new DeepdanbooruTagger(session, tags)
