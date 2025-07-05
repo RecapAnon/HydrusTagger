@@ -40,7 +40,7 @@ module CommandLineExtensions =
     open System.CommandLine.Binding
     open Microsoft.Extensions.Hosting
     open Microsoft.Extensions.DependencyInjection
+
     let srvBinder<'T> (host: IHost) =
         { new BinderBase<'T>() with
-            override _.GetBoundValue(bindingContext) =
-                host.Services.GetRequiredService<'T>() }
+            override _.GetBoundValue(bindingContext) = host.Services.GetRequiredService<'T>() }
