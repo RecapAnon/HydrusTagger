@@ -72,10 +72,9 @@ let handler
     (getFilesApi: IGetFilesApi)
     (addTagsApi: IAddTagsApi)
     : Task =
-    let appSettings = options.Value
-    use tagger = DeepdanbooruTagger.Create(appSettings.ResnetModelPath)
-
     task {
+        let appSettings = options.Value
+        use tagger = DeepdanbooruTagger.Create(appSettings.ResnetModelPath)
         let! response = getFilesApi.GetFilesSearchFilesAsync(tags.ToList())
 
         if response.IsSuccessStatusCode then
