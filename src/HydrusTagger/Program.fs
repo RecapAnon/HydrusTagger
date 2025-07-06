@@ -191,7 +191,6 @@ let main argv =
 
                 options
                     .AddTokens<ApiKeyToken>([| accessToken; sessionToken |])
-                    .UseProvider<CustomTokenProvider<ApiKeyToken>, ApiKeyToken>()
                     .AddHydrusApiHttpClients(
                         (fun client -> client.BaseAddress <- new Uri(appSettings.BaseUrl)),
                         (fun builder ->
