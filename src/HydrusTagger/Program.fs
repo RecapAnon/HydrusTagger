@@ -244,6 +244,7 @@ let main argv =
     |> addGlobalOption (Option<string> "--ResNetModelPath")
     |> addGlobalOption (Option<string> "--ServiceKey")
     |> addGlobalOption (Option<LogLevel> "--Logging:LogLevel:Default")
+    |> addGlobalOption (Option<Service array> "--Services")
     |> addGlobalArgument argument1
     |> setGlobalHandler6
         handler
