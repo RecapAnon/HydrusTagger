@@ -35,6 +35,7 @@
     <Compile Include="CommandlineExtensions.fs" />
     <Compile Include="DeepdanbooruTagger.fs" />
     <Compile Include="VideoFrameExtractor.fs" />
+    <Compile Include="HydrusApiWrapper.fs" />
     <Compile Include="Program.fs" />
     <Content Include="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
