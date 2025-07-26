@@ -1,6 +1,7 @@
 ﻿module HydrusTagger.Program
 
 open CommandLineExtensions
+open FsToolkit.ErrorHandling
 open HydrusAPI.NET.Api
 open HydrusAPI.NET.Client
 open HydrusAPI.NET.Extensions
@@ -48,9 +49,6 @@ type AppSettings =
 
 let captionApi (kernel: Kernel) (service: Service) (logger: ILogger) (bytes: byte array) (mimeType: string) =
     task {
-        let chat =
-            kernel.Services.GetRequiredKeyedService<IChatCompletionService>(service.Name)
-
         let history = new ChatHistory()
         history.AddSystemMessage(service.SystemPrompt)
 
@@ -59,9 +57,24 @@ let captionApi (kernel: Kernel) (service: Service) (logger: ILogger) (bytes: byt
         message.Add(new ImageContent(bytes, mimeType))
         history.AddUserMessage(message)
 
-        let! result = chat.GetChatMessageContentAsync(history, service.ExecutionSettings)
-        logger.LogInformation("Generation complete: {GeneratorResponse}", result.Content)
-        return result.Content
+        let! result =
+            asyncResult {
+                let! chat =
+                    kernel.Services.GetKeyedService<IChatCompletionService>(service.Name)
+                    |> Result.requireNotNull Error
+
+                let! result = chat.GetChatMessageContentAsync(history, service.ExecutionSettings)
+                return! result.Content |> Result.requireNotNull Error
+            }
+
+        return
+            match result with
+            | Ok content ->
+                logger.LogInformation("Generation complete: {GeneratorResponse}", content)
+                content
+            | Error message ->
+                logger.LogError("Generation failed: {GeneratorError}", message)
+                ""
     }
 
 let handler
