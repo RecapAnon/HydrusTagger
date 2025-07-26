@@ -41,6 +41,6 @@ module CommandLineExtensions =
     open Microsoft.Extensions.Hosting
     open Microsoft.Extensions.DependencyInjection
 
-    let srvBinder<'T when 'T : not null> (host: IHost) =
+    let srvBinder<'T when 'T: not null> (host: IHost) =
         { new BinderBase<'T>() with
             override _.GetBoundValue(bindingContext) = host.Services.GetRequiredService<'T>() }
