@@ -39,12 +39,12 @@ type LoggingConfig = { LogLevel: LogLevelConfig }
 
 [<CLIMutable>]
 type AppSettings =
-    { BaseUrl: string
-      HydrusClientAPIAccessKey: string
-      ServiceKey: string
-      ResnetModelPath: string
-      Logging: LoggingConfig
-      Services: Service array }
+    { BaseUrl: string option
+      HydrusClientAPIAccessKey: string option
+      ServiceKey: string option
+      ResnetModelPath: string option
+      Logging: LoggingConfig option
+      Services: Service array option }
 
 let captionApi (kernel: Kernel) (service: Service) (logger: ILogger) (bytes: byte array) (mimeType: string) =
     task {
@@ -74,7 +74,12 @@ let handler
     : Task =
     task {
         let appSettings = options.Value
-        use tagger = DeepdanbooruTagger.Create(appSettings.ResnetModelPath)
+
+        let tagger =
+            match appSettings.ResnetModelPath with
+            | Some path -> Some(DeepdanbooruTagger.Create(path))
+            | None -> None
+
         let! response = getFilesApi.GetFilesSearchFilesAsync(tags.ToList())
 
         if response.IsSuccessStatusCode then
@@ -116,26 +121,36 @@ let handler
                     else
                         fileBytes
 
-                let newTags = tagger.Identify actualBytes
+                let newTags =
+                    match tagger with
+                    | Some t -> t.Identify actualBytes
+                    | None -> [||]
+
                 logger.LogInformation("DeepDanbooru Tags: {Tags}", newTags)
 
                 let! captions =
-                    appSettings.Services
-                    |> Array.map (fun service ->
-                        task {
-                            let! caption = captionApi kernel service logger actualBytes fileType
-                            logger.LogInformation("{ServiceName} Tags: {Tags}", service.Name, caption)
+                    match appSettings.Services with
+                    | Some srv ->
+                        srv
+                        |> Array.map (fun service ->
+                            task {
+                                let! caption = captionApi kernel service logger actualBytes fileType
+                                logger.LogInformation("{ServiceName} Tags: {Tags}", service.Name, caption)
 
-                            return
-                                caption.Split([| ',' |], StringSplitOptions.RemoveEmptyEntries)
-                                |> Array.map (fun s -> s.Trim())
-                        })
-                    |> Task.WhenAll
+                                return
+                                    caption.Split([| ',' |], StringSplitOptions.RemoveEmptyEntries)
+                                    |> Array.map (fun s -> s.Trim())
+                            })
+                        |> Task.WhenAll
+                    | None -> Task.FromResult([||])
 
                 let allTags = captions |> Array.collect id |> Array.append newTags |> Array.distinct
 
                 let serviceKeysToTags = Dictionary<string, List<string>>()
-                serviceKeysToTags[appSettings.ServiceKey] <- allTags.ToList()
+
+                match appSettings.ServiceKey with
+                | Some serviceKey -> serviceKeysToTags[serviceKey] <- allTags.ToList()
+                | None -> ()
 
                 let request =
                     AddTagsAddTagsRequest(
@@ -157,16 +172,19 @@ let main argv =
             .ConfigureServices(fun context services ->
                 let appSettings = context.Configuration.Get<AppSettings>()
 
-                appSettings.Services
-                |> Array.iter (fun service ->
-                    let client =
-                        let clientOptions = new OpenAIClientOptions()
-                        clientOptions.Endpoint <- new Uri(service.Endpoint)
-                        clientOptions.NetworkTimeout <- new TimeSpan(2, 0, 0)
+                match appSettings.Services with
+                | Some srv ->
+                    srv
+                    |> Array.iter (fun service ->
+                        let client =
+                            let clientOptions = new OpenAIClientOptions()
+                            clientOptions.Endpoint <- new Uri(service.Endpoint)
+                            clientOptions.NetworkTimeout <- new TimeSpan(2, 0, 0)
 
-                        new OpenAIClient(new ClientModel.ApiKeyCredential(service.Key), clientOptions)
+                            new OpenAIClient(new ClientModel.ApiKeyCredential(service.Key), clientOptions)
 
-                    services.AddOpenAIChatCompletion(service.Model, client, service.Name) |> ignore)
+                        services.AddOpenAIChatCompletion(service.Model, client, service.Name) |> ignore)
+                | None -> ()
 
                 services
                     .Configure<AppSettings>(context.Configuration)
@@ -180,11 +198,9 @@ let main argv =
                 let appSettings = context.Configuration.Get<AppSettings>()
 
                 let accessToken =
-                    new ApiKeyToken(
-                        appSettings.HydrusClientAPIAccessKey,
-                        ClientUtils.ApiKeyHeader.Hydrus_Client_API_Access_Key,
-                        ""
-                    )
+                    match appSettings.HydrusClientAPIAccessKey with
+                    | Some key -> new ApiKeyToken(key, ClientUtils.ApiKeyHeader.Hydrus_Client_API_Access_Key, "")
+                    | None -> new ApiKeyToken("", ClientUtils.ApiKeyHeader.Hydrus_Client_API_Access_Key, "")
 
                 let sessionToken =
                     new ApiKeyToken("", ClientUtils.ApiKeyHeader.Hydrus_Client_API_Session_Key, "")
@@ -192,7 +208,9 @@ let main argv =
                 options
                     .AddTokens<ApiKeyToken>([| accessToken; sessionToken |])
                     .AddHydrusApiHttpClients(
-                        (fun client -> client.BaseAddress <- new Uri(appSettings.BaseUrl)),
+                        (fun client ->
+                            if appSettings.BaseUrl.IsSome then
+                                client.BaseAddress <- new Uri(appSettings.BaseUrl.Value)),
                         (fun builder ->
                             builder
                                 .AddRetryPolicy(2)
