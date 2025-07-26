@@ -47,6 +47,35 @@ type AppSettings =
       Logging: LoggingConfig | null
       Services: Service array | null }
 
+let tryCallApi<'T when 'T :> IApiResponse>
+    (logger: ILogger)
+    (operationName: string)
+    (apiCall: unit -> Task<'T>)
+    : Async<Result<'T, string>> =
+    async {
+        try
+            let! response = apiCall () |> Async.AwaitTask
+
+            if response.IsSuccessStatusCode then
+                return Ok response
+            else
+                logger.LogWarning(
+                    "{OperationName} returned failed status: {StatusCode}",
+                    operationName,
+                    response.StatusCode
+                )
+
+                return Error $"HTTP error: %s{operationName} - Status: %b{response.IsSuccessStatusCode}"
+        with ex ->
+            logger.LogError(ex, "{OperationName} failed due to exception", operationName)
+            return Error $"Exception during %s{operationName}: %s{ex.Message}"
+    }
+
+let getApiResponseData (result: Result<#IOk<_>, string>) : Result<_, string> =
+    result
+    |> Result.map (fun resp -> resp.Ok())
+    |> Result.bind (fun resp -> Result.requireNotNull "null" resp)
+
 let captionApi (kernel: Kernel) (service: Service) (logger: ILogger) (bytes: byte array) (mimeType: string) =
     task {
         let history = new ChatHistory()
@@ -61,10 +90,10 @@ let captionApi (kernel: Kernel) (service: Service) (logger: ILogger) (bytes: byt
             asyncResult {
                 let! chat =
                     kernel.Services.GetKeyedService<IChatCompletionService>(service.Name)
-                    |> Result.requireNotNull Error
+                    |> Result.requireNotNull "Error"
 
                 let! result = chat.GetChatMessageContentAsync(history, service.ExecutionSettings)
-                return! result.Content |> Result.requireNotNull Error
+                return! result.Content |> Result.requireNotNull "Error"
             }
 
         return
@@ -93,11 +122,13 @@ let handler
             | null -> None
             | path -> Some(DeepdanbooruTagger.Create(path))
 
-        let! response = getFilesApi.GetFilesSearchFilesAsync(tags.ToList())
+        let! fileIdsResult =
+            tryCallApi logger "GetFilesSearchFiles" (fun () -> getFilesApi.GetFilesSearchFilesAsync(tags.ToList()))
 
-        if response.IsSuccessStatusCode then
-            let data = response.Ok()
+        let fileIdsResponse = fileIdsResult |> getApiResponseData
 
+        match fileIdsResponse with
+        | Ok data ->
             for fileId in data.FileIds do
                 let! filePathResponse = getFilesApi.GetFilesFilePathOrDefaultAsync(fileId)
 
@@ -171,10 +202,10 @@ let handler
                         serviceKeysToTags = new ApiOption<Dictionary<string, List<string>>>(serviceKeysToTags)
                     )
 
-                let! _ = addTagsApi.AddTagsAddTagsAsync(request)
+                let! _ = tryCallApi logger "AddTagsAddTags" (fun () -> addTagsApi.AddTagsAddTagsAsync(request))
+
                 ()
-        else
-            logger.LogError("Failed to retrieve file ids.")
+        | Error message -> logger.LogError("Failed to retrieve file ids: {Error}", message)
     }
 
 [<EntryPoint>]
