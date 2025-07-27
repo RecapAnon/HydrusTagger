@@ -39,6 +39,9 @@ module HydrusApiWrapper =
                         Error $"HTTP error: %s{operationName} - Status: %b{response.IsSuccessStatusCode}")
         }
 
+    let getOk (result: #IOk<'A>) : Result<'A, string> =
+        result.Ok() |> Result.requireNotNull "null"
+
     let getApiResponseData (result: Result<#IOk<_>, string>) : Result<_, string> =
         result
         |> Result.map (fun resp -> resp.Ok())

@@ -69,6 +69,116 @@ let captionApi (kernel: Kernel) (service: Service) (logger: ILogger) (bytes: byt
         return! result.Content |> Result.requireNotNull "Error"
     }
 
+let getFileBytesAndType
+    (logger: ILogger)
+    (getFilesApi: IGetFilesApi)
+    (fileId: int)
+    : Task<Result<byte array * string, string>> =
+    taskResult {
+        let! filePathResponse =
+            tryCallHydrusApi logger "GetFilesFilePathOrDefault" (fun () ->
+                getFilesApi.GetFilesFilePathOrDefaultAsync(fileId))
+
+        let! bytes, fileType =
+            match getOk filePathResponse with
+            | Ok pathResponse ->
+                task {
+                    logger.LogInformation("Path for file_id {FileId}: {Path}", fileId, pathResponse.Path)
+                    let! bytes = File.ReadAllBytesAsync(pathResponse.Path)
+                    return bytes, pathResponse.Filetype
+                }
+            | Error _ ->
+                task {
+                    let! result =
+                        tryCallHydrusApi logger "GetFilesFile" (fun () ->
+                            getFilesApi.GetFilesFileAsync(new ApiOption<Nullable<int>>(fileId)))
+
+                    match result with
+                    | Ok response ->
+                        let response = response :?> GetFilesApi.GetFilesFileApiResponse
+                        let contentType = response.ContentHeaders.ContentType.ToString()
+                        return response.ContentBytes, contentType
+                    | Error err -> return [||], err
+                }
+
+        if Array.isEmpty bytes then
+            return! Error "Failed to retrieve file content"
+        else
+            return! Ok(bytes, fileType)
+    }
+
+let extractFrameIfVideo (logger: ILogger) (fileBytes: byte array) (fileType: string) : byte array =
+    if fileType.Contains("video") then
+        let tmp = Path.GetTempFileName()
+        File.WriteAllBytes(tmp, fileBytes)
+        let extracted = getMiddleFrameBytes tmp
+        File.Delete(tmp)
+        logger.LogInformation("Extracted middle frame from video for tagging")
+        extracted
+    else
+        fileBytes
+
+let getDeepDanbooruTags (logger: ILogger) (tagger: DeepdanbooruTagger option) (bytes: byte array) : string array =
+    match tagger with
+    | Some t ->
+        let tags = t.Identify bytes
+        logger.LogInformation("DeepDanbooru Tags: {Tags}", tags)
+        tags
+    | None -> [||]
+
+let getCaptionTags
+    (logger: ILogger)
+    (kernel: Kernel)
+    (services: Service[])
+    (bytes: byte array)
+    (mimeType: string)
+    : Task<string array> =
+    services
+    |> Array.map (fun service ->
+        task {
+            let! result = captionApi kernel service logger bytes mimeType
+
+            match result with
+            | Ok caption ->
+                logger.LogInformation("{ServiceName} Tags: {Tags}", service.Name, caption)
+
+                return
+                    caption.Split([| ',' |], StringSplitOptions.RemoveEmptyEntries)
+                    |> Array.map (fun s -> s.Trim())
+            | Error err ->
+                logger.LogError("{ServiceName} failed: {Error}", service.Name, err)
+                return [||]
+        })
+    |> Task.WhenAll
+    |> Task.map (Array.collect id)
+
+let applyTagsToHydrusFile
+    (logger: ILogger)
+    (addTagsApi: IAddTagsApi)
+    (fileId: int)
+    (appSettings: AppSettings)
+    (allTags: string array)
+    : Task<unit> =
+    task {
+        let serviceKeysToTags = Dictionary<string, List<string>>()
+
+        match appSettings.ServiceKey with
+        | null -> ()
+        | serviceKey -> serviceKeysToTags[serviceKey] <- allTags.ToList()
+
+        let request =
+            AddTagsAddTagsRequest(
+                fileId = new ApiOption<Nullable<int>>(fileId),
+                serviceKeysToTags = new ApiOption<Dictionary<string, List<string>>>(serviceKeysToTags)
+            )
+
+        let! result = tryCallHydrusApi logger "AddTagsAddTags" (fun () -> addTagsApi.AddTagsAddTagsAsync(request))
+
+        match result with
+        | Error err -> logger.LogError("Failed to apply tags to file_id {FileId}: {Error}", fileId, err)
+        | Ok _ -> ()
+    }
+
 let handler
     (tags: string[])
     (options: IOptions<AppSettings>)
@@ -89,104 +199,29 @@ let handler
             tryCallHydrusApi logger "GetFilesSearchFiles" (fun () ->
                 getFilesApi.GetFilesSearchFilesAsync(tags.ToList()))
 
-        let fileIdsResponse = fileIdsResult |> getApiResponseData
+        let fileIdsResponse = getApiResponseData fileIdsResult
 
         match fileIdsResponse with
         | Ok data ->
             for fileId in data.FileIds do
-                let! filePathResult =
-                    tryCallHydrusApi logger "GetFilesFilePathOrDefault" (fun () ->
-                        getFilesApi.GetFilesFilePathOrDefaultAsync(fileId))
+                let! fileDataResult = getFileBytesAndType logger getFilesApi fileId
 
-                let filePathResponse = filePathResult |> getApiResponseData
+                match fileDataResult with
+                | Ok(fileBytes, fileType) ->
+                    let actualBytes = extractFrameIfVideo logger fileBytes fileType
+                    let ddTags = getDeepDanbooruTags logger tagger actualBytes
 
-                let! fileBytes, fileType =
-                    match filePathResponse with
-                    | Ok pathResponse ->
-                        task {
-                            logger.LogInformation("Path for file_id {FileId}: {Path}", fileId, pathResponse.Path)
-                            let! bytes = File.ReadAllBytesAsync(pathResponse.Path)
-                            return bytes, pathResponse.Filetype
-                        }
-                    | Error _ ->
-                        task {
-                            let! result =
-                                tryCallHydrusApi logger "GetFilesFile" (fun () ->
-                                    getFilesApi.GetFilesFileAsync(new ApiOption<Nullable<int>>(fileId)))
+                    let! captionTags =
+                        match appSettings.Services with
+                        | null -> Task.FromResult([||])
+                        | srv -> getCaptionTags logger kernel srv actualBytes fileType
 
-                            // TODO:
-                            match result with
-                            | Ok response ->
-                                let response2 = response :?> GetFilesApi.GetFilesFileApiResponse
-                                return response2.ContentBytes, response2.ContentHeaders.ContentType.ToString()
-                            | Error _ -> return [||], ""
-                        }
+                    let allTags = Array.append ddTags captionTags |> Array.distinct
 
-                if not (Array.isEmpty fileBytes) then
-                    logger.LogInformation(
-                        "File downloaded for file_id {FileId}. Type: {Type} Size: {Size} bytes",
-                        fileId,
-                        fileType,
-                        fileBytes.Length
-                    )
-
-                let actualBytes =
-                    if fileType.Contains("video") then
-                        let tmp = Path.GetTempFileName()
-                        File.WriteAllBytes(tmp, fileBytes)
-                        let bytes = getMiddleFrameBytes tmp
-                        File.Delete(tmp)
-                        bytes
-                    else
-                        fileBytes
-
-                let newTags =
-                    match tagger with
-                    | Some t -> t.Identify actualBytes
-                    | None -> [||]
-
-                logger.LogInformation("DeepDanbooru Tags: {Tags}", newTags)
-
-                let! captions =
-                    match appSettings.Services with
-                    | null -> Task.FromResult([||])
-                    | srv ->
-                        srv
-                        |> Array.map (fun service ->
-                            task {
-                                let! result = captionApi kernel service logger actualBytes fileType
-
-                                match result with
-                                | Ok caption ->
-                                    logger.LogInformation("{ServiceName} Tags: {Tags}", service.Name, caption)
-
-                                    return
-                                        caption.Split([| ',' |], StringSplitOptions.RemoveEmptyEntries)
-                                        |> Array.map (fun s -> s.Trim())
-                                | Error message ->
-                                    logger.LogError("{ServiceName} failed: {GeneratorError}", message)
-                                    return [||]
-                            })
-                        |> Task.WhenAll
-
-                let allTags = captions |> Array.collect id |> Array.append newTags |> Array.distinct
-
-                let serviceKeysToTags = Dictionary<string, List<string>>()
-
-                match appSettings.ServiceKey with
-                | null -> ()
-                | serviceKey -> serviceKeysToTags[serviceKey] <- allTags.ToList()
-
-                let request =
-                    AddTagsAddTagsRequest(
-                        fileId = new ApiOption<Nullable<int>>(fileId),
-                        serviceKeysToTags = new ApiOption<Dictionary<string, List<string>>>(serviceKeysToTags)
-                    )
-
-                let! _ = tryCallHydrusApi logger "AddTagsAddTags" (fun () -> addTagsApi.AddTagsAddTagsAsync(request))
-
-                ()
-        | Error message -> logger.LogError("Failed to retrieve file ids: {Error}", message)
+                    do! applyTagsToHydrusFile logger addTagsApi fileId appSettings allTags
+                | Error err ->
+                    logger.LogError("Failed to retrieve file content for file_id {FileId}: {Error}", fileId, err)
+        | Error err -> logger.LogError("Failed to retrieve file ids: {Error}", err)
     }
 
 [<EntryPoint>]
