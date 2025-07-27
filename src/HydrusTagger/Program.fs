@@ -94,21 +94,32 @@ let handler
         match fileIdsResponse with
         | Ok data ->
             for fileId in data.FileIds do
-                let! filePathResponse = getFilesApi.GetFilesFilePathOrDefaultAsync(fileId)
+                let! filePathResult =
+                    tryCallHydrusApi logger "GetFilesFilePathOrDefault" (fun () ->
+                        getFilesApi.GetFilesFilePathOrDefaultAsync(fileId))
+
+                let filePathResponse = filePathResult |> getApiResponseData
 
                 let! fileBytes, fileType =
-                    if filePathResponse.IsSuccessStatusCode then
+                    match filePathResponse with
+                    | Ok pathResponse ->
                         task {
-                            let pathResponse = filePathResponse.Ok()
                             logger.LogInformation("Path for file_id {FileId}: {Path}", fileId, pathResponse.Path)
                             let! bytes = File.ReadAllBytesAsync(pathResponse.Path)
                             return bytes, pathResponse.Filetype
                         }
-                    else
+                    | Error _ ->
                         task {
-                            let! resp = getFilesApi.GetFilesFileAsync(new ApiOption<Nullable<int>>(fileId))
-                            let r = resp :?> GetFilesApi.GetFilesFileApiResponse
-                            return r.ContentBytes, r.ContentHeaders.ContentType.ToString()
+                            let! result =
+                                tryCallHydrusApi logger "GetFilesFile" (fun () ->
+                                    getFilesApi.GetFilesFileAsync(new ApiOption<Nullable<int>>(fileId)))
+
+                            // TODO:
+                            match result with
+                            | Ok response ->
+                                let response2 = response :?> GetFilesApi.GetFilesFileApiResponse
+                                return response2.ContentBytes, response2.ContentHeaders.ContentType.ToString()
+                            | Error _ -> return [||], ""
                         }
 
                 if not (Array.isEmpty fileBytes) then
