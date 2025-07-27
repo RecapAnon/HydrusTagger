@@ -49,7 +49,7 @@ type AppSettings =
       Services: Service array | null }
 
 let captionApi (kernel: Kernel) (service: Service) (logger: ILogger) (bytes: byte array) (mimeType: string) =
-    task {
+    taskResult {
         let history = new ChatHistory()
         history.AddSystemMessage(service.SystemPrompt)
 
@@ -58,24 +58,15 @@ let captionApi (kernel: Kernel) (service: Service) (logger: ILogger) (bytes: byt
         message.Add(new ImageContent(bytes, mimeType))
         history.AddUserMessage(message)
 
+        let! chat =
+            kernel.Services.GetKeyedService<IChatCompletionService>(service.Name)
+            |> Result.requireNotNull "Error"
+
         let! result =
-            asyncResult {
-                let! chat =
-                    kernel.Services.GetKeyedService<IChatCompletionService>(service.Name)
-                    |> Result.requireNotNull "Error"
+            tryCall logger "GetChatMessageContent" (fun () ->
+                chat.GetChatMessageContentAsync(history, service.ExecutionSettings))
 
-                let! result = chat.GetChatMessageContentAsync(history, service.ExecutionSettings)
-                return! result.Content |> Result.requireNotNull "Error"
-            }
-
-        return
-            match result with
-            | Ok content ->
-                logger.LogInformation("Generation complete: {GeneratorResponse}", content)
-                content
-            | Error message ->
-                logger.LogError("Generation failed: {GeneratorError}", message)
-                ""
+        return! result.Content |> Result.requireNotNull "Error"
     }
 
 let handler
@@ -95,7 +86,8 @@ let handler
             | path -> Some(DeepdanbooruTagger.Create(path))
 
         let! fileIdsResult =
-            tryCallApi logger "GetFilesSearchFiles" (fun () -> getFilesApi.GetFilesSearchFilesAsync(tags.ToList()))
+            tryCallHydrusApi logger "GetFilesSearchFiles" (fun () ->
+                getFilesApi.GetFilesSearchFilesAsync(tags.ToList()))
 
         let fileIdsResponse = fileIdsResult |> getApiResponseData
 
@@ -151,12 +143,18 @@ let handler
                         srv
                         |> Array.map (fun service ->
                             task {
-                                let! caption = captionApi kernel service logger actualBytes fileType
-                                logger.LogInformation("{ServiceName} Tags: {Tags}", service.Name, caption)
+                                let! result = captionApi kernel service logger actualBytes fileType
 
-                                return
-                                    caption.Split([| ',' |], StringSplitOptions.RemoveEmptyEntries)
-                                    |> Array.map (fun s -> s.Trim())
+                                match result with
+                                | Ok caption ->
+                                    logger.LogInformation("{ServiceName} Tags: {Tags}", service.Name, caption)
+
+                                    return
+                                        caption.Split([| ',' |], StringSplitOptions.RemoveEmptyEntries)
+                                        |> Array.map (fun s -> s.Trim())
+                                | Error message ->
+                                    logger.LogError("{ServiceName} failed: {GeneratorError}", message)
+                                    return [||]
                             })
                         |> Task.WhenAll
 
@@ -174,7 +172,7 @@ let handler
                         serviceKeysToTags = new ApiOption<Dictionary<string, List<string>>>(serviceKeysToTags)
                     )
 
-                let! _ = tryCallApi logger "AddTagsAddTags" (fun () -> addTagsApi.AddTagsAddTagsAsync(request))
+                let! _ = tryCallHydrusApi logger "AddTagsAddTags" (fun () -> addTagsApi.AddTagsAddTagsAsync(request))
 
                 ()
         | Error message -> logger.LogError("Failed to retrieve file ids: {Error}", message)

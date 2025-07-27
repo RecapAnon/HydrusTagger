@@ -6,28 +6,37 @@ module HydrusApiWrapper =
     open HydrusAPI.NET.Client
     open FsToolkit.ErrorHandling
 
-    let tryCallApi<'T when 'T :> IApiResponse>
-        (logger: ILogger)
-        (operationName: string)
-        (apiCall: unit -> Task<'T>)
-        : Async<Result<'T, string>> =
-        async {
+    let tryCall<'T> (logger: ILogger) (operationName: string) (request: unit -> Task<'T>) : Task<Result<'T, string>> =
+        task {
             try
-                let! response = apiCall () |> Async.AwaitTask
-
-                if response.IsSuccessStatusCode then
-                    return Ok response
-                else
-                    logger.LogWarning(
-                        "{OperationName} returned failed status: {StatusCode}",
-                        operationName,
-                        response.StatusCode
-                    )
-
-                    return Error $"HTTP error: %s{operationName} - Status: %b{response.IsSuccessStatusCode}"
+                let! result = request ()
+                return Ok result
             with ex ->
                 logger.LogError(ex, "{OperationName} failed due to exception", operationName)
                 return Error $"Exception during %s{operationName}: %s{ex.Message}"
+        }
+
+    let tryCallHydrusApi<'T when 'T :> IApiResponse>
+        (logger: ILogger)
+        (operationName: string)
+        (apiCall: unit -> Task<'T>)
+        : Task<Result<'T, string>> =
+        task {
+            let! result = tryCall logger operationName apiCall
+
+            return
+                result
+                |> Result.bind (fun response ->
+                    if response.IsSuccessStatusCode then
+                        Ok response
+                    else
+                        logger.LogWarning(
+                            "{OperationName} returned failed status: {StatusCode}",
+                            operationName,
+                            response.StatusCode
+                        )
+
+                        Error $"HTTP error: %s{operationName} - Status: %b{response.IsSuccessStatusCode}")
         }
 
     let getApiResponseData (result: Result<#IOk<_>, string>) : Result<_, string> =
