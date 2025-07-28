@@ -187,7 +187,7 @@ let handler
     (getFilesApi: IGetFilesApi)
     (addTagsApi: IAddTagsApi)
     : Task =
-    task {
+    taskResult {
         let appSettings = options.Value
 
         let tagger =
@@ -199,29 +199,22 @@ let handler
             tryCallHydrusApi logger "GetFilesSearchFiles" (fun () ->
                 getFilesApi.GetFilesSearchFilesAsync(tags.ToList()))
 
-        let fileIdsResponse = getApiResponseData fileIdsResult
+        let! fileIdsResponse = getOk fileIdsResult
 
-        match fileIdsResponse with
-        | Ok data ->
-            for fileId in data.FileIds do
-                let! fileDataResult = getFileBytesAndType logger getFilesApi fileId
+        for fileId in fileIdsResponse.FileIds do
+            let! fileBytes, fileType = getFileBytesAndType logger getFilesApi fileId
 
-                match fileDataResult with
-                | Ok(fileBytes, fileType) ->
-                    let actualBytes = extractFrameIfVideo logger fileBytes fileType
-                    let ddTags = getDeepDanbooruTags logger tagger actualBytes
+            let actualBytes = extractFrameIfVideo logger fileBytes fileType
+            let ddTags = getDeepDanbooruTags logger tagger actualBytes
 
-                    let! captionTags =
-                        match appSettings.Services with
-                        | null -> Task.FromResult([||])
-                        | srv -> getCaptionTags logger kernel srv actualBytes fileType
+            let! captionTags =
+                match appSettings.Services with
+                | null -> Task.FromResult([||])
+                | srv -> getCaptionTags logger kernel srv actualBytes fileType
 
-                    let allTags = Array.append ddTags captionTags |> Array.distinct
+            let allTags = Array.append ddTags captionTags |> Array.distinct
 
-                    do! applyTagsToHydrusFile logger addTagsApi fileId appSettings allTags
-                | Error err ->
-                    logger.LogError("Failed to retrieve file content for file_id {FileId}: {Error}", fileId, err)
-        | Error err -> logger.LogError("Failed to retrieve file ids: {Error}", err)
+            do! applyTagsToHydrusFile logger addTagsApi fileId appSettings allTags
     }
 
 [<EntryPoint>]
