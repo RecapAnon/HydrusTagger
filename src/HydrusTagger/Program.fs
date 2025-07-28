@@ -102,7 +102,7 @@ let getFileBytesAndType
                 }
 
         if Array.isEmpty bytes then
-            return! Error "Failed to retrieve file content"
+            return! Error $"Failed to retrieve file content for file_id {fileId}"
         else
             return! Ok(bytes, fileType)
     }
@@ -195,25 +195,23 @@ let handler
             | null -> None
             | path -> Some(DeepdanbooruTagger.Create(path))
 
-        let! fileIdsResult =
+        let services =
+            match appSettings.Services with
+            | null -> [||]
+            | arr -> arr
+
+        let! fileIdsResponse =
             tryCallHydrusApi logger "GetFilesSearchFiles" (fun () ->
                 getFilesApi.GetFilesSearchFilesAsync(tags.ToList()))
 
-        let! fileIdsResponse = getOk fileIdsResult
+        let! fileIds = fileIdsResponse |> getOk |> Result.map (fun r -> r.FileIds) //.FileIds
 
-        for fileId in fileIdsResponse.FileIds do
+        for fileId in fileIds do
             let! fileBytes, fileType = getFileBytesAndType logger getFilesApi fileId
-
             let actualBytes = extractFrameIfVideo logger fileBytes fileType
             let ddTags = getDeepDanbooruTags logger tagger actualBytes
-
-            let! captionTags =
-                match appSettings.Services with
-                | null -> Task.FromResult([||])
-                | srv -> getCaptionTags logger kernel srv actualBytes fileType
-
+            let! captionTags = getCaptionTags logger kernel services actualBytes fileType
             let allTags = Array.append ddTags captionTags |> Array.distinct
-
             do! applyTagsToHydrusFile logger addTagsApi fileId appSettings allTags
     }
 
