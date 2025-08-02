@@ -70,11 +70,20 @@ type DeepdanbooruTagger(session: InferenceSession, tags: string[]) =
     interface System.IDisposable with
         member _.Dispose() = session.Dispose()
 
-    static member Create(modelPath: string) =
-        let session = new InferenceSession(modelPath)
+    static member Create(modelPath: string) : Result<DeepdanbooruTagger, string> =
+        try
+            let session = new InferenceSession(modelPath)
 
-        let tags =
-            session.ModelMetadata.CustomMetadataMap["tags"]
-            |> JsonSerializer.Deserialize<string[]>
+            try
+                let tagsJson =
+                    match session.ModelMetadata.CustomMetadataMap.TryGetValue("tags") with
+                    | true, value -> value
+                    | false, _ -> failwith "Missing 'tags' metadata in ONNX model."
 
-        new DeepdanbooruTagger(session, tags)
+                let tags = JsonSerializer.Deserialize<string[]>(tagsJson)
+                Ok(new DeepdanbooruTagger(session, tags))
+            with ex ->
+                session.Dispose()
+                Error($"Failed to load tags from model metadata: {ex.Message}")
+        with ex ->
+            Error($"Failed to load ONNX model from path '{modelPath}': {ex.Message}")
