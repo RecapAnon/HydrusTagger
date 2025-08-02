@@ -55,32 +55,28 @@ let getFileBytesAndType
             tryCallHydrusApi logger "GetFilesFilePathOrDefault" (fun () ->
                 getFilesApi.GetFilesFilePathOrDefaultAsync(fileId))
 
-        let! bytes, fileType =
-            match getOk filePathResponse with
-            | Ok pathResponse ->
-                task {
-                    logger.LogInformation("Path for file_id {FileId}: {Path}", fileId, pathResponse.Path)
-                    let! bytes = File.ReadAllBytesAsync(pathResponse.Path)
-                    return bytes, pathResponse.Filetype
-                }
-            | Error _ ->
-                task {
-                    let! result =
-                        tryCallHydrusApi logger "GetFilesFile" (fun () ->
-                            getFilesApi.GetFilesFileAsync(new ApiOption<Nullable<int>>(fileId)))
+        match getOk filePathResponse with
+        | Ok pathResponse ->
+            logger.LogInformation("Path for file_id {FileId}: {Path}", fileId, pathResponse.Path)
+            let! bytes = File.ReadAllBytesAsync(pathResponse.Path)
 
-                    match result with
-                    | Ok response ->
-                        let response = response :?> GetFilesApi.GetFilesFileApiResponse
-                        let contentType = response.ContentHeaders.ContentType.ToString()
-                        return response.ContentBytes, contentType
-                    | Error err -> return [||], err
-                }
+            if Array.isEmpty bytes then
+                return! Error $"Failed to read file content from path for file_id {fileId}"
+            else
+                return! Ok(bytes, pathResponse.Filetype)
+        | Error _ ->
+            let! fileResponse =
+                tryCallHydrusApi logger "GetFilesFile" (fun () ->
+                    getFilesApi.GetFilesFileAsync(new ApiOption<Nullable<int>>(fileId)))
 
-        if Array.isEmpty bytes then
-            return! Error $"Failed to retrieve file content for file_id {fileId}"
-        else
-            return! Ok(bytes, fileType)
+            let response = fileResponse :?> GetFilesApi.GetFilesFileApiResponse
+            let bytes = response.ContentBytes
+            let contentType = response.ContentHeaders.ContentType.ToString()
+
+            if Array.isEmpty bytes then
+                return! Error $"Failed to retrieve file content for file_id {fileId}"
+            else
+                return! Ok(bytes, contentType)
     }
 
 let extractFrameIfVideo (logger: ILogger) (fileBytes: byte array) (fileType: string) : byte array =
