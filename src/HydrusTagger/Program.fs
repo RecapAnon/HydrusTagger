@@ -14,6 +14,7 @@ open Microsoft.Extensions.Logging
 open Microsoft.SemanticKernel
 open Microsoft.SemanticKernel.ChatCompletion
 open OpenAI
+open ResultExtensions
 open System
 open System.Collections.Generic
 open System.CommandLine
@@ -58,12 +59,14 @@ let getFileBytesAndType
         match getOk filePathResponse with
         | Ok pathResponse ->
             logger.LogInformation("Path for file_id {FileId}: {Path}", fileId, pathResponse.Path)
-            let! bytes = File.ReadAllBytesAsync(pathResponse.Path)
+            let! path = Result.requireNotNull "null" pathResponse.Path
+            let! filetype = Result.requireNotNull "null" pathResponse.Filetype
+            let! bytes = File.ReadAllBytesAsync(path)
 
             if Array.isEmpty bytes then
                 return! Error $"Failed to read file content from path for file_id {fileId}"
             else
-                return! Ok(bytes, pathResponse.Filetype)
+                return! Ok(bytes, filetype)
         | Error _ ->
             let! fileResponse =
                 tryCallHydrusApi logger "GetFilesFile" (fun () ->
@@ -71,12 +74,12 @@ let getFileBytesAndType
 
             let response = fileResponse :?> GetFilesApi.GetFilesFileApiResponse
             let bytes = response.ContentBytes
-            let contentType = response.ContentHeaders.ContentType.ToString()
+            let! contentType = Result.requireNotNull "null" response.ContentHeaders.ContentType
 
             if Array.isEmpty bytes then
                 return! Error $"Failed to retrieve file content for file_id {fileId}"
             else
-                return! Ok(bytes, contentType)
+                return! Ok(bytes, contentType.ToString())
     }
 
 let extractFrameIfVideo (logger: ILogger) (fileBytes: byte array) (fileType: string) : byte array =
@@ -171,7 +174,11 @@ let handler
                     tryCallHydrusApi logger "GetFilesSearchFiles" (fun () ->
                         getFilesApi.GetFilesSearchFilesAsync(tags.ToList()))
 
-                let! fileIds = fileIdsResponse |> getOk |> Result.map (fun r -> r.FileIds)
+                let! fileIds =
+                    fileIdsResponse
+                    |> getOk
+                    |> Result.map (fun r -> r.FileIds)
+                    |> Result.bind (Result.requireNotNull "null")
 
                 for fileId in fileIds do
                     let! fileBytes, fileType = getFileBytesAndType logger getFilesApi fileId
