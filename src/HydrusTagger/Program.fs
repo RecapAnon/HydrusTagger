@@ -163,7 +163,7 @@ let handler
     (getFilesApi: IGetFilesApi)
     (addTagsApi: IAddTagsApi)
     : Task =
-    taskResult {
+    task {
         let tagger =
             match config.ResnetModelPath with
             | Some path -> Some(DeepdanbooruTagger.Create(path))
@@ -174,19 +174,25 @@ let handler
             | Some arr -> arr
             | None -> [||]
 
-        let! fileIdsResponse =
-            tryCallHydrusApi logger "GetFilesSearchFiles" (fun () ->
-                getFilesApi.GetFilesSearchFilesAsync(tags.ToList()))
+        let! result =
+            taskResult {
+                let! fileIdsResponse =
+                    tryCallHydrusApi logger "GetFilesSearchFiles" (fun () ->
+                        getFilesApi.GetFilesSearchFilesAsync(tags.ToList()))
 
-        let! fileIds = fileIdsResponse |> getOk |> Result.map (fun r -> r.FileIds)
+                let! fileIds = fileIdsResponse |> getOk |> Result.map (fun r -> r.FileIds)
 
-        for fileId in fileIds do
-            let! fileBytes, fileType = getFileBytesAndType logger getFilesApi fileId
-            let actualBytes = extractFrameIfVideo logger fileBytes fileType
-            let ddTags = getDeepDanbooruTags logger tagger actualBytes
-            let! captionTags = getCaptionTags logger kernel services actualBytes fileType
-            let allTags = Array.append ddTags captionTags |> Array.distinct
-            do! applyTagsToHydrusFile logger addTagsApi fileId config allTags
+                for fileId in fileIds do
+                    let! fileBytes, fileType = getFileBytesAndType logger getFilesApi fileId
+                    let actualBytes = extractFrameIfVideo logger fileBytes fileType
+                    let ddTags = getDeepDanbooruTags logger tagger actualBytes
+                    let! captionTags = getCaptionTags logger kernel services actualBytes fileType
+                    let allTags = Array.append ddTags captionTags |> Array.distinct
+                    do! applyTagsToHydrusFile logger addTagsApi fileId config allTags
+            }
+
+        tagger |> Option.iter (fun t -> (t :> IDisposable).Dispose())
+        return result
     }
 
 [<EntryPoint>]
