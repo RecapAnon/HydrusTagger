@@ -21,22 +21,20 @@ module HydrusApiWrapper =
         (operationName: string)
         (apiCall: unit -> Task<'T>)
         : Task<Result<'T, string>> =
-        task {
-            let! result = tryCall logger operationName apiCall
+        taskResult {
+            let! response = tryCall logger operationName apiCall
 
-            return
-                result
-                |> Result.bind (fun response ->
-                    if response.IsSuccessStatusCode then
-                        Ok response
-                    else
-                        logger.LogWarning(
-                            "{OperationName} returned failed status: {StatusCode}",
-                            operationName,
-                            response.StatusCode
-                        )
+            return!
+                if response.IsSuccessStatusCode then
+                    Ok response
+                else
+                    logger.LogWarning(
+                        "{OperationName} returned failed status: {StatusCode}",
+                        operationName,
+                        response.StatusCode
+                    )
 
-                        Error $"HTTP error: %s{operationName} - Status: %b{response.IsSuccessStatusCode}")
+                    Error $"HTTP error: %s{operationName} - Status: %b{response.IsSuccessStatusCode}"
         }
 
     let getOk (result: #IOk<'A>) : Result<'A, string> =
