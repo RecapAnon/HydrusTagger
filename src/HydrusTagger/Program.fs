@@ -11,10 +11,8 @@ open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.DependencyInjection
 open Microsoft.Extensions.Hosting
 open Microsoft.Extensions.Logging
-open Microsoft.Extensions.Options
 open Microsoft.SemanticKernel
 open Microsoft.SemanticKernel.ChatCompletion
-open Microsoft.SemanticKernel.Connectors.OpenAI
 open OpenAI
 open System
 open System.Collections.Generic
@@ -26,29 +24,7 @@ open VideoFrameExtractor
 
 type ApiOption<'T> = HydrusAPI.NET.Client.Option<'T>
 
-type Service =
-    { Name: string
-      Endpoint: string
-      Key: string
-      Model: string
-      SystemPrompt: string
-      UserPrompt: string
-      ExecutionSettings: OpenAIPromptExecutionSettings }
-
-type LogLevelConfig = { Default: LogLevel }
-
-type LoggingConfig = { LogLevel: LogLevelConfig }
-
-[<CLIMutable>]
-type AppSettings =
-    { BaseUrl: string | null
-      HydrusClientAPIAccessKey: string | null
-      ServiceKey: string | null
-      ResnetModelPath: string | null
-      Logging: LoggingConfig | null
-      Services: Service array | null }
-
-let captionApi (kernel: Kernel) (service: Service) (logger: ILogger) (bytes: byte array) (mimeType: string) =
+let captionApi (kernel: Kernel) (service: TaggingService) (logger: ILogger) (bytes: byte array) (mimeType: string) =
     taskResult {
         let history = new ChatHistory()
         history.AddSystemMessage(service.SystemPrompt)
@@ -129,7 +105,7 @@ let getDeepDanbooruTags (logger: ILogger) (tagger: DeepdanbooruTagger option) (b
 let getCaptionTags
     (logger: ILogger)
     (kernel: Kernel)
-    (services: Service[])
+    (services: TaggingService[])
     (bytes: byte array)
     (mimeType: string)
     : Task<string array> =
@@ -156,20 +132,20 @@ let applyTagsToHydrusFile
     (logger: ILogger)
     (addTagsApi: IAddTagsApi)
     (fileId: int)
-    (appSettings: AppSettings)
+    (config: IAppConfig)
     (allTags: string array)
     : Task<unit> =
     task {
         let serviceKeysToTags = Dictionary<string, List<string>>()
 
-        match appSettings.ServiceKey with
-        | null -> ()
-        | serviceKey -> serviceKeysToTags[serviceKey] <- allTags.ToList()
+        match config.ServiceKey with
+        | Some serviceKey -> serviceKeysToTags[serviceKey] <- allTags.ToList()
+        | None -> ()
 
         let request =
             AddTagsAddTagsRequest(
-                fileId = new ApiOption<Nullable<int>>(fileId),
-                serviceKeysToTags = new ApiOption<Dictionary<string, List<string>>>(serviceKeysToTags)
+                fileId = ApiOption<Nullable<int>>(fileId),
+                serviceKeysToTags = ApiOption<Dictionary<string, List<string>>>(serviceKeysToTags)
             )
 
         let! result = tryCallHydrusApi logger "AddTagsAddTags" (fun () -> addTagsApi.AddTagsAddTagsAsync(request))
@@ -181,30 +157,28 @@ let applyTagsToHydrusFile
 
 let handler
     (tags: string[])
-    (options: IOptions<AppSettings>)
+    (config: IAppConfig)
     (logger: ILogger)
     (kernel: Kernel)
     (getFilesApi: IGetFilesApi)
     (addTagsApi: IAddTagsApi)
     : Task =
     taskResult {
-        let appSettings = options.Value
-
         let tagger =
-            match appSettings.ResnetModelPath with
-            | null -> None
-            | path -> Some(DeepdanbooruTagger.Create(path))
+            match config.ResnetModelPath with
+            | Some path -> Some(DeepdanbooruTagger.Create(path))
+            | None -> None
 
         let services =
-            match appSettings.Services with
-            | null -> [||]
-            | arr -> arr
+            match config.Services with
+            | Some arr -> arr
+            | None -> [||]
 
         let! fileIdsResponse =
             tryCallHydrusApi logger "GetFilesSearchFiles" (fun () ->
                 getFilesApi.GetFilesSearchFilesAsync(tags.ToList()))
 
-        let! fileIds = fileIdsResponse |> getOk |> Result.map (fun r -> r.FileIds) //.FileIds
+        let! fileIds = fileIdsResponse |> getOk |> Result.map (fun r -> r.FileIds)
 
         for fileId in fileIds do
             let! fileBytes, fileType = getFileBytesAndType logger getFilesApi fileId
@@ -212,7 +186,7 @@ let handler
             let ddTags = getDeepDanbooruTags logger tagger actualBytes
             let! captionTags = getCaptionTags logger kernel services actualBytes fileType
             let allTags = Array.append ddTags captionTags |> Array.distinct
-            do! applyTagsToHydrusFile logger addTagsApi fileId appSettings allTags
+            do! applyTagsToHydrusFile logger addTagsApi fileId config allTags
     }
 
 [<EntryPoint>]
@@ -230,20 +204,20 @@ let main argv =
                     |> Array.iter (fun service ->
                         let client =
                             let clientOptions = new OpenAIClientOptions()
-                            clientOptions.Endpoint <- new Uri(service.Endpoint)
-                            clientOptions.NetworkTimeout <- new TimeSpan(2, 0, 0)
-
-                            new OpenAIClient(new ClientModel.ApiKeyCredential(service.Key), clientOptions)
+                            clientOptions.Endpoint <- Uri(service.Endpoint)
+                            clientOptions.NetworkTimeout <- TimeSpan(2, 0, 0)
+                            new OpenAIClient(ClientModel.ApiKeyCredential(service.Key), clientOptions)
 
                         services.AddOpenAIChatCompletion(service.Model, client, service.Name) |> ignore)
 
                 services
                     .Configure<AppSettings>(context.Configuration)
                     .AddLogging(fun c -> c.AddConsole() |> ignore)
-                    .AddSingleton<KernelPluginCollection>(fun serviceProvider -> new KernelPluginCollection())
+                    .AddSingleton<IAppConfig, AppConfig>()
+                    .AddSingleton<KernelPluginCollection>(fun _ -> KernelPluginCollection())
                     .AddTransient<Kernel>(fun serviceProvider ->
                         let pluginCollection = serviceProvider.GetRequiredService<KernelPluginCollection>()
-                        new Kernel(serviceProvider, pluginCollection))
+                        Kernel(serviceProvider, pluginCollection))
                 |> ignore)
             .ConfigureHydrusApi(fun context collection options ->
                 let appSettings = context.Configuration.Get<AppSettings>()
@@ -287,7 +261,7 @@ let main argv =
     |> setGlobalHandler6
         handler
         argument1
-        (srvBinder<IOptions<AppSettings>> host)
+        (srvBinder<IAppConfig> host)
         (srvBinder<ILogger<AppSettings>> host)
         (srvBinder<Kernel> host)
         (srvBinder<IGetFilesApi> host)
