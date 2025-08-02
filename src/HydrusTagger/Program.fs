@@ -105,11 +105,12 @@ let getDeepDanbooruTags (logger: ILogger) (tagger: DeepdanbooruTagger option) (b
 let getCaptionTags
     (logger: ILogger)
     (kernel: Kernel)
-    (services: TaggingService[])
+    (services: TaggingService[] option)
     (bytes: byte array)
     (mimeType: string)
     : Task<string array> =
     services
+    |> Option.defaultValue [||]
     |> Array.map (fun service ->
         task {
             let! result = captionApi kernel service logger bytes mimeType
@@ -168,11 +169,6 @@ let handler
             config.ResnetModelPath
             |> Option.bind (DeepdanbooruTagger.Create >> Result.toOption)
 
-        let services =
-            match config.Services with
-            | Some arr -> arr
-            | None -> [||]
-
         let! result =
             taskResult {
                 let! fileIdsResponse =
@@ -185,7 +181,7 @@ let handler
                     let! fileBytes, fileType = getFileBytesAndType logger getFilesApi fileId
                     let actualBytes = extractFrameIfVideo logger fileBytes fileType
                     let ddTags = getDeepDanbooruTags logger tagger actualBytes
-                    let! captionTags = getCaptionTags logger kernel services actualBytes fileType
+                    let! captionTags = getCaptionTags logger kernel config.Services actualBytes fileType
                     let allTags = Array.append ddTags captionTags |> Array.distinct
                     do! applyTagsToHydrusFile logger addTagsApi fileId config allTags
             }
