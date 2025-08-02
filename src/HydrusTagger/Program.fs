@@ -165,9 +165,8 @@ let handler
     : Task =
     task {
         let tagger =
-            match config.ResnetModelPath with
-            | Some path -> DeepdanbooruTagger.Create(path) |> Result.toOption
-            | None -> None
+            config.ResnetModelPath
+            |> Option.bind (DeepdanbooruTagger.Create >> Result.toOption)
 
         let services =
             match config.Services with
