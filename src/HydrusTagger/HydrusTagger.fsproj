@@ -19,6 +19,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="CsvHelper" Version="33.1.0" />
     <PackageReference Include="FsToolkit.ErrorHandling" Version="5.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.4" />
     <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="9.0.4" />
@@ -38,6 +39,7 @@
     <Compile Include="DeepdanbooruTagger.fs" />
     <Compile Include="HydrusApiWrapper.fs" />
     <Compile Include="VideoFrameExtractor.fs" />
+    <Compile Include="WaifuDiffusionPredictor.fs" />
     <Compile Include="Program.fs" />
     <Content Include="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
