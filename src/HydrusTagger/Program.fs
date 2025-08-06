@@ -101,6 +101,15 @@ let getDeepDanbooruTags (logger: ILogger) (tagger: DeepdanbooruPredictor option)
         tags
     | None -> [||]
 
+let getWaifuTags (logger: ILogger) (tagger: WaifuDiffusionPredictor option) (bytes: byte array) : string array =
+    match tagger with
+    | Some t ->
+        let result = t.predict bytes 0.35 true 0.85 true
+        let tags = result.GeneralTags |> Array.map fst
+        logger.LogInformation("WaifuDiffusion Tags: {Tags}", tags)
+        tags
+    | None -> [||]
+
 let getCaptionTags
     (logger: ILogger)
     (kernel: Kernel)
@@ -175,6 +184,17 @@ let handler
                 logger.LogError("Failed to initialize DeepdanbooruPredictor: {Error}", ex.Message)
                 None
 
+        let waifuTagger =
+            try
+                match config.WaifuModelPath, config.WaifuLabelPath with
+                | Some modelPath, Some labelPath -> Some(new WaifuDiffusionPredictor(modelPath, labelPath))
+                | _ ->
+                    logger.LogWarning("Failed to initialize WaifuDiffusionPredictor: Missing configuration.")
+                    None
+            with ex ->
+                logger.LogError("Failed to initialize WaifuDiffusionPredictor: {Error}", ex.Message)
+                None
+
         let! result =
             taskResult {
                 let! fileIdsResponse =
@@ -191,12 +211,14 @@ let handler
                     let! fileBytes, fileType = getFileBytesAndType logger getFilesApi fileId
                     let actualBytes = extractFrameIfVideo logger fileBytes fileType
                     let ddTags = getDeepDanbooruTags logger tagger actualBytes
+                    let waifuTags = getWaifuTags logger waifuTagger actualBytes
                     let! captionTags = getCaptionTags logger kernel config.Services actualBytes fileType
-                    let allTags = Array.append ddTags captionTags |> Array.distinct
+                    let allTags = Array.concat [|ddTags; waifuTags; captionTags|] |> Array.distinct
                     do! applyTagsToHydrusFile logger addTagsApi fileId config allTags
             }
 
         tagger |> Option.iter (fun t -> (t :> IDisposable).Dispose())
+        waifuTagger |> Option.iter (fun t -> (t :> IDisposable).Dispose())
         return result
     }
 
