@@ -97,7 +97,7 @@ type WaifuDiffusionPredictor(modelPath: string, labelPath: string) =
     let session = new InferenceSession(modelPath)
     let modelTargetSize = session.InputMetadata.First().Value.Dimensions[1]
 
-    let prepareImage(imageBytes: byte[]) : DenseTensor<float32> =
+    let prepareImage (imageBytes: byte array) =
         use stream = new MemoryStream(imageBytes)
         use image = Image.Load<Rgb24>(stream)
 
@@ -128,7 +128,7 @@ type WaifuDiffusionPredictor(modelPath: string, labelPath: string) =
     interface IDisposable with
         member _.Dispose() = session.Dispose()
 
-    member this.predict
+    member _.predict
         (image: byte array)
         (generalThresh: float)
         (generalMcutEnabled: bool)

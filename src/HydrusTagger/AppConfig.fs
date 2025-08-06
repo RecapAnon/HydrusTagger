@@ -23,6 +23,7 @@ type AppSettings =
       HydrusClientAPIAccessKey: string | null
       ServiceKey: string | null
       ResnetModelPath: string | null
+      ResnetLabelPath: string | null
       Logging: LoggingConfig | null
       Services: TaggingService array | null }
 
@@ -31,6 +32,7 @@ type IAppConfig =
     abstract HydrusClientAPIAccessKey: string option
     abstract ServiceKey: string option
     abstract ResnetModelPath: string option
+    abstract ResnetLabelPath: string option
     abstract Logging: LoggingConfig option
     abstract Services: TaggingService array option
 
@@ -43,5 +45,6 @@ type AppConfig(private options: IOptions<AppSettings>) =
 
         member this.ServiceKey = Option.ofObj options.Value.ServiceKey
         member this.ResnetModelPath = Option.ofObj options.Value.ResnetModelPath
+        member this.ResnetLabelPath = Option.ofObj options.Value.ResnetLabelPath
         member this.Logging = Option.ofObj options.Value.Logging
         member this.Services = Option.ofObj options.Value.Services

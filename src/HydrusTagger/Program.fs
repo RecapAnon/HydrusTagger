@@ -93,10 +93,10 @@ let extractFrameIfVideo (logger: ILogger) (fileBytes: byte array) (fileType: str
     else
         fileBytes
 
-let getDeepDanbooruTags (logger: ILogger) (tagger: DeepdanbooruTagger option) (bytes: byte array) : string array =
+let getDeepDanbooruTags (logger: ILogger) (tagger: DeepdanbooruPredictor option) (bytes: byte array) : string array =
     match tagger with
     | Some t ->
-        let tags = t.Identify bytes
+        let tags = t.predict bytes
         logger.LogInformation("DeepDanbooru Tags: {Tags}", tags)
         tags
     | None -> [||]
@@ -165,8 +165,15 @@ let handler
     : Task =
     task {
         let tagger =
-            config.ResnetModelPath
-            |> Option.bind (DeepdanbooruTagger.Create >> Result.toOption)
+            try
+                match config.ResnetModelPath, config.ResnetLabelPath with
+                | Some modelPath, Some labelPath -> Some(new DeepdanbooruPredictor(modelPath, labelPath))
+                | _ ->
+                    logger.LogWarning("Failed to initialize DeepdanbooruPredictor: Missing configuration.")
+                    None
+            with ex ->
+                logger.LogError("Failed to initialize DeepdanbooruPredictor: {Error}", ex.Message)
+                None
 
         let! result =
             taskResult {

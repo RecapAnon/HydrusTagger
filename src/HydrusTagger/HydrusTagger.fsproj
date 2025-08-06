@@ -36,9 +36,9 @@
     <Compile Include="AppConfig.fs" />
     <Compile Include="CommandlineExtensions.fs" />
     <Compile Include="ResultExtensions.fs" />
-    <Compile Include="DeepdanbooruTagger.fs" />
     <Compile Include="HydrusApiWrapper.fs" />
     <Compile Include="VideoFrameExtractor.fs" />
+    <Compile Include="DeepdanbooruPredictor.fs" />
     <Compile Include="WaifuDiffusionPredictor.fs" />
     <Compile Include="Program.fs" />
     <Content Include="appsettings.json">

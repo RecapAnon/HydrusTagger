@@ -7,10 +7,13 @@ open SixLabors.ImageSharp.PixelFormats
 open SixLabors.ImageSharp.Processing
 open System.IO
 open System.Linq
-open System.Text.Json
 
-type DeepdanbooruTagger(session: InferenceSession, tags: string[]) =
-    let imageToOnnx (imageBytes: byte array) (size: int) =
+type DeepdanbooruPredictor(modelPath: string, labelPath: string) =
+    let session = new InferenceSession(modelPath)
+    let tags = File.ReadAllLines(labelPath)
+    let modelTargetSize = session.InputMetadata.First().Value.Dimensions[1]
+
+    let prepareImage (imageBytes: byte array) =
         use stream = new MemoryStream(imageBytes)
         use image = Image.Load<Rgb24>(stream)
 
@@ -18,13 +21,13 @@ type DeepdanbooruTagger(session: InferenceSession, tags: string[]) =
 
         let h', w' =
             if h > w then
-                (size, int (float size * float w / float h))
+                (modelTargetSize, int (float modelTargetSize * float w / float h))
             else
-                (int (float size * float h / float w), size)
+                (int (float modelTargetSize * float h / float w), modelTargetSize)
 
         image.Mutate(fun c ->
             c.Resize(w', h', KnownResamplers.Lanczos3) |> ignore
-            c.Pad(size, size, Color.White) |> ignore)
+            c.Pad(modelTargetSize, modelTargetSize, Color.White) |> ignore)
 
         let width = image.Width
         let height = image.Height
@@ -45,10 +48,10 @@ type DeepdanbooruTagger(session: InferenceSession, tags: string[]) =
             for x in width - (width - w') / 2 .. width - 1 do
                 image[x, y] <- image[width - (width - w') / 2 - 1, y]
 
-        let tensor = new DenseTensor<float32>([| 1; size; size; 3 |])
+        let tensor = new DenseTensor<float32>([| 1; modelTargetSize; modelTargetSize; 3 |])
 
-        for y = 0 to size - 1 do
-            for x = 0 to size - 1 do
+        for y = 0 to modelTargetSize - 1 do
+            for x = 0 to modelTargetSize - 1 do
                 let pixel = image[x, y]
                 tensor[0, y, x, 0] <- float32 pixel.R / 255.0f
                 tensor[0, y, x, 1] <- float32 pixel.G / 255.0f
@@ -56,9 +59,10 @@ type DeepdanbooruTagger(session: InferenceSession, tags: string[]) =
 
         tensor
 
-    member _.Identify(imageBytes: byte array) =
-        let tensor = imageToOnnx imageBytes 512
-        let inputs = [ NamedOnnxValue.CreateFromTensor("inputs", tensor) ]
+    member _.predict(imageBytes: byte array) =
+        let tensor = prepareImage imageBytes
+        let inputName = session.InputMetadata |> Seq.head |> (fun x -> x.Key)
+        let inputs = [ NamedOnnxValue.CreateFromTensor(inputName, tensor) ]
         let results = session.Run(inputs)
         let outputTensor = results[0].AsTensor<float32>()
         let probs = outputTensor.ToArray()
@@ -69,21 +73,3 @@ type DeepdanbooruTagger(session: InferenceSession, tags: string[]) =
 
     interface System.IDisposable with
         member _.Dispose() = session.Dispose()
-
-    static member Create(modelPath: string) : Result<DeepdanbooruTagger, string> =
-        try
-            let session = new InferenceSession(modelPath)
-
-            try
-                let tagsJson =
-                    match session.ModelMetadata.CustomMetadataMap.TryGetValue("tags") with
-                    | true, value -> value
-                    | false, _ -> failwith "Missing 'tags' metadata in ONNX model."
-
-                let tags = JsonSerializer.Deserialize<string[]>(tagsJson)
-                Ok(new DeepdanbooruTagger(session, tags))
-            with ex ->
-                session.Dispose()
-                Error($"Failed to load tags from model metadata: {ex.Message}")
-        with ex ->
-            Error($"Failed to load ONNX model from path '{modelPath}': {ex.Message}")
