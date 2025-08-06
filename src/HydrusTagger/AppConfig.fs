@@ -1,3 +1,5 @@
+// File: src/HydrusTagger/AppConfig.fs
+
 namespace HydrusTagger
 
 open Microsoft.SemanticKernel.Connectors.OpenAI
@@ -40,17 +42,16 @@ type IAppConfig =
     abstract Logging: LoggingConfig option
     abstract Services: TaggingService array option
 
-type AppConfig(private options: IOptions<AppSettings>) =
+type AppConfig(private settings: AppSettings) =
     interface IAppConfig with
-        member this.BaseUrl = Option.ofObj options.Value.BaseUrl
+        member _.BaseUrl = Option.ofObj settings.BaseUrl
+        member _.HydrusClientAPIAccessKey = Option.ofObj settings.HydrusClientAPIAccessKey
+        member _.ServiceKey = Option.ofObj settings.ServiceKey
+        member _.ResnetModelPath = Option.ofObj settings.ResnetModelPath
+        member _.ResnetLabelPath = Option.ofObj settings.ResnetLabelPath
+        member _.WaifuModelPath = Option.ofObj settings.WaifuModelPath
+        member _.WaifuLabelPath = Option.ofObj settings.WaifuLabelPath
+        member _.Logging = Option.ofObj settings.Logging
+        member _.Services = Option.ofObj settings.Services
 
-        member this.HydrusClientAPIAccessKey =
-            Option.ofObj options.Value.HydrusClientAPIAccessKey
-
-        member this.ServiceKey = Option.ofObj options.Value.ServiceKey
-        member this.ResnetModelPath = Option.ofObj options.Value.ResnetModelPath
-        member this.ResnetLabelPath = Option.ofObj options.Value.ResnetLabelPath
-        member this.WaifuModelPath = Option.ofObj options.Value.WaifuModelPath
-        member this.WaifuLabelPath = Option.ofObj options.Value.WaifuLabelPath
-        member this.Logging = Option.ofObj options.Value.Logging
-        member this.Services = Option.ofObj options.Value.Services
+    new(options: IOptions<AppSettings>) = AppConfig(options.Value)

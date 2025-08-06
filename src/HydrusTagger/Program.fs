@@ -213,7 +213,7 @@ let handler
                     let ddTags = getDeepDanbooruTags logger tagger actualBytes
                     let waifuTags = getWaifuTags logger waifuTagger actualBytes
                     let! captionTags = getCaptionTags logger kernel config.Services actualBytes fileType
-                    let allTags = Array.concat [|ddTags; waifuTags; captionTags|] |> Array.distinct
+                    let allTags = Array.concat [| ddTags; waifuTags; captionTags |] |> Array.distinct
                     do! applyTagsToHydrusFile logger addTagsApi fileId config allTags
             }
 
@@ -228,55 +228,68 @@ let main argv =
         Host
             .CreateDefaultBuilder(argv)
             .ConfigureServices(fun context services ->
-                let appSettings = context.Configuration.Get<AppSettings>()
+                let appSettings = context.Configuration.Get<AppSettings>() |> Option.ofObj
 
-                match appSettings.Services with
-                | null -> ()
-                | srv ->
-                    srv
-                    |> Array.iter (fun service ->
-                        let client =
+                match appSettings with
+                | Some settings ->
+                    let appConfig = new AppConfig(settings) :> IAppConfig
+
+                    match appConfig.Services with
+                    | Some servicesArray ->
+                        servicesArray
+                        |> Array.iter (fun service ->
                             let clientOptions = new OpenAIClientOptions()
                             clientOptions.Endpoint <- Uri(service.Endpoint)
                             clientOptions.NetworkTimeout <- TimeSpan(2, 0, 0)
-                            new OpenAIClient(ClientModel.ApiKeyCredential(service.Key), clientOptions)
 
-                        services.AddOpenAIChatCompletion(service.Model, client, service.Name) |> ignore)
+                            let client =
+                                new OpenAIClient(ClientModel.ApiKeyCredential(service.Key), clientOptions)
 
-                services
-                    .Configure<AppSettings>(context.Configuration)
-                    .AddLogging(fun c -> c.AddConsole() |> ignore)
-                    .AddSingleton<IAppConfig, AppConfig>()
-                    .AddSingleton<KernelPluginCollection>(fun _ -> KernelPluginCollection())
-                    .AddTransient<Kernel>(fun serviceProvider ->
-                        let pluginCollection = serviceProvider.GetRequiredService<KernelPluginCollection>()
-                        Kernel(serviceProvider, pluginCollection))
-                |> ignore)
+                            services.AddOpenAIChatCompletion(service.Model, client, service.Name) |> ignore)
+                    | None -> ()
+
+                    services
+                        .Configure<AppSettings>(context.Configuration)
+                        .AddLogging(fun c -> c.AddConsole() |> ignore)
+                        .AddSingleton<IAppConfig, AppConfig>()
+                        .AddSingleton<KernelPluginCollection>(fun _ -> KernelPluginCollection())
+                        .AddTransient<Kernel>(fun serviceProvider ->
+                            let pluginCollection = serviceProvider.GetRequiredService<KernelPluginCollection>()
+                            Kernel(serviceProvider, pluginCollection))
+                    |> ignore
+                | None -> ()
+
+                ())
             .ConfigureHydrusApi(fun context collection options ->
-                let appSettings = context.Configuration.Get<AppSettings>()
+                let appSettings = context.Configuration.Get<AppSettings>() |> Option.ofObj
 
-                let accessToken =
-                    match appSettings.HydrusClientAPIAccessKey with
-                    | null -> new ApiKeyToken("", ClientUtils.ApiKeyHeader.Hydrus_Client_API_Access_Key, "")
-                    | key -> new ApiKeyToken(key, ClientUtils.ApiKeyHeader.Hydrus_Client_API_Access_Key, "")
+                match appSettings with
+                | Some settings ->
+                    let appConfig = new AppConfig(settings) :> IAppConfig
 
-                let sessionToken =
-                    new ApiKeyToken("", ClientUtils.ApiKeyHeader.Hydrus_Client_API_Session_Key, "")
+                    let accessToken =
+                        match appConfig.HydrusClientAPIAccessKey with
+                        | Some key -> new ApiKeyToken(key, ClientUtils.ApiKeyHeader.Hydrus_Client_API_Access_Key, "")
+                        | None -> new ApiKeyToken("", ClientUtils.ApiKeyHeader.Hydrus_Client_API_Access_Key, "")
 
-                options
-                    .AddTokens<ApiKeyToken>([| accessToken; sessionToken |])
-                    .AddHydrusApiHttpClients(
-                        (fun client ->
-                            if appSettings.BaseUrl <> null then
-                                client.BaseAddress <- new Uri(appSettings.BaseUrl)),
-                        (fun builder ->
-                            builder
-                                .AddRetryPolicy(2)
-                                .AddTimeoutPolicy(TimeSpan.FromSeconds(5L))
-                                .AddCircuitBreakerPolicy(10, TimeSpan.FromSeconds(30L))
-                            |> ignore)
-                    )
-                |> ignore
+                    let sessionToken =
+                        new ApiKeyToken("", ClientUtils.ApiKeyHeader.Hydrus_Client_API_Session_Key, "")
+
+                    let baseUrl = defaultArg (appConfig.BaseUrl) "localhost:45869"
+
+                    options
+                        .AddTokens<ApiKeyToken>([| accessToken; sessionToken |])
+                        .AddHydrusApiHttpClients(
+                            (fun client -> client.BaseAddress <- Uri(baseUrl)),
+                            (fun builder ->
+                                builder
+                                    .AddRetryPolicy(2)
+                                    .AddTimeoutPolicy(TimeSpan.FromSeconds(5L))
+                                    .AddCircuitBreakerPolicy(10, TimeSpan.FromSeconds(30L))
+                                |> ignore)
+                        )
+                    |> ignore
+                | None -> ()
 
                 ())
             .Build()
