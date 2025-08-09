@@ -41,9 +41,6 @@
     <Compile Include="DeepdanbooruPredictor.fs" />
     <Compile Include="WaifuDiffusionPredictor.fs" />
     <Compile Include="Program.fs" />
-    <Content Include="appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="FSharp.Core" Version="9.0.202" />
