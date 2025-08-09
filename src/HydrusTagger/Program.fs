@@ -20,6 +20,7 @@ open System.Collections.Generic
 open System.CommandLine
 open System.IO
 open System.Linq
+open System.Net.Http
 open System.Threading.Tasks
 open VideoFrameExtractor
 
@@ -275,12 +276,15 @@ let main argv =
                     let sessionToken =
                         new ApiKeyToken("", ClientUtils.ApiKeyHeader.Hydrus_Client_API_Session_Key, "")
 
-                    let baseUrl = defaultArg (appConfig.BaseUrl) "localhost:45869"
+                    let clientBuilder =
+                        match appConfig.BaseUrl with
+                        | Some baseUrl -> Action<HttpClient>(fun client -> client.BaseAddress <- Uri(baseUrl))
+                        | None -> Unchecked.defaultof<Action<HttpClient>>
 
                     options
                         .AddTokens<ApiKeyToken>([| accessToken; sessionToken |])
                         .AddHydrusApiHttpClients(
-                            (fun client -> client.BaseAddress <- Uri(baseUrl)),
+                            clientBuilder,
                             (fun builder ->
                                 builder
                                     .AddRetryPolicy(2)
