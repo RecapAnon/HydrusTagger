@@ -1,5 +1,3 @@
-// File: src/HydrusTagger/AppConfig.fs
-
 namespace HydrusTagger
 
 open Microsoft.SemanticKernel.Connectors.OpenAI
