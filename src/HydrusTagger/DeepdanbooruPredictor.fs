@@ -10,7 +10,7 @@ open System.Linq
 
 type DeepdanbooruPredictor(modelPath: string, labelPath: string) =
     let buildInferenceSession path =
-        let availableProviders =  OrtEnv.Instance().GetAvailableProviders()
+        let availableProviders = OrtEnv.Instance().GetAvailableProviders()
         use sessionOptions = new SessionOptions()
 
         if availableProviders.Contains("CUDAExecutionProvider") then
@@ -20,8 +20,9 @@ type DeepdanbooruPredictor(modelPath: string, labelPath: string) =
                 ()
         else
             sessionOptions.AppendExecutionProvider_CPU()
+
         new InferenceSession(modelPath, sessionOptions)
-    
+
     let session = buildInferenceSession modelPath
     let tags = File.ReadAllLines(labelPath)
     let modelTargetSize = session.InputMetadata.First().Value.Dimensions[1]
