@@ -48,12 +48,14 @@ module VideoFrameExtractor =
 
         let outputPath = Path.GetTempFileName()
         File.Delete(outputPath)
-        let outputPath = Path.ChangeExtension(outputPath, "jpg")
 
-        captureFrame videoFilePath middleTime outputPath
+        match Path.ChangeExtension(outputPath, "jpg") |> Option.ofObj with
+        | Some outputPath ->
+            captureFrame videoFilePath middleTime outputPath
 
-        let imageBytes = File.ReadAllBytes(outputPath)
+            let imageBytes = File.ReadAllBytes(outputPath)
 
-        File.Delete(outputPath)
+            File.Delete(outputPath)
 
-        imageBytes
+            imageBytes
+        | None -> [||]
