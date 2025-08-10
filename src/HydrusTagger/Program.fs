@@ -175,7 +175,7 @@ let handler
     task {
         let tagger =
             try
-                match config.ResnetModelPath, config.ResnetLabelPath with
+                match config.DDModelPath, config.DDLabelPath with
                 | Some modelPath, Some labelPath -> Some(new DeepdanbooruPredictor(modelPath, labelPath))
                 | _ ->
                     logger.LogWarning("Failed to initialize DeepdanbooruPredictor: Missing configuration.")
@@ -186,7 +186,7 @@ let handler
 
         let waifuTagger =
             try
-                match config.WaifuModelPath, config.WaifuLabelPath with
+                match config.WDModelPath, config.WDLabelPath with
                 | Some modelPath, Some labelPath -> Some(new WaifuDiffusionPredictor(modelPath, labelPath))
                 | _ ->
                     logger.LogWarning("Failed to initialize WaifuDiffusionPredictor: Missing configuration.")
@@ -302,10 +302,10 @@ let main argv =
     RootCommand()
     |> addGlobalOption (Option<string> "--BaseUrl")
     |> addGlobalOption (Option<string> "--HydrusClientAPIAccessKey")
-    |> addGlobalOption (Option<string> "--ResNetModelPath")
-    |> addGlobalOption (Option<string> "--ResNetLabelPath")
-    |> addGlobalOption (Option<string> "--WaifuModelPath")
-    |> addGlobalOption (Option<string> "--WaifuLabelPath")
+    |> addGlobalOption (Option<string> "--DDModelPath")
+    |> addGlobalOption (Option<string> "--DDLabelPath")
+    |> addGlobalOption (Option<string> "--WDModelPath")
+    |> addGlobalOption (Option<string> "--WDLabelPath")
     |> addGlobalOption (Option<string> "--ServiceKey")
     |> addGlobalOption (Option<LogLevel> "--Logging:LogLevel:Default")
     |> addGlobalOption (Option<string> "--Services:0:Name")

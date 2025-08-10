@@ -38,10 +38,10 @@ Searches for files in Hydrus matching the provided tags and applies AI-generated
 |-------|-------------|--------|
 | `--BaseUrl` | Base URL of the Hydrus client API (Defaults to `http://localhost:45869`). | `--BaseUrl http://localhost:5000` |
 | `--HydrusClientAPIAccessKey` | API key for authenticating with the Hydrus client. | `--HydrusClientAPIAccessKey your-access-key` |
-| `--ResNetModelPath` | Path to the DeepDanbooru model `.zip` file. | `--ResNetModelPath ./models/deepdanbooru.onnx` |
-| `--ResNetLabelPath` | Path to the DeepDanbooru labels file. | `--ResNetLabelPath ./models/tags.txt` |
-| `--WaifuModelPath` | Path to the Waifu Diffusion model `.onnx` file. | `--WaifuModelPath ./models/waifu.onnx` |
-| `--WaifuLabelPath` | Path to the Waifu Diffusion labels file. | `--WaifuLabelPath ./models/waifu_labels.csv` |
+| `--DDModelPath` | Path to the DeepDanbooru model `.zip` file. | `--DDModelPath ./models/deepdanbooru.onnx` |
+| `--DDLabelPath` | Path to the DeepDanbooru labels file. | `--DDLabelPath ./models/tags.txt` |
+| `--WDModelPath` | Path to the Waifu Diffusion model `.onnx` file. | `--WDModelPath ./models/waifu.onnx` |
+| `--WDLabelPath` | Path to the Waifu Diffusion labels file. | `--WDLabelPath ./models/waifu_labels.csv` |
 | `--ServiceKey` | Hydrus service key where generated tags will be applied.
 | `--Logging:LogLevel:Default` | Set the logging level. | `--Logging:LogLevel:Default Information` |
 | `--Services:0:Name` | Name of the first LLM service (used internally). | `--Services:0:Name gpt4-vision` |
@@ -61,8 +61,8 @@ Searches for files in Hydrus matching the provided tags and applies AI-generated
 HydrusTagger animated
   --BaseUrl http://localhost:5000
   --HydrusClientAPIAccessKey abcdef123456
-  --ResNetModelPath ./models/deepdanbooru.zip
-  --ResNetLabelPath ./models/tags.txt
+  --DDModelPath ./models/deepdanbooru.zip
+  --DDLabelPath ./models/tags.txt
   --ServiceKey "4a5e1621-1d11-495a-8f85-a6f554387961"
   --Services:0:Name gpt4v
   --Services:0:Endpoint https://api.openai.com/v1
@@ -91,10 +91,10 @@ Example `appsettings.json`:
   "BaseUrl": "http://localhost:45869",
   "HydrusClientAPIAccessKey": "your-api-key",
   "ServiceKey": "your-service-key",
-  "ResnetModelPath": "path/to/deepdanbooru/model.onnx",
-  "ResnetLabelPath": "path/to/deepdanbooru/labels.txt",
-  "WaifuModelPath": "path/to/waifu/model.onnx",
-  "WaifuLabelPath": "path/to/waifu/labels.csv",
+  "DDModelPath": "path/to/deepdanbooru/model.onnx",
+  "DDLabelPath": "path/to/deepdanbooru/labels.txt",
+  "WDModelPath": "path/to/waifu/model.onnx",
+  "WDLabelPath": "path/to/waifu/labels.csv",
   "Services": [
     {
       "Name": "caption-service",

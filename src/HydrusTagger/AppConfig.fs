@@ -25,10 +25,10 @@ type AppSettings =
     { BaseUrl: string | null
       HydrusClientAPIAccessKey: string | null
       ServiceKey: string | null
-      ResnetModelPath: string | null
-      ResnetLabelPath: string | null
-      WaifuModelPath: string | null
-      WaifuLabelPath: string | null
+      DDModelPath: string | null
+      DDLabelPath: string | null
+      WDModelPath: string | null
+      WDLabelPath: string | null
       Logging: LoggingConfig | null
       Services: TaggingService array | null }
 
@@ -36,10 +36,10 @@ type IAppConfig =
     abstract BaseUrl: string option
     abstract HydrusClientAPIAccessKey: string option
     abstract ServiceKey: string option
-    abstract ResnetModelPath: string option
-    abstract ResnetLabelPath: string option
-    abstract WaifuModelPath: string option
-    abstract WaifuLabelPath: string option
+    abstract DDModelPath: string option
+    abstract DDLabelPath: string option
+    abstract WDModelPath: string option
+    abstract WDLabelPath: string option
     abstract Logging: LoggingConfig option
     abstract Services: TaggingService array option
 
@@ -48,10 +48,10 @@ type AppConfig(private settings: AppSettings) =
         member _.BaseUrl = Option.ofObj settings.BaseUrl
         member _.HydrusClientAPIAccessKey = Option.ofObj settings.HydrusClientAPIAccessKey
         member _.ServiceKey = Option.ofObj settings.ServiceKey
-        member _.ResnetModelPath = Option.ofObj settings.ResnetModelPath
-        member _.ResnetLabelPath = Option.ofObj settings.ResnetLabelPath
-        member _.WaifuModelPath = Option.ofObj settings.WaifuModelPath
-        member _.WaifuLabelPath = Option.ofObj settings.WaifuLabelPath
+        member _.DDModelPath = Option.ofObj settings.DDModelPath
+        member _.DDLabelPath = Option.ofObj settings.DDLabelPath
+        member _.WDModelPath = Option.ofObj settings.WDModelPath
+        member _.WDLabelPath = Option.ofObj settings.WDLabelPath
         member _.Logging = Option.ofObj settings.Logging
         member _.Services = Option.ofObj settings.Services
 
