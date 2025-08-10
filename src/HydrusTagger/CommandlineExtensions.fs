@@ -7,6 +7,11 @@ module CommandLineExtensions =
         command.AddGlobalOption option
         command
 
+    let addGlobalHiddenOption (option: Option<string>) (command: RootCommand) =
+        option.IsHidden <- true
+        command.AddGlobalOption option
+        command
+
     let addGlobalArgument argument (command: RootCommand) =
         command.AddArgument argument
         command
