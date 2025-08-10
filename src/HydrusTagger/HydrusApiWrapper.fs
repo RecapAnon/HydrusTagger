@@ -16,7 +16,7 @@ module HydrusApiWrapper =
         task {
             try
                 let! result = request ()
-                return Result.requireNotNull "null" result
+                return Result.requireNotNull "API response is null" result
             with ex ->
                 logger.LogError(ex, "{OperationName} failed due to exception", operationName)
                 return Error $"Exception during %s{operationName}: %s{ex.Message}"
@@ -32,7 +32,7 @@ module HydrusApiWrapper =
 
             return!
                 if response.IsSuccessStatusCode then
-                    Result.requireNotNull "null" response
+                    Result.requireNotNull "API response is null" response
                 else
                     logger.LogWarning(
                         "{OperationName} returned failed status: {StatusCode}",
@@ -44,4 +44,4 @@ module HydrusApiWrapper =
         }
 
     let getOk (result: #IOk<'A | null>) : Result<'A, string> =
-        Result.requireNotNull "null" (result.Ok())
+        Result.requireNotNull "Ok value is null" (result.Ok())

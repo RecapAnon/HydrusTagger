@@ -38,13 +38,13 @@ let captionApi (kernel: Kernel) (service: TaggingService) (logger: ILogger) (byt
 
         let! chat =
             kernel.Services.GetKeyedService<IChatCompletionService>(service.Name)
-            |> Result.requireNotNull "Error"
+            |> Result.requireNotNull "Chat completion service not found in kernel services"
 
         let! result =
             tryCall logger "GetChatMessageContent" (fun () ->
                 chat.GetChatMessageContentAsync(history, service.ExecutionSettings))
 
-        return! result.Content |> Result.requireNotNull "Error"
+        return! result.Content |> Result.requireNotNull "Chat completion result content is null"
     }
 
 let getFileBytesAndType (logger: ILogger) (getFilesApi: IGetFilesApi) (fileId: int) =
@@ -58,8 +58,8 @@ let getFileBytesAndType (logger: ILogger) (getFilesApi: IGetFilesApi) (fileId: i
                 match filePathResponse |> Result.bind getOk with
                 | Ok pathResponse ->
                     logger.LogInformation("Path for file_id {FileId}: {Path}", fileId, pathResponse.Path)
-                    let! path = Result.requireNotNull "null" pathResponse.Path
-                    let! filetype = Result.requireNotNull "null" pathResponse.Filetype
+                    let! path = Result.requireNotNull "File path is null in path response" pathResponse.Path
+                    let! filetype = Result.requireNotNull "File type is null in path response" pathResponse.Filetype
                     let! bytes = File.ReadAllBytesAsync(path)
 
                     if Array.isEmpty bytes then
@@ -73,7 +73,7 @@ let getFileBytesAndType (logger: ILogger) (getFilesApi: IGetFilesApi) (fileId: i
 
                     let response = fileResponse :?> GetFilesApi.GetFilesFileApiResponse
                     let bytes = response.ContentBytes
-                    let! contentType = Result.requireNotNull "null" response.ContentHeaders.ContentType
+                    let! contentType = Result.requireNotNull "Content type is null in response headers" response.ContentHeaders.ContentType
 
                     if Array.isEmpty bytes then
                         return! Error $"Failed to retrieve file content for file_id {fileId}"
@@ -205,7 +205,7 @@ let handler
                     fileIdsResponse
                     |> getOk
                     |> Result.map (fun r -> r.FileIds)
-                    |> Result.bind (Result.requireNotNull "null")
+                    |> Result.bind (Result.requireNotNull "File IDs are null in response")
 
                 for fileId in fileIds do
                     let! fileBytes, fileType = getFileBytesAndType logger getFilesApi fileId
@@ -316,7 +316,6 @@ let main argv =
     |> addGlobalOption (Option<string> "--Services:0:Model")
     |> addGlobalOption (Option<string> "--Services:0:SystemPrompt")
     |> addGlobalOption (Option<string> "--Services:0:UserPrompt")
-    // |> addGlobalOption (Option<string> "--Services:0:SystemPrompt")
     |> addGlobalArgument argument1
     |> setGlobalHandler6
         handler
