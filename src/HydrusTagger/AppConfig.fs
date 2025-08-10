@@ -4,6 +4,7 @@ open Microsoft.SemanticKernel.Connectors.OpenAI
 open Microsoft.Extensions.Logging
 open Microsoft.Extensions.Options
 
+[<CLIMutable>]
 type TaggingService =
     { Name: string
       Endpoint: string
@@ -13,8 +14,10 @@ type TaggingService =
       UserPrompt: string
       ExecutionSettings: OpenAIPromptExecutionSettings }
 
+[<CLIMutable>]
 type LogLevelConfig = { Default: LogLevel }
 
+[<CLIMutable>]
 type LoggingConfig = { LogLevel: LogLevelConfig }
 
 [<CLIMutable>]
