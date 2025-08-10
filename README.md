@@ -14,6 +14,18 @@
 
 ---
 
+## Dependencies
+
+- [FFmpeg](https://ffmpeg.org/) – required for extracting frames from video files. Must be installed and available in your system's `PATH`.
+
+> Ensure `ffmpeg` is accessible from the command line by running:
+> ```bash
+> ffmpeg -version
+> ```
+> If this command fails, add the FFmpeg binary directory to your system’s `PATH` environment variable.
+
+---
+
 ## Usage
 
 ```bash
@@ -75,7 +87,7 @@ HydrusTagger animated
 
 This command:
 - Searches for files in Hydrus with the "animated" tag.
-- Retrieves each file and extract the middle frame if it's a video
+- Retrieves each file and extracts the middle frame if it's a video.
 - Generates tags using DeepDanbooru and GPT-4 Vision.
 - Applies the combined tags to the specified service.
 
