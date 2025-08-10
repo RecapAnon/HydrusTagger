@@ -47,40 +47,39 @@ let captionApi (kernel: Kernel) (service: TaggingService) (logger: ILogger) (byt
         return! result.Content |> Result.requireNotNull "Error"
     }
 
-let getFileBytesAndType
-    (logger: ILogger)
-    (getFilesApi: IGetFilesApi)
-    (fileId: int)
-    : Task<Result<byte array * string, string>> =
-    taskResult {
+let getFileBytesAndType (logger: ILogger) (getFilesApi: IGetFilesApi) (fileId: int) =
+    task {
         let! filePathResponse =
             tryCallHydrusApi logger "GetFilesFilePathOrDefault" (fun () ->
                 getFilesApi.GetFilesFilePathOrDefaultAsync(fileId))
 
-        match getOk filePathResponse with
-        | Ok pathResponse ->
-            logger.LogInformation("Path for file_id {FileId}: {Path}", fileId, pathResponse.Path)
-            let! path = Result.requireNotNull "null" pathResponse.Path
-            let! filetype = Result.requireNotNull "null" pathResponse.Filetype
-            let! bytes = File.ReadAllBytesAsync(path)
+        return!
+            taskResult {
+                match filePathResponse |> Result.bind getOk with
+                | Ok pathResponse ->
+                    logger.LogInformation("Path for file_id {FileId}: {Path}", fileId, pathResponse.Path)
+                    let! path = Result.requireNotNull "null" pathResponse.Path
+                    let! filetype = Result.requireNotNull "null" pathResponse.Filetype
+                    let! bytes = File.ReadAllBytesAsync(path)
 
-            if Array.isEmpty bytes then
-                return! Error $"Failed to read file content from path for file_id {fileId}"
-            else
-                return! Ok(bytes, filetype)
-        | Error _ ->
-            let! fileResponse =
-                tryCallHydrusApi logger "GetFilesFile" (fun () ->
-                    getFilesApi.GetFilesFileAsync(new ApiOption<Nullable<int>>(fileId)))
+                    if Array.isEmpty bytes then
+                        return! Error $"Failed to read file content from path for file_id {fileId}"
+                    else
+                        return! Ok(bytes, filetype)
+                | Error _ ->
+                    let! fileResponse =
+                        tryCallHydrusApi logger "GetFilesFile" (fun () ->
+                            getFilesApi.GetFilesFileAsync(new ApiOption<Nullable<int>>(fileId)))
 
-            let response = fileResponse :?> GetFilesApi.GetFilesFileApiResponse
-            let bytes = response.ContentBytes
-            let! contentType = Result.requireNotNull "null" response.ContentHeaders.ContentType
+                    let response = fileResponse :?> GetFilesApi.GetFilesFileApiResponse
+                    let bytes = response.ContentBytes
+                    let! contentType = Result.requireNotNull "null" response.ContentHeaders.ContentType
 
-            if Array.isEmpty bytes then
-                return! Error $"Failed to retrieve file content for file_id {fileId}"
-            else
-                return! Ok(bytes, contentType.ToString())
+                    if Array.isEmpty bytes then
+                        return! Error $"Failed to retrieve file content for file_id {fileId}"
+                    else
+                        return! Ok(bytes, contentType.ToString())
+            }
     }
 
 let extractFrameIfVideo (logger: ILogger) (fileBytes: byte array) (fileType: string) : byte array =
@@ -304,9 +303,20 @@ let main argv =
     |> addGlobalOption (Option<string> "--BaseUrl")
     |> addGlobalOption (Option<string> "--HydrusClientAPIAccessKey")
     |> addGlobalOption (Option<string> "--ResNetModelPath")
+    |> addGlobalOption (Option<string> "--ResNetLabelPath")
+    |> addGlobalOption (Option<string> "--WaifuModelPath")
+    |> addGlobalOption (Option<string> "--WaifuLabelPath")
     |> addGlobalOption (Option<string> "--ServiceKey")
     |> addGlobalOption (Option<LogLevel> "--Logging:LogLevel:Default")
     |> addGlobalOption (Option<Service array> "--Services")
+    |> addGlobalOption (Option<Service> "--Services:0")
+    |> addGlobalOption (Option<string> "--Services:0:Name")
+    |> addGlobalOption (Option<string> "--Services:0:Endpoint")
+    |> addGlobalOption (Option<string> "--Services:0:Key")
+    |> addGlobalOption (Option<string> "--Services:0:Model")
+    |> addGlobalOption (Option<string> "--Services:0:SystemPrompt")
+    |> addGlobalOption (Option<string> "--Services:0:UserPrompt")
+    // |> addGlobalOption (Option<string> "--Services:0:SystemPrompt")
     |> addGlobalArgument argument1
     |> setGlobalHandler6
         handler
