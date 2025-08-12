@@ -21,7 +21,7 @@ type LabelData =
 
 type PredictionResult =
     { GeneralTags: (string * float)[]
-      RatingTags: Map<string, float>
+      RatingTags: (string * float)[]
       CharacterTags: (string * float)[] }
 
 type SelectedTag =
@@ -187,11 +187,11 @@ type WaifuDiffusionPredictor(modelPath: string, labelPath: string, useCuda: bool
         let ratingTags =
             labelData.RatingIndexes
             |> Array.map (fun i -> labelData.TagNames[i], output[i])
-            |> Map.ofArray
+            |> Array.maxBy snd
 
         let characterTags =
             getTags labelData.CharacterIndexes characterThresh characterMcutEnabled
 
         { GeneralTags = generalTags
-          RatingTags = ratingTags
+          RatingTags = [| ratingTags |]
           CharacterTags = characterTags }
