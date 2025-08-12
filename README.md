@@ -55,8 +55,9 @@ Searches for files in Hydrus matching the provided tags and applies AI-generated
 | `--DDCharacterLabelPath` | Path to the DeepDanbooru character labels file (optional). Character tags will be prefixed with "character:". | `--DDCharacterLabelPath ./models/character_tags.txt` |
 | `--WDModelPath` | Path to the Waifu Diffusion model `.onnx` file. | `--WDModelPath ./models/waifu.onnx` |
 | `--WDLabelPath` | Path to the Waifu Diffusion labels file. | `--WDLabelPath ./models/waifu_labels.csv` |
-| `--ServiceKey` | Hydrus service key where generated tags will be applied.
+| `--ServiceKey` | Hydrus service key where generated tags will be applied. | |
 | `--Logging:LogLevel:Default` | Set the logging level. | `--Logging:LogLevel:Default Information` |
+| `--UseCuda` | Use CUDA for inference if available (defaults to false). | `--UseCuda` |
 | `--Services:0:Name` | Name of the first LLM service (used internally). | `--Services:0:Name gpt4-vision` |
 | `--Services:0:Endpoint` | Endpoint URL for the LLM API (OpenAI-compatible). | `--Services:0:Endpoint https://api.openai.com/v1` |
 | `--Services:0:Key` | API key for the LLM service. | `--Services:0:Key your-openai-key` |

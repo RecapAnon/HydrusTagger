@@ -39,7 +39,7 @@ module ArrayMath =
     let diff (arr: float[]) =
         Array.map2 (-) arr[.. arr.Length - 2] arr[1..]
 
-type WaifuDiffusionPredictor(modelPath: string, labelPath: string) =
+type WaifuDiffusionPredictor(modelPath: string, labelPath: string, useCuda: bool) =
     let kaomojis =
         [ "0_0"
           "(o)_(o)"
@@ -82,8 +82,10 @@ type WaifuDiffusionPredictor(modelPath: string, labelPath: string) =
             | _ -> name
 
         let formatName (name: string) =
-            if kaomojis.Contains(name) then name
-            else name.Replace("_", " ")
+            if kaomojis.Contains(name) then
+                name
+            else
+                name.Replace("_", " ")
 
         let tagNames =
             records
@@ -102,14 +104,13 @@ type WaifuDiffusionPredictor(modelPath: string, labelPath: string) =
           CharacterIndexes = indexesByCat 4 }
 
     let buildInferenceSession path =
-        let availableProviders = OrtEnv.Instance().GetAvailableProviders()
         use sessionOptions = new SessionOptions()
 
-        if availableProviders.Contains("CUDAExecutionProvider") then
+        if useCuda then
             try
                 sessionOptions.AppendExecutionProvider_CUDA()
             with ex ->
-                ()
+                sessionOptions.AppendExecutionProvider_CPU()
         else
             sessionOptions.AppendExecutionProvider_CPU()
 

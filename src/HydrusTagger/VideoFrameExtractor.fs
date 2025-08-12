@@ -27,7 +27,9 @@ module VideoFrameExtractor =
 
     let captureFrame videoFilePath time outputPath =
         let t = sprintf "%0.3f" time
-        let parameters = $"-ss {t} -i \"{videoFilePath}\" -vframes 1 -update 1 \"{outputPath}\""
+
+        let parameters =
+            $"-ss {t} -i \"{videoFilePath}\" -vframes 1 -update 1 \"{outputPath}\""
 
         use proc = new Process()
         proc.StartInfo.FileName <- "ffmpeg"

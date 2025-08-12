@@ -25,6 +25,7 @@ type AppSettings =
     { BaseUrl: string | null
       HydrusClientAPIAccessKey: string | null
       ServiceKey: string | null
+      UseCuda: bool
       DDModelPath: string | null
       DDLabelPath: string | null
       DDCharacterLabelPath: string | null
@@ -37,6 +38,7 @@ type IAppConfig =
     abstract BaseUrl: string option
     abstract HydrusClientAPIAccessKey: string option
     abstract ServiceKey: string option
+    abstract UseCuda: bool
     abstract DDModelPath: string option
     abstract DDLabelPath: string option
     abstract DDCharacterLabelPath: string option
@@ -50,6 +52,7 @@ type AppConfig(private settings: AppSettings) =
         member _.BaseUrl = Option.ofObj settings.BaseUrl
         member _.HydrusClientAPIAccessKey = Option.ofObj settings.HydrusClientAPIAccessKey
         member _.ServiceKey = Option.ofObj settings.ServiceKey
+        member _.UseCuda = settings.UseCuda
         member _.DDModelPath = Option.ofObj settings.DDModelPath
         member _.DDLabelPath = Option.ofObj settings.DDLabelPath
         member _.DDCharacterLabelPath = Option.ofObj settings.DDCharacterLabelPath

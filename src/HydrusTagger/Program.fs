@@ -73,7 +73,11 @@ let getFileBytesAndType (logger: ILogger) (getFilesApi: IGetFilesApi) (fileId: i
 
                     let response = fileResponse :?> GetFilesApi.GetFilesFileApiResponse
                     let bytes = response.ContentBytes
-                    let! contentType = Result.requireNotNull "Content type is null in response headers" response.ContentHeaders.ContentType
+
+                    let! contentType =
+                        Result.requireNotNull
+                            "Content type is null in response headers"
+                            response.ContentHeaders.ContentType
 
                     if Array.isEmpty bytes then
                         return! Error $"Failed to retrieve file content for file_id {fileId}"
@@ -176,7 +180,8 @@ let handler
         let tagger =
             try
                 match config.DDModelPath, config.DDLabelPath, config.DDCharacterLabelPath with
-                | Some modelPath, Some labelPath, Some characterLabelPath -> Some(new DeepdanbooruPredictor(modelPath, labelPath, characterLabelPath))
+                | Some modelPath, Some labelPath, Some characterLabelPath ->
+                    Some(new DeepdanbooruPredictor(modelPath, labelPath, characterLabelPath, config.UseCuda))
                 | _ ->
                     logger.LogWarning("Failed to initialize DeepdanbooruPredictor: Missing configuration.")
                     None
@@ -187,7 +192,8 @@ let handler
         let waifuTagger =
             try
                 match config.WDModelPath, config.WDLabelPath with
-                | Some modelPath, Some labelPath -> Some(new WaifuDiffusionPredictor(modelPath, labelPath))
+                | Some modelPath, Some labelPath ->
+                    Some(new WaifuDiffusionPredictor(modelPath, labelPath, config.UseCuda))
                 | _ ->
                     logger.LogWarning("Failed to initialize WaifuDiffusionPredictor: Missing configuration.")
                     None
@@ -298,9 +304,12 @@ let main argv =
             .Build()
 
     let argument1 = Argument<string[]> "tags"
+    let cudaOption = Option<bool> "--UseCuda"
+    cudaOption.SetDefaultValue(false)
 
     RootCommand()
     |> addGlobalOption (Option<string> "--BaseUrl")
+    |> addGlobalOption cudaOption
     |> addGlobalOption (Option<string> "--HydrusClientAPIAccessKey")
     |> addGlobalOption (Option<string> "--DDModelPath")
     |> addGlobalOption (Option<string> "--DDLabelPath")

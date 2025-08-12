@@ -8,16 +8,15 @@ open SixLabors.ImageSharp.Processing
 open System.IO
 open System.Linq
 
-type DeepdanbooruPredictor(modelPath: string, labelPath: string, characterLabelPath: string) =
+type DeepdanbooruPredictor(modelPath: string, labelPath: string, characterLabelPath: string, useCuda: bool) =
     let buildInferenceSession path =
-        let availableProviders = OrtEnv.Instance().GetAvailableProviders()
         use sessionOptions = new SessionOptions()
 
-        if availableProviders.Contains("CUDAExecutionProvider") then
+        if useCuda then
             try
                 sessionOptions.AppendExecutionProvider_CUDA()
             with ex ->
-                ()
+                sessionOptions.AppendExecutionProvider_CPU()
         else
             sessionOptions.AppendExecutionProvider_CPU()
 
@@ -25,9 +24,11 @@ type DeepdanbooruPredictor(modelPath: string, labelPath: string, characterLabelP
 
     let session = buildInferenceSession modelPath
     let generalTags = File.ReadAllLines(labelPath)
+
     let characterTags =
         File.ReadAllLines(characterLabelPath)
         |> Array.map (fun tag -> $"character:{tag}")
+
     let tags = Array.append generalTags characterTags
     let modelTargetSize = session.InputMetadata.First().Value.Dimensions[1]
 
