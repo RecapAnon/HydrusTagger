@@ -109,9 +109,12 @@ let getWaifuTags (logger: ILogger) (tagger: WaifuDiffusionPredictor option) (byt
     match tagger with
     | Some t ->
         let result = t.predict bytes 0.35 true 0.85 true
-        let tags = result.GeneralTags |> Array.map fst
-        logger.LogInformation("WaifuDiffusion Tags: {Tags}", tags)
-        tags
+        let ratingTags = result.RatingTags |> Map.keys |> Array.ofSeq
+        let generalTags = result.GeneralTags |> Array.map fst
+        let characterTags = result.CharacterTags |> Array.map fst
+        let allTags = Array.concat [ ratingTags; generalTags; characterTags ]
+        logger.LogInformation("WaifuDiffusion Tags: {Tags}", allTags)
+        allTags
     | None -> [||]
 
 let getCaptionTags
