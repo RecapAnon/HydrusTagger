@@ -27,6 +27,7 @@ type AppSettings =
       ServiceKey: string | null
       DDModelPath: string | null
       DDLabelPath: string | null
+      DDCharacterLabelPath: string | null
       WDModelPath: string | null
       WDLabelPath: string | null
       Logging: LoggingConfig | null
@@ -38,6 +39,7 @@ type IAppConfig =
     abstract ServiceKey: string option
     abstract DDModelPath: string option
     abstract DDLabelPath: string option
+    abstract DDCharacterLabelPath: string option
     abstract WDModelPath: string option
     abstract WDLabelPath: string option
     abstract Logging: LoggingConfig option
@@ -50,6 +52,7 @@ type AppConfig(private settings: AppSettings) =
         member _.ServiceKey = Option.ofObj settings.ServiceKey
         member _.DDModelPath = Option.ofObj settings.DDModelPath
         member _.DDLabelPath = Option.ofObj settings.DDLabelPath
+        member _.DDCharacterLabelPath = Option.ofObj settings.DDCharacterLabelPath
         member _.WDModelPath = Option.ofObj settings.WDModelPath
         member _.WDLabelPath = Option.ofObj settings.WDLabelPath
         member _.Logging = Option.ofObj settings.Logging

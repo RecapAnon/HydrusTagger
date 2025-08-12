@@ -175,8 +175,8 @@ let handler
     task {
         let tagger =
             try
-                match config.DDModelPath, config.DDLabelPath with
-                | Some modelPath, Some labelPath -> Some(new DeepdanbooruPredictor(modelPath, labelPath))
+                match config.DDModelPath, config.DDLabelPath, config.DDCharacterLabelPath with
+                | Some modelPath, Some labelPath, Some characterLabelPath -> Some(new DeepdanbooruPredictor(modelPath, labelPath, characterLabelPath))
                 | _ ->
                     logger.LogWarning("Failed to initialize DeepdanbooruPredictor: Missing configuration.")
                     None
@@ -304,6 +304,7 @@ let main argv =
     |> addGlobalOption (Option<string> "--HydrusClientAPIAccessKey")
     |> addGlobalOption (Option<string> "--DDModelPath")
     |> addGlobalOption (Option<string> "--DDLabelPath")
+    |> addGlobalOption (Option<string> "--DDCharacterLabelPath")
     |> addGlobalOption (Option<string> "--WDModelPath")
     |> addGlobalOption (Option<string> "--WDLabelPath")
     |> addGlobalOption (Option<string> "--ServiceKey")

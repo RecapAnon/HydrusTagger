@@ -75,13 +75,21 @@ type WaifuDiffusionPredictor(modelPath: string, labelPath: string) =
         use csv = new CsvReader(reader, config)
         let records = csv.GetRecords<SelectedTag>().ToArray()
 
+        let applyNamespace (name: string) (category: int) =
+            match category with
+            | 4 -> "character:" + name
+            | 9 -> "rating:" + name
+            | _ -> name
+
+        let formatName (name: string) =
+            if kaomojis.Contains(name) then name
+            else name.Replace("_", " ")
+
         let tagNames =
             records
             |> Array.map (fun r ->
-                if kaomojis.Contains(r.Name) then
-                    r.Name
-                else
-                    r.Name.Replace("_", " "))
+                let formattedName = formatName r.Name
+                applyNamespace formattedName r.Category)
 
         let indexesByCat cat =
             records

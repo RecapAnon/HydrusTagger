@@ -8,7 +8,7 @@ open SixLabors.ImageSharp.Processing
 open System.IO
 open System.Linq
 
-type DeepdanbooruPredictor(modelPath: string, labelPath: string) =
+type DeepdanbooruPredictor(modelPath: string, labelPath: string, characterLabelPath: string) =
     let buildInferenceSession path =
         let availableProviders = OrtEnv.Instance().GetAvailableProviders()
         use sessionOptions = new SessionOptions()
@@ -24,7 +24,11 @@ type DeepdanbooruPredictor(modelPath: string, labelPath: string) =
         new InferenceSession(modelPath, sessionOptions)
 
     let session = buildInferenceSession modelPath
-    let tags = File.ReadAllLines(labelPath)
+    let generalTags = File.ReadAllLines(labelPath)
+    let characterTags =
+        File.ReadAllLines(characterLabelPath)
+        |> Array.map (fun tag -> $"character:{tag}")
+    let tags = Array.append generalTags characterTags
     let modelTargetSize = session.InputMetadata.First().Value.Dimensions[1]
 
     let prepareImage (imageBytes: byte array) =

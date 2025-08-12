@@ -52,6 +52,7 @@ Searches for files in Hydrus matching the provided tags and applies AI-generated
 | `--HydrusClientAPIAccessKey` | API key for authenticating with the Hydrus client. | `--HydrusClientAPIAccessKey your-access-key` |
 | `--DDModelPath` | Path to the DeepDanbooru model `.zip` file. | `--DDModelPath ./models/deepdanbooru.onnx` |
 | `--DDLabelPath` | Path to the DeepDanbooru labels file. | `--DDLabelPath ./models/tags.txt` |
+| `--DDCharacterLabelPath` | Path to the DeepDanbooru character labels file (optional). Character tags will be prefixed with "character:". | `--DDCharacterLabelPath ./models/character_tags.txt` |
 | `--WDModelPath` | Path to the Waifu Diffusion model `.onnx` file. | `--WDModelPath ./models/waifu.onnx` |
 | `--WDLabelPath` | Path to the Waifu Diffusion labels file. | `--WDLabelPath ./models/waifu_labels.csv` |
 | `--ServiceKey` | Hydrus service key where generated tags will be applied.
@@ -75,6 +76,7 @@ HydrusTagger animated
   --HydrusClientAPIAccessKey abcdef123456
   --DDModelPath ./models/deepdanbooru.zip
   --DDLabelPath ./models/tags.txt
+  --DDCharacterLabelPath ./models/tags.txt
   --ServiceKey "4a5e1621-1d11-495a-8f85-a6f554387961"
   --Services:0:Name gpt4v
   --Services:0:Endpoint https://api.openai.com/v1
@@ -105,6 +107,7 @@ Example `appsettings.json`:
   "ServiceKey": "your-service-key",
   "DDModelPath": "path/to/deepdanbooru/model.onnx",
   "DDLabelPath": "path/to/deepdanbooru/labels.txt",
+  "DDCharacterLabelPath": "path/to/deepdanbooru/labels.txt",
   "WDModelPath": "path/to/waifu/model.onnx",
   "WDLabelPath": "path/to/waifu/labels.csv",
   "Services": [
