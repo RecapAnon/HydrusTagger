@@ -124,6 +124,34 @@ let getCaptionTags
     (bytes: byte array)
     (mimeType: string)
     : Task<string array> =
+    let kaomojis =
+        [ "0_0"
+          "(o)_(o)"
+          "+_+"
+          "+_-"
+          "._."
+          "<o>_<o>"
+          "<|>_<|>"
+          "=_="
+          ">_<"
+          "3_3"
+          "6_9"
+          ">_o"
+          "@_@"
+          "^_^"
+          "o_o"
+          "u_u"
+          "x_x"
+          "|_|"
+          "||_||" ]
+        |> set
+
+    let formatName (name: string) =
+        if kaomojis.Contains(name) then
+            name
+        else
+            name.Replace("_", " ")
+
     services
     |> Option.defaultValue [||]
     |> Array.map (fun service ->
@@ -136,7 +164,7 @@ let getCaptionTags
 
                 return
                     caption.Split([| ',' |], StringSplitOptions.RemoveEmptyEntries)
-                    |> Array.map (fun s -> s.Trim())
+                    |> Array.map (fun s -> s.Trim() |> formatName)
             | Error err ->
                 logger.LogError("{ServiceName} failed: {Error}", service.Name, err)
                 return [||]
