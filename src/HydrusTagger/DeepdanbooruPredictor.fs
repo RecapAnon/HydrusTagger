@@ -9,6 +9,34 @@ open System.IO
 open System.Linq
 
 type DeepdanbooruPredictor(modelPath: string, labelPath: string, characterLabelPath: string, useCuda: bool) =
+    let kaomojis =
+        [ "0_0"
+          "(o)_(o)"
+          "+_+"
+          "+_-"
+          "._."
+          "<o>_<o>"
+          "<|>_<|>"
+          "=_="
+          ">_<"
+          "3_3"
+          "6_9"
+          ">_o"
+          "@_@"
+          "^_^"
+          "o_o"
+          "u_u"
+          "x_x"
+          "|_|"
+          "||_||" ]
+        |> set
+
+    let formatName (name: string) =
+        if kaomojis.Contains(name) then
+            name
+        else
+            name.Replace("_", " ")
+
     let buildInferenceSession path =
         use sessionOptions = new SessionOptions()
 
@@ -23,11 +51,11 @@ type DeepdanbooruPredictor(modelPath: string, labelPath: string, characterLabelP
         new InferenceSession(modelPath, sessionOptions)
 
     let session = buildInferenceSession modelPath
-    let generalTags = File.ReadAllLines(labelPath)
+    let generalTags = File.ReadAllLines(labelPath) |> Array.map formatName
 
     let characterTags =
         File.ReadAllLines(characterLabelPath)
-        |> Array.map (fun tag -> $"character:{tag}")
+        |> Array.map (fun tag -> formatName $"character:{tag}")
 
     let ratingTags = [| "rating:safe"; "rating:questionable"; "rating:explicit" |]
 
