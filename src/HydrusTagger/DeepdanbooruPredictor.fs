@@ -29,7 +29,9 @@ type DeepdanbooruPredictor(modelPath: string, labelPath: string, characterLabelP
         File.ReadAllLines(characterLabelPath)
         |> Array.map (fun tag -> $"character:{tag}")
 
-    let tags = Array.append generalTags characterTags
+    let ratingTags = [| "rating:safe"; "rating:questionable"; "rating:explicit" |]
+
+    let tags = Array.concat [| generalTags; characterTags; ratingTags |]
     let modelTargetSize = session.InputMetadata.First().Value.Dimensions[1]
 
     let prepareImage (imageBytes: byte array) =
