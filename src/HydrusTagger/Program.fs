@@ -245,13 +245,16 @@ let handler
                     |> Result.bind (Result.requireNotNull "File IDs are null in response")
 
                 for fileId in fileIds do
-                    let! fileBytes, fileType = getFileBytesAndType logger getFilesApi fileId
-                    let actualBytes = extractFrameIfVideo logger fileBytes fileType
-                    let ddTags = getDeepDanbooruTags logger tagger actualBytes
-                    let waifuTags = getWaifuTags logger waifuTagger actualBytes
-                    let! captionTags = getCaptionTags logger kernel config.Services actualBytes fileType
-                    let allTags = Array.concat [| ddTags; waifuTags; captionTags |] |> Array.distinct
-                    do! applyTagsToHydrusFile logger addTagsApi fileId config allTags
+                    do!
+                        taskResult {
+                            let! fileBytes, fileType = getFileBytesAndType logger getFilesApi fileId
+                            let actualBytes = extractFrameIfVideo logger fileBytes fileType
+                            let ddTags = getDeepDanbooruTags logger tagger actualBytes
+                            let waifuTags = getWaifuTags logger waifuTagger actualBytes
+                            let! captionTags = getCaptionTags logger kernel config.Services actualBytes fileType
+                            let allTags = Array.concat [| ddTags; waifuTags; captionTags |] |> Array.distinct
+                            do! applyTagsToHydrusFile logger addTagsApi fileId config allTags
+                        }
             }
 
         tagger |> Option.iter (fun t -> (t :> IDisposable).Dispose())
