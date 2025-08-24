@@ -217,7 +217,7 @@ let handler
                     logger.LogWarning("Failed to initialize DeepdanbooruPredictor: Missing configuration.")
                     None
             with ex ->
-                logger.LogError("Failed to initialize DeepdanbooruPredictor: {Error}", ex.Message)
+                logger.LogError(ex, "Failed to initialize DeepdanbooruPredictor: {Error}", ex.Message)
                 None
 
         let waifuTagger =
@@ -229,7 +229,7 @@ let handler
                     logger.LogWarning("Failed to initialize WaifuDiffusionPredictor: Missing configuration.")
                     None
             with ex ->
-                logger.LogError("Failed to initialize WaifuDiffusionPredictor: {Error}", ex.Message)
+                logger.LogError(ex, "Failed to initialize WaifuDiffusionPredictor: {Error}", ex.Message)
                 None
 
         let! result =
@@ -259,6 +259,11 @@ let handler
 
         tagger |> Option.iter (fun t -> (t :> IDisposable).Dispose())
         waifuTagger |> Option.iter (fun t -> (t :> IDisposable).Dispose())
+
+        match result with
+        | Error err -> logger.LogError("{Error}", err)
+        | Ok _ -> ()
+
         return result
     }
 
