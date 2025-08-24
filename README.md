@@ -24,6 +24,16 @@
 > ```
 > If this command fails, add the FFmpeg binary directory to your system’s `PATH` environment variable.
 
+- Optional: Steps to Configure CUDA
+
+  1. **Install CUDA Toolkit**  
+    Download and install the CUDA Toolkit from:
+    [https://developer.nvidia.com/cuda-toolkit-archive](https://developer.nvidia.com/cuda-toolkit-archive)
+
+  2. **Install cuDNN**  
+    Download the cuDNN 9 from:
+    [https://developer.nvidia.com/cudnn-downloads](https://developer.nvidia.com/cudnn-downloads)  
+
 ---
 
 ## Usage
