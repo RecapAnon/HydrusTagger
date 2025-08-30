@@ -16,6 +16,7 @@
 
 ## Dependencies
 
+- [Latest VC Runtime](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170)
 - [FFmpeg](https://ffmpeg.org/) – required for extracting frames from video files. Must be installed and available in your system's `PATH`.
 
 > Ensure `ffmpeg` is accessible from the command line by running:
@@ -175,10 +176,6 @@ dotnet publish -r win-x64
 Replace `win-x64` with your target runtime (e.g., `linux-x64`, `osx-x64`) as needed.
 
 ---
-
-## License
-
-MIT License
 
 ## Contributing
 
