@@ -18,6 +18,7 @@ open ResultExtensions
 open System
 open System.Collections.Generic
 open System.CommandLine
+open System.Diagnostics
 open System.IO
 open System.Linq
 open System.Net.Http
@@ -232,6 +233,8 @@ let handler
                 logger.LogError(ex, "Failed to initialize WaifuDiffusionPredictor: {Error}", ex.Message)
                 None
 
+        let totalStopwatch = Stopwatch.StartNew()
+
         let! result =
             taskResult {
                 let! fileIdsResponse =
@@ -244,18 +247,99 @@ let handler
                     |> Result.map (fun r -> r.FileIds)
                     |> Result.bind (Result.requireNotNull "File IDs are null in response")
 
-                for fileId in fileIds do
+                let totalFiles = fileIds.Count
+                logger.LogInformation("Found {TotalFiles} files to process", totalFiles)
+
+                for i = 0 to totalFiles - 1 do
+                    let fileId = fileIds.[i]
+                    let fileProgress = i + 1
+
+                    logger.LogInformation(
+                        "Processing file {FileProgress} of {TotalFiles} (file_id: {FileId})",
+                        fileProgress,
+                        totalFiles,
+                        fileId
+                    )
+
+                    let fileStopwatch = Stopwatch.StartNew()
+
                     do!
                         taskResult {
                             let! fileBytes, fileType = getFileBytesAndType logger getFilesApi fileId
+                            let getFileTime = fileStopwatch.ElapsedMilliseconds
+                            logger.LogInformation("Time to retrieve file {FileId}: {Time}ms", fileId, getFileTime)
+
                             let actualBytes = extractFrameIfVideo logger fileBytes fileType
+                            let extractTime = fileStopwatch.ElapsedMilliseconds - getFileTime
+
+                            logger.LogInformation(
+                                "Time to extract frame from file {FileId}: {Time}ms",
+                                fileId,
+                                extractTime
+                            )
+
                             let ddTags = getDeepDanbooruTags logger tagger actualBytes
+                            let ddTime = fileStopwatch.ElapsedMilliseconds - getFileTime - extractTime
+
+                            logger.LogInformation(
+                                "Time for DeepDanbooru tagging of file {FileId}: {Time}ms",
+                                fileId,
+                                ddTime
+                            )
+
                             let waifuTags = getWaifuTags logger waifuTagger actualBytes
+
+                            let waifuTime =
+                                fileStopwatch.ElapsedMilliseconds - getFileTime - extractTime - ddTime
+
+                            logger.LogInformation(
+                                "Time for WaifuDiffusion tagging of file {FileId}: {Time}ms",
+                                fileId,
+                                waifuTime
+                            )
+
                             let! captionTags = getCaptionTags logger kernel config.Services actualBytes fileType
+
+                            let captionTime =
+                                fileStopwatch.ElapsedMilliseconds
+                                - getFileTime
+                                - extractTime
+                                - ddTime
+                                - waifuTime
+
+                            logger.LogInformation(
+                                "Time for caption tagging of file {FileId}: {Time}ms",
+                                fileId,
+                                captionTime
+                            )
+
                             let allTags = Array.concat [| ddTags; waifuTags; captionTags |] |> Array.distinct
+                            logger.LogInformation("Total tags for file {FileId}: {TagCount}", fileId, allTags.Length)
+
                             do! applyTagsToHydrusFile logger addTagsApi fileId config allTags
+
+                            let applyTime =
+                                fileStopwatch.ElapsedMilliseconds
+                                - getFileTime
+                                - extractTime
+                                - ddTime
+                                - waifuTime
+                                - captionTime
+
+                            logger.LogInformation("Time to apply tags to file {FileId}: {Time}ms", fileId, applyTime)
                         }
+
+                    fileStopwatch.Stop()
+
+                    logger.LogInformation(
+                        "Total time to process file {FileId}: {TotalTime}ms",
+                        fileId,
+                        fileStopwatch.ElapsedMilliseconds
+                    )
             }
+
+        totalStopwatch.Stop()
+        logger.LogInformation("Total time to process all files: {TotalTime}ms", totalStopwatch.ElapsedMilliseconds)
 
         tagger |> Option.iter (fun t -> (t :> IDisposable).Dispose())
         waifuTagger |> Option.iter (fun t -> (t :> IDisposable).Dispose())
