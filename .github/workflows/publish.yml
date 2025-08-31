@@ -38,7 +38,7 @@ jobs:
 
     - name: Publish for ${{ matrix.os }}
       run: |
-        dotnet publish ./src/${{ env.PROJECT_NAME }/${{ env.PROJECT_NAME }.fsproj
+        dotnet publish ./src/${{ env.PROJECT_NAME }}/${{ env.PROJECT_NAME }}.fsproj
           -c Release \
           -r ${{ matrix.os }} \
           -p:PublishSingleFile=true \
