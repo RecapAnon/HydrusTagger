@@ -1,0 +1,87 @@
+name: Publish CLI Binaries
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag (e.g., v1.0.0)'
+        required: true
+        default: 'v1.0.0'
+
+env:
+  PROJECT_NAME: HydrusTagger
+  ARTIFACT_NAME: hydrus-tagger
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [win-x64, linux-x64]
+        
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET 9.0
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build project
+      run: dotnet build --no-restore -c Release
+
+    - name: Publish for ${{ matrix.os }}
+      run: |
+        dotnet publish ./src/${{ env.PROJECT_NAME }/${{ env.PROJECT_NAME }.fsproj
+          -c Release \
+          -r ${{ matrix.os }} \
+          -p:PublishSingleFile=true \
+          -p:SelfContained=true \
+          -p:IncludeNativeLibrariesForSelfExtract=true \
+          --output ./publish/${{ matrix.os }}
+
+    - name: Package artifacts (Windows)
+      if: matrix.os == 'win-x64'
+      run: |
+        cd ./publish/win-x64
+        zip -r ../../${{ env.ARTIFACT_NAME }}-win-x64.zip .
+
+    - name: Package artifacts (Linux)
+      if: matrix.os == 'linux-x64'
+      run: |
+        cd ./publish/linux-x64
+        tar -czf ../../${{ env.ARTIFACT_NAME }}-linux-x64.tar.gz .
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.ARTIFACT_NAME }}-${{ matrix.os }}
+        path: ${{ env.ARTIFACT_NAME }}-${{ matrix.os }}.*
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+    steps:
+    - name: Download all artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: ./artifacts
+
+    - name: Display structure of downloaded files
+      run: ls -R ./artifacts
+
+    - name: Upload release assets
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          ./artifacts/${{ env.ARTIFACT_NAME }}-win-x64/${{ env.ARTIFACT_NAME }}-win-x64.zip
+          ./artifacts/${{ env.ARTIFACT_NAME }}-linux-x64/${{ env.ARTIFACT_NAME }}-linux-x64.tar.gz
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
