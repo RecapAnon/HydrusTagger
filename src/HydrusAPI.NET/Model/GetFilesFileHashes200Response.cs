@@ -121,16 +121,13 @@ namespace HydrusAPI.NET.Model
                     switch (localVarJsonPropertyName)
                     {
                         case "hashes":
-                            hashes = new Option<Dictionary<string, string>?>(JsonSerializer.Deserialize<Dictionary<string, string>>(ref utf8JsonReader, jsonSerializerOptions)!);
+                            hashes = new Option<Dictionary<string, string>?>(JsonSerializer.Deserialize<Dictionary<string, string>>(ref utf8JsonReader, jsonSerializerOptions));
                             break;
                         default:
                             break;
                     }
                 }
             }
-
-            if (hashes.IsSet && hashes.Value == null)
-                throw new ArgumentNullException(nameof(hashes), "Property is not nullable for class GetFilesFileHashes200Response.");
 
             return new GetFilesFileHashes200Response(hashes);
         }
@@ -159,14 +156,14 @@ namespace HydrusAPI.NET.Model
         /// <exception cref="NotImplementedException"></exception>
         public void WriteProperties(Utf8JsonWriter writer, GetFilesFileHashes200Response getFilesFileHashes200Response, JsonSerializerOptions jsonSerializerOptions)
         {
-            if (getFilesFileHashes200Response.HashesOption.IsSet && getFilesFileHashes200Response.Hashes == null)
-                throw new ArgumentNullException(nameof(getFilesFileHashes200Response.Hashes), "Property is required for class GetFilesFileHashes200Response.");
-
             if (getFilesFileHashes200Response.HashesOption.IsSet)
-            {
-                writer.WritePropertyName("hashes");
-                JsonSerializer.Serialize(writer, getFilesFileHashes200Response.Hashes, jsonSerializerOptions);
-            }
+                if (getFilesFileHashes200Response.HashesOption.Value != null)
+                {
+                    writer.WritePropertyName("hashes");
+                    JsonSerializer.Serialize(writer, getFilesFileHashes200Response.Hashes, jsonSerializerOptions);
+                }
+                else
+                    writer.WriteNull("hashes");
         }
     }
 

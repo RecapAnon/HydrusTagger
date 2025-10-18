@@ -47,7 +47,7 @@ namespace HydrusAPI.NET.Model
         /// <summary>
         /// Gets or Sets Tags
         /// </summary>
-        /* <example>[&quot;9&quot;,&quot;10&quot;,&quot;11&quot;,&quot; ::)&quot;,&quot;bikini&quot;,&quot;blue eyes&quot;,&quot;character:samus aran&quot;,&quot;flower&quot;,&quot;wew&quot;]</example> */
+        /* <example>[9, 10, 11,  ::), bikini, blue eyes, character:samus aran, flower, wew]</example> */
         [JsonPropertyName("tags")]
         public List<string> Tags { get; set; }
 

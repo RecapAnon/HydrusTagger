@@ -47,7 +47,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="download">If true, sets &#x60;Content-Disposition&#x60; to &#x60;attachment&#x60;, prompting a download in browsers. (optional, default to false)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IGetFilesFileApiResponse"/>&gt;</returns>
-        Task<IGetFilesFileApiResponse> GetFilesFileAsync(Option<int?> fileId = default, Option<string> hash = default, Option<bool> download = default, System.Threading.CancellationToken cancellationToken = default);
+        Task<IGetFilesFileApiResponse> GetFilesFileAsync(Option<int> fileId = default, Option<string> hash = default, Option<bool> download = default, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Get a file
@@ -60,7 +60,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="download">If true, sets &#x60;Content-Disposition&#x60; to &#x60;attachment&#x60;, prompting a download in browsers. (optional, default to false)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IGetFilesFileApiResponse"/>?&gt;</returns>
-        Task<IGetFilesFileApiResponse?> GetFilesFileOrDefaultAsync(Option<int?> fileId = default, Option<string> hash = default, Option<bool> download = default, System.Threading.CancellationToken cancellationToken = default);
+        Task<IGetFilesFileApiResponse?> GetFilesFileOrDefaultAsync(Option<int> fileId = default, Option<string> hash = default, Option<bool> download = default, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Lookup file hashes from other hashes
@@ -113,7 +113,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="hideServiceKeysTags"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IGetFilesFileMetadataApiResponse"/>&gt;</returns>
-        Task<IGetFilesFileMetadataApiResponse> GetFilesFileMetadataAsync(Option<int?> fileId = default, Option<List<int>> fileIds = default, Option<string> hash = default, Option<List<string>> hashes = default, Option<bool> createNewFileIds = default, Option<bool> onlyReturnIdentifiers = default, Option<bool> onlyReturnBasicInformation = default, Option<bool> detailedUrlInformation = default, Option<bool> includeBlurhash = default, Option<bool> includeMilliseconds = default, Option<bool> includeNotes = default, Option<bool> includeServicesObject = default, Option<bool> hideServiceKeysTags = default, System.Threading.CancellationToken cancellationToken = default);
+        Task<IGetFilesFileMetadataApiResponse> GetFilesFileMetadataAsync(Option<int> fileId = default, Option<List<int>> fileIds = default, Option<string> hash = default, Option<List<string>> hashes = default, Option<bool> createNewFileIds = default, Option<bool> onlyReturnIdentifiers = default, Option<bool> onlyReturnBasicInformation = default, Option<bool> detailedUrlInformation = default, Option<bool> includeBlurhash = default, Option<bool> includeMilliseconds = default, Option<bool> includeNotes = default, Option<bool> includeServicesObject = default, Option<bool> hideServiceKeysTags = default, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Get metadata about files in the client
@@ -136,7 +136,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="hideServiceKeysTags"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IGetFilesFileMetadataApiResponse"/>?&gt;</returns>
-        Task<IGetFilesFileMetadataApiResponse?> GetFilesFileMetadataOrDefaultAsync(Option<int?> fileId = default, Option<List<int>> fileIds = default, Option<string> hash = default, Option<List<string>> hashes = default, Option<bool> createNewFileIds = default, Option<bool> onlyReturnIdentifiers = default, Option<bool> onlyReturnBasicInformation = default, Option<bool> detailedUrlInformation = default, Option<bool> includeBlurhash = default, Option<bool> includeMilliseconds = default, Option<bool> includeNotes = default, Option<bool> includeServicesObject = default, Option<bool> hideServiceKeysTags = default, System.Threading.CancellationToken cancellationToken = default);
+        Task<IGetFilesFileMetadataApiResponse?> GetFilesFileMetadataOrDefaultAsync(Option<int> fileId = default, Option<List<int>> fileIds = default, Option<string> hash = default, Option<List<string>> hashes = default, Option<bool> createNewFileIds = default, Option<bool> onlyReturnIdentifiers = default, Option<bool> onlyReturnBasicInformation = default, Option<bool> detailedUrlInformation = default, Option<bool> includeBlurhash = default, Option<bool> includeMilliseconds = default, Option<bool> includeNotes = default, Option<bool> includeServicesObject = default, Option<bool> hideServiceKeysTags = default, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Get the local file path and metadata.
@@ -874,7 +874,7 @@ namespace HydrusAPI.NET.Api
             ApiKeyProvider = apiKeyProvider;
         }
 
-        partial void FormatGetFilesFile(ref Option<int?> fileId, ref Option<string> hash, ref Option<bool> download);
+        partial void FormatGetFilesFile(ref Option<int> fileId, ref Option<string> hash, ref Option<bool> download);
 
         /// <summary>
         /// Validates the request parameters
@@ -894,7 +894,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="fileId"></param>
         /// <param name="hash"></param>
         /// <param name="download"></param>
-        private void AfterGetFilesFileDefaultImplementation(IGetFilesFileApiResponse apiResponseLocalVar, Option<int?> fileId, Option<string> hash, Option<bool> download)
+        private void AfterGetFilesFileDefaultImplementation(IGetFilesFileApiResponse apiResponseLocalVar, Option<int> fileId, Option<string> hash, Option<bool> download)
         {
             bool suppressDefaultLog = false;
             AfterGetFilesFile(ref suppressDefaultLog, apiResponseLocalVar, fileId, hash, download);
@@ -910,7 +910,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="fileId"></param>
         /// <param name="hash"></param>
         /// <param name="download"></param>
-        partial void AfterGetFilesFile(ref bool suppressDefaultLog, IGetFilesFileApiResponse apiResponseLocalVar, Option<int?> fileId, Option<string> hash, Option<bool> download);
+        partial void AfterGetFilesFile(ref bool suppressDefaultLog, IGetFilesFileApiResponse apiResponseLocalVar, Option<int> fileId, Option<string> hash, Option<bool> download);
 
         /// <summary>
         /// Logs exceptions that occur while retrieving the server response
@@ -921,7 +921,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="fileId"></param>
         /// <param name="hash"></param>
         /// <param name="download"></param>
-        private void OnErrorGetFilesFileDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, Option<int?> fileId, Option<string> hash, Option<bool> download)
+        private void OnErrorGetFilesFileDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, Option<int> fileId, Option<string> hash, Option<bool> download)
         {
             bool suppressDefaultLogLocalVar = false;
             OnErrorGetFilesFile(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, fileId, hash, download);
@@ -939,7 +939,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="fileId"></param>
         /// <param name="hash"></param>
         /// <param name="download"></param>
-        partial void OnErrorGetFilesFile(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, Option<int?> fileId, Option<string> hash, Option<bool> download);
+        partial void OnErrorGetFilesFile(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, Option<int> fileId, Option<string> hash, Option<bool> download);
 
         /// <summary>
         /// Get a file Retrieves a file based on &#x60;file_id&#x60; or &#x60;hash&#x60;. Requires appropriate access permissions.
@@ -949,7 +949,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="download">If true, sets &#x60;Content-Disposition&#x60; to &#x60;attachment&#x60;, prompting a download in browsers. (optional, default to false)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IGetFilesFileApiResponse"/>&gt;</returns>
-        public async Task<IGetFilesFileApiResponse?> GetFilesFileOrDefaultAsync(Option<int?> fileId = default, Option<string> hash = default, Option<bool> download = default, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IGetFilesFileApiResponse?> GetFilesFileOrDefaultAsync(Option<int> fileId = default, Option<string> hash = default, Option<bool> download = default, System.Threading.CancellationToken cancellationToken = default)
         {
             try
             {
@@ -970,7 +970,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="download">If true, sets &#x60;Content-Disposition&#x60; to &#x60;attachment&#x60;, prompting a download in browsers. (optional, default to false)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IGetFilesFileApiResponse"/>&gt;</returns>
-        public async Task<IGetFilesFileApiResponse> GetFilesFileAsync(Option<int?> fileId = default, Option<string> hash = default, Option<bool> download = default, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IGetFilesFileApiResponse> GetFilesFileAsync(Option<int> fileId = default, Option<string> hash = default, Option<bool> download = default, System.Threading.CancellationToken cancellationToken = default)
         {
             UriBuilder uriBuilderLocalVar = new UriBuilder();
 
@@ -1028,11 +1028,25 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<GetFilesFileApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<GetFilesFileApiResponse>();
+                        GetFilesFileApiResponse apiResponseLocalVar;
 
-                        GetFilesFileApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/get_files/file", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            case (200):
+                            {
+                                byte[] responseBytesArrayLocalVar = await httpResponseMessageLocalVar.Content.ReadAsByteArrayAsync(cancellationToken).ConfigureAwait(false);
+                                System.IO.Stream responseContentStreamLocalVar = new System.IO.MemoryStream(responseBytesArrayLocalVar);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentStreamLocalVar, "/get_files/file", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/get_files/file", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterGetFilesFileDefaultImplementation(apiResponseLocalVar, fileId, hash, download);
 
@@ -1080,6 +1094,22 @@ namespace HydrusAPI.NET.Api
                 OnCreated(httpRequestMessage, httpResponseMessage);
             }
 
+            /// <summary>
+            /// The <see cref="GetFilesFileApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public GetFilesFileApiResponse(ILogger<GetFilesFileApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
             partial void OnCreated(global::System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage);
 
             /// <summary>
@@ -1096,7 +1126,7 @@ namespace HydrusAPI.NET.Api
             {
                 // This logic may be modified with the AsModel.mustache template
                 return IsOk
-                    ? System.Text.Json.JsonSerializer.Deserialize<System.IO.Stream>(RawContent, _jsonSerializerOptions)
+                    ? ContentStream
                     : null;
             }
 
@@ -1335,11 +1365,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<GetFilesFileHashesApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<GetFilesFileHashesApiResponse>();
+                        GetFilesFileHashesApiResponse apiResponseLocalVar;
 
-                        GetFilesFileHashesApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/get_files/file_hashes", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/get_files/file_hashes", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterGetFilesFileHashesDefaultImplementation(apiResponseLocalVar, desiredHashType, hash, hashes, sourceHashType);
 
@@ -1382,6 +1418,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public GetFilesFileHashesApiResponse(ILogger<GetFilesFileHashesApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="GetFilesFileHashesApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public GetFilesFileHashesApiResponse(ILogger<GetFilesFileHashesApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -1468,7 +1520,7 @@ namespace HydrusAPI.NET.Api
             partial void OnDeserializationError(ref bool suppressDefaultLog, Exception exception, HttpStatusCode httpStatusCode);
         }
 
-        partial void FormatGetFilesFileMetadata(ref Option<int?> fileId, Option<List<int>> fileIds, ref Option<string> hash, Option<List<string>> hashes, ref Option<bool> createNewFileIds, ref Option<bool> onlyReturnIdentifiers, ref Option<bool> onlyReturnBasicInformation, ref Option<bool> detailedUrlInformation, ref Option<bool> includeBlurhash, ref Option<bool> includeMilliseconds, ref Option<bool> includeNotes, ref Option<bool> includeServicesObject, ref Option<bool> hideServiceKeysTags);
+        partial void FormatGetFilesFileMetadata(ref Option<int> fileId, Option<List<int>> fileIds, ref Option<string> hash, Option<List<string>> hashes, ref Option<bool> createNewFileIds, ref Option<bool> onlyReturnIdentifiers, ref Option<bool> onlyReturnBasicInformation, ref Option<bool> detailedUrlInformation, ref Option<bool> includeBlurhash, ref Option<bool> includeMilliseconds, ref Option<bool> includeNotes, ref Option<bool> includeServicesObject, ref Option<bool> hideServiceKeysTags);
 
         /// <summary>
         /// Validates the request parameters
@@ -1506,7 +1558,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="includeNotes"></param>
         /// <param name="includeServicesObject"></param>
         /// <param name="hideServiceKeysTags"></param>
-        private void AfterGetFilesFileMetadataDefaultImplementation(IGetFilesFileMetadataApiResponse apiResponseLocalVar, Option<int?> fileId, Option<List<int>> fileIds, Option<string> hash, Option<List<string>> hashes, Option<bool> createNewFileIds, Option<bool> onlyReturnIdentifiers, Option<bool> onlyReturnBasicInformation, Option<bool> detailedUrlInformation, Option<bool> includeBlurhash, Option<bool> includeMilliseconds, Option<bool> includeNotes, Option<bool> includeServicesObject, Option<bool> hideServiceKeysTags)
+        private void AfterGetFilesFileMetadataDefaultImplementation(IGetFilesFileMetadataApiResponse apiResponseLocalVar, Option<int> fileId, Option<List<int>> fileIds, Option<string> hash, Option<List<string>> hashes, Option<bool> createNewFileIds, Option<bool> onlyReturnIdentifiers, Option<bool> onlyReturnBasicInformation, Option<bool> detailedUrlInformation, Option<bool> includeBlurhash, Option<bool> includeMilliseconds, Option<bool> includeNotes, Option<bool> includeServicesObject, Option<bool> hideServiceKeysTags)
         {
             bool suppressDefaultLog = false;
             AfterGetFilesFileMetadata(ref suppressDefaultLog, apiResponseLocalVar, fileId, fileIds, hash, hashes, createNewFileIds, onlyReturnIdentifiers, onlyReturnBasicInformation, detailedUrlInformation, includeBlurhash, includeMilliseconds, includeNotes, includeServicesObject, hideServiceKeysTags);
@@ -1532,7 +1584,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="includeNotes"></param>
         /// <param name="includeServicesObject"></param>
         /// <param name="hideServiceKeysTags"></param>
-        partial void AfterGetFilesFileMetadata(ref bool suppressDefaultLog, IGetFilesFileMetadataApiResponse apiResponseLocalVar, Option<int?> fileId, Option<List<int>> fileIds, Option<string> hash, Option<List<string>> hashes, Option<bool> createNewFileIds, Option<bool> onlyReturnIdentifiers, Option<bool> onlyReturnBasicInformation, Option<bool> detailedUrlInformation, Option<bool> includeBlurhash, Option<bool> includeMilliseconds, Option<bool> includeNotes, Option<bool> includeServicesObject, Option<bool> hideServiceKeysTags);
+        partial void AfterGetFilesFileMetadata(ref bool suppressDefaultLog, IGetFilesFileMetadataApiResponse apiResponseLocalVar, Option<int> fileId, Option<List<int>> fileIds, Option<string> hash, Option<List<string>> hashes, Option<bool> createNewFileIds, Option<bool> onlyReturnIdentifiers, Option<bool> onlyReturnBasicInformation, Option<bool> detailedUrlInformation, Option<bool> includeBlurhash, Option<bool> includeMilliseconds, Option<bool> includeNotes, Option<bool> includeServicesObject, Option<bool> hideServiceKeysTags);
 
         /// <summary>
         /// Logs exceptions that occur while retrieving the server response
@@ -1553,7 +1605,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="includeNotes"></param>
         /// <param name="includeServicesObject"></param>
         /// <param name="hideServiceKeysTags"></param>
-        private void OnErrorGetFilesFileMetadataDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, Option<int?> fileId, Option<List<int>> fileIds, Option<string> hash, Option<List<string>> hashes, Option<bool> createNewFileIds, Option<bool> onlyReturnIdentifiers, Option<bool> onlyReturnBasicInformation, Option<bool> detailedUrlInformation, Option<bool> includeBlurhash, Option<bool> includeMilliseconds, Option<bool> includeNotes, Option<bool> includeServicesObject, Option<bool> hideServiceKeysTags)
+        private void OnErrorGetFilesFileMetadataDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, Option<int> fileId, Option<List<int>> fileIds, Option<string> hash, Option<List<string>> hashes, Option<bool> createNewFileIds, Option<bool> onlyReturnIdentifiers, Option<bool> onlyReturnBasicInformation, Option<bool> detailedUrlInformation, Option<bool> includeBlurhash, Option<bool> includeMilliseconds, Option<bool> includeNotes, Option<bool> includeServicesObject, Option<bool> hideServiceKeysTags)
         {
             bool suppressDefaultLogLocalVar = false;
             OnErrorGetFilesFileMetadata(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, fileId, fileIds, hash, hashes, createNewFileIds, onlyReturnIdentifiers, onlyReturnBasicInformation, detailedUrlInformation, includeBlurhash, includeMilliseconds, includeNotes, includeServicesObject, hideServiceKeysTags);
@@ -1581,7 +1633,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="includeNotes"></param>
         /// <param name="includeServicesObject"></param>
         /// <param name="hideServiceKeysTags"></param>
-        partial void OnErrorGetFilesFileMetadata(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, Option<int?> fileId, Option<List<int>> fileIds, Option<string> hash, Option<List<string>> hashes, Option<bool> createNewFileIds, Option<bool> onlyReturnIdentifiers, Option<bool> onlyReturnBasicInformation, Option<bool> detailedUrlInformation, Option<bool> includeBlurhash, Option<bool> includeMilliseconds, Option<bool> includeNotes, Option<bool> includeServicesObject, Option<bool> hideServiceKeysTags);
+        partial void OnErrorGetFilesFileMetadata(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, Option<int> fileId, Option<List<int>> fileIds, Option<string> hash, Option<List<string>> hashes, Option<bool> createNewFileIds, Option<bool> onlyReturnIdentifiers, Option<bool> onlyReturnBasicInformation, Option<bool> detailedUrlInformation, Option<bool> includeBlurhash, Option<bool> includeMilliseconds, Option<bool> includeNotes, Option<bool> includeServicesObject, Option<bool> hideServiceKeysTags);
 
         /// <summary>
         /// Get metadata about files in the client 
@@ -1601,7 +1653,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="hideServiceKeysTags"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IGetFilesFileMetadataApiResponse"/>&gt;</returns>
-        public async Task<IGetFilesFileMetadataApiResponse?> GetFilesFileMetadataOrDefaultAsync(Option<int?> fileId = default, Option<List<int>> fileIds = default, Option<string> hash = default, Option<List<string>> hashes = default, Option<bool> createNewFileIds = default, Option<bool> onlyReturnIdentifiers = default, Option<bool> onlyReturnBasicInformation = default, Option<bool> detailedUrlInformation = default, Option<bool> includeBlurhash = default, Option<bool> includeMilliseconds = default, Option<bool> includeNotes = default, Option<bool> includeServicesObject = default, Option<bool> hideServiceKeysTags = default, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IGetFilesFileMetadataApiResponse?> GetFilesFileMetadataOrDefaultAsync(Option<int> fileId = default, Option<List<int>> fileIds = default, Option<string> hash = default, Option<List<string>> hashes = default, Option<bool> createNewFileIds = default, Option<bool> onlyReturnIdentifiers = default, Option<bool> onlyReturnBasicInformation = default, Option<bool> detailedUrlInformation = default, Option<bool> includeBlurhash = default, Option<bool> includeMilliseconds = default, Option<bool> includeNotes = default, Option<bool> includeServicesObject = default, Option<bool> hideServiceKeysTags = default, System.Threading.CancellationToken cancellationToken = default)
         {
             try
             {
@@ -1632,7 +1684,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="hideServiceKeysTags"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IGetFilesFileMetadataApiResponse"/>&gt;</returns>
-        public async Task<IGetFilesFileMetadataApiResponse> GetFilesFileMetadataAsync(Option<int?> fileId = default, Option<List<int>> fileIds = default, Option<string> hash = default, Option<List<string>> hashes = default, Option<bool> createNewFileIds = default, Option<bool> onlyReturnIdentifiers = default, Option<bool> onlyReturnBasicInformation = default, Option<bool> detailedUrlInformation = default, Option<bool> includeBlurhash = default, Option<bool> includeMilliseconds = default, Option<bool> includeNotes = default, Option<bool> includeServicesObject = default, Option<bool> hideServiceKeysTags = default, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IGetFilesFileMetadataApiResponse> GetFilesFileMetadataAsync(Option<int> fileId = default, Option<List<int>> fileIds = default, Option<string> hash = default, Option<List<string>> hashes = default, Option<bool> createNewFileIds = default, Option<bool> onlyReturnIdentifiers = default, Option<bool> onlyReturnBasicInformation = default, Option<bool> detailedUrlInformation = default, Option<bool> includeBlurhash = default, Option<bool> includeMilliseconds = default, Option<bool> includeNotes = default, Option<bool> includeServicesObject = default, Option<bool> hideServiceKeysTags = default, System.Threading.CancellationToken cancellationToken = default)
         {
             UriBuilder uriBuilderLocalVar = new UriBuilder();
 
@@ -1720,11 +1772,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<GetFilesFileMetadataApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<GetFilesFileMetadataApiResponse>();
+                        GetFilesFileMetadataApiResponse apiResponseLocalVar;
 
-                        GetFilesFileMetadataApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/get_files/file_metadata", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/get_files/file_metadata", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterGetFilesFileMetadataDefaultImplementation(apiResponseLocalVar, fileId, fileIds, hash, hashes, createNewFileIds, onlyReturnIdentifiers, onlyReturnBasicInformation, detailedUrlInformation, includeBlurhash, includeMilliseconds, includeNotes, includeServicesObject, hideServiceKeysTags);
 
@@ -1767,6 +1825,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public GetFilesFileMetadataApiResponse(ILogger<GetFilesFileMetadataApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="GetFilesFileMetadataApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public GetFilesFileMetadataApiResponse(ILogger<GetFilesFileMetadataApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -1992,11 +2066,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<GetFilesFilePathApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<GetFilesFilePathApiResponse>();
+                        GetFilesFilePathApiResponse apiResponseLocalVar;
 
-                        GetFilesFilePathApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/get_files/file_path", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/get_files/file_path", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterGetFilesFilePathDefaultImplementation(apiResponseLocalVar, fileId, hash);
 
@@ -2039,6 +2119,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public GetFilesFilePathApiResponse(ILogger<GetFilesFilePathApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="GetFilesFilePathApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public GetFilesFilePathApiResponse(ILogger<GetFilesFilePathApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -2318,11 +2414,25 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<GetFilesRenderApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<GetFilesRenderApiResponse>();
+                        GetFilesRenderApiResponse apiResponseLocalVar;
 
-                        GetFilesRenderApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/get_files/render", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            case (200):
+                            {
+                                byte[] responseBytesArrayLocalVar = await httpResponseMessageLocalVar.Content.ReadAsByteArrayAsync(cancellationToken).ConfigureAwait(false);
+                                System.IO.Stream responseContentStreamLocalVar = new System.IO.MemoryStream(responseBytesArrayLocalVar);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentStreamLocalVar, "/get_files/render", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/get_files/render", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterGetFilesRenderDefaultImplementation(apiResponseLocalVar, fileId, hash, download, renderFormat, renderQuality, width, height);
 
@@ -2370,6 +2480,22 @@ namespace HydrusAPI.NET.Api
                 OnCreated(httpRequestMessage, httpResponseMessage);
             }
 
+            /// <summary>
+            /// The <see cref="GetFilesRenderApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public GetFilesRenderApiResponse(ILogger<GetFilesRenderApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
             partial void OnCreated(global::System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage);
 
             /// <summary>
@@ -2386,7 +2512,7 @@ namespace HydrusAPI.NET.Api
             {
                 // This logic may be modified with the AsModel.mustache template
                 return IsOk
-                    ? System.Text.Json.JsonSerializer.Deserialize<System.IO.Stream>(RawContent, _jsonSerializerOptions)
+                    ? ContentStream
                     : null;
             }
 
@@ -2705,11 +2831,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<GetFilesSearchFilesApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<GetFilesSearchFilesApiResponse>();
+                        GetFilesSearchFilesApiResponse apiResponseLocalVar;
 
-                        GetFilesSearchFilesApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/get_files/search_files", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/get_files/search_files", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterGetFilesSearchFilesDefaultImplementation(apiResponseLocalVar, tags, fileServiceKey, fileServiceKeys, deletedFileServiceKey, deletedFileServiceKeys, tagServiceKey, includeCurrentTags, includePendingTags, fileSortType, fileSortAsc, returnFileIds, returnHashes);
 
@@ -2752,6 +2884,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public GetFilesSearchFilesApiResponse(ILogger<GetFilesSearchFilesApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="GetFilesSearchFilesApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public GetFilesSearchFilesApiResponse(ILogger<GetFilesSearchFilesApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -2984,11 +3132,25 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<GetFilesThumbnailApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<GetFilesThumbnailApiResponse>();
+                        GetFilesThumbnailApiResponse apiResponseLocalVar;
 
-                        GetFilesThumbnailApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/get_files/thumbnail", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            case (200):
+                            {
+                                byte[] responseBytesArrayLocalVar = await httpResponseMessageLocalVar.Content.ReadAsByteArrayAsync(cancellationToken).ConfigureAwait(false);
+                                System.IO.Stream responseContentStreamLocalVar = new System.IO.MemoryStream(responseBytesArrayLocalVar);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentStreamLocalVar, "/get_files/thumbnail", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/get_files/thumbnail", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterGetFilesThumbnailDefaultImplementation(apiResponseLocalVar, fileId, hash);
 
@@ -3036,6 +3198,22 @@ namespace HydrusAPI.NET.Api
                 OnCreated(httpRequestMessage, httpResponseMessage);
             }
 
+            /// <summary>
+            /// The <see cref="GetFilesThumbnailApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public GetFilesThumbnailApiResponse(ILogger<GetFilesThumbnailApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
             partial void OnCreated(global::System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage);
 
             /// <summary>
@@ -3052,7 +3230,7 @@ namespace HydrusAPI.NET.Api
             {
                 // This logic may be modified with the AsModel.mustache template
                 return IsOk
-                    ? System.Text.Json.JsonSerializer.Deserialize<System.IO.Stream>(RawContent, _jsonSerializerOptions)
+                    ? ContentStream
                     : null;
             }
 
@@ -3259,11 +3437,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<GetFilesThumbnailPathApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<GetFilesThumbnailPathApiResponse>();
+                        GetFilesThumbnailPathApiResponse apiResponseLocalVar;
 
-                        GetFilesThumbnailPathApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/get_files/thumbnail_path", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/get_files/thumbnail_path", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterGetFilesThumbnailPathDefaultImplementation(apiResponseLocalVar, fileId, hash, includeThumbnailFiletype);
 
@@ -3306,6 +3490,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public GetFilesThumbnailPathApiResponse(ILogger<GetFilesThumbnailPathApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="GetFilesThumbnailPathApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public GetFilesThumbnailPathApiResponse(ILogger<GetFilesThumbnailPathApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -3480,11 +3680,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<GetLocalFileStorageLocationsApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<GetLocalFileStorageLocationsApiResponse>();
+                        GetLocalFileStorageLocationsApiResponse apiResponseLocalVar;
 
-                        GetLocalFileStorageLocationsApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/get_files/local_file_storage_locations", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/get_files/local_file_storage_locations", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterGetLocalFileStorageLocationsDefaultImplementation(apiResponseLocalVar);
 
@@ -3527,6 +3733,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public GetLocalFileStorageLocationsApiResponse(ILogger<GetLocalFileStorageLocationsApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="GetLocalFileStorageLocationsApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public GetLocalFileStorageLocationsApiResponse(ILogger<GetLocalFileStorageLocationsApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);

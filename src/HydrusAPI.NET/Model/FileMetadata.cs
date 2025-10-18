@@ -825,6 +825,12 @@ namespace HydrusAPI.NET.Model
             if (thumbnailHeight.IsSet && thumbnailHeight.Value == null)
                 throw new ArgumentNullException(nameof(thumbnailHeight), "Property is not nullable for class FileMetadata.");
 
+            if (duration.IsSet && duration.Value == null)
+                throw new ArgumentNullException(nameof(duration), "Property is not nullable for class FileMetadata.");
+
+            if (timeModified.IsSet && timeModified.Value == null)
+                throw new ArgumentNullException(nameof(timeModified), "Property is not nullable for class FileMetadata.");
+
             if (timeModifiedDetails.IsSet && timeModifiedDetails.Value == null)
                 throw new ArgumentNullException(nameof(timeModifiedDetails), "Property is not nullable for class FileMetadata.");
 
@@ -842,6 +848,12 @@ namespace HydrusAPI.NET.Model
 
             if (pixelHash.IsSet && pixelHash.Value == null)
                 throw new ArgumentNullException(nameof(pixelHash), "Property is not nullable for class FileMetadata.");
+
+            if (numFrames.IsSet && numFrames.Value == null)
+                throw new ArgumentNullException(nameof(numFrames), "Property is not nullable for class FileMetadata.");
+
+            if (numWords.IsSet && numWords.Value == null)
+                throw new ArgumentNullException(nameof(numWords), "Property is not nullable for class FileMetadata.");
 
             if (isInbox.IsSet && isInbox.Value == null)
                 throw new ArgumentNullException(nameof(isInbox), "Property is not nullable for class FileMetadata.");
@@ -982,16 +994,10 @@ namespace HydrusAPI.NET.Model
                 writer.WriteNumber("thumbnail_height", fileMetadata.ThumbnailHeightOption.Value!.Value);
 
             if (fileMetadata.DurationOption.IsSet)
-                if (fileMetadata.DurationOption.Value != null)
-                    writer.WriteNumber("duration", fileMetadata.DurationOption.Value!.Value);
-                else
-                    writer.WriteNull("duration");
+                writer.WriteNumber("duration", fileMetadata.DurationOption.Value!.Value);
 
             if (fileMetadata.TimeModifiedOption.IsSet)
-                if (fileMetadata.TimeModifiedOption.Value != null)
-                    writer.WriteNumber("time_modified", fileMetadata.TimeModifiedOption.Value!.Value);
-                else
-                    writer.WriteNull("time_modified");
+                writer.WriteNumber("time_modified", fileMetadata.TimeModifiedOption.Value!.Value);
 
             if (fileMetadata.TimeModifiedDetailsOption.IsSet)
             {
@@ -1018,16 +1024,10 @@ namespace HydrusAPI.NET.Model
                 writer.WriteString("pixel_hash", fileMetadata.PixelHash);
 
             if (fileMetadata.NumFramesOption.IsSet)
-                if (fileMetadata.NumFramesOption.Value != null)
-                    writer.WriteNumber("num_frames", fileMetadata.NumFramesOption.Value!.Value);
-                else
-                    writer.WriteNull("num_frames");
+                writer.WriteNumber("num_frames", fileMetadata.NumFramesOption.Value!.Value);
 
             if (fileMetadata.NumWordsOption.IsSet)
-                if (fileMetadata.NumWordsOption.Value != null)
-                    writer.WriteNumber("num_words", fileMetadata.NumWordsOption.Value!.Value);
-                else
-                    writer.WriteNull("num_words");
+                writer.WriteNumber("num_words", fileMetadata.NumWordsOption.Value!.Value);
 
             if (fileMetadata.IsInboxOption.IsSet)
                 writer.WriteBoolean("is_inbox", fileMetadata.IsInboxOption.Value!.Value);

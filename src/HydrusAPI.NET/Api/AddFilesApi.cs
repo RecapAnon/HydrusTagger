@@ -91,7 +91,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="clearFileDeletionRecordRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IAddFilesClearFileDeletionRecordApiResponse"/>&gt;</returns>
-        Task<IAddFilesClearFileDeletionRecordApiResponse> AddFilesClearFileDeletionRecordAsync(ClearFileDeletionRecordRequest? clearFileDeletionRecordRequest = default, System.Threading.CancellationToken cancellationToken = default);
+        Task<IAddFilesClearFileDeletionRecordApiResponse> AddFilesClearFileDeletionRecordAsync(ClearFileDeletionRecordRequest clearFileDeletionRecordRequest, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Clear file deletion record
@@ -102,7 +102,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="clearFileDeletionRecordRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IAddFilesClearFileDeletionRecordApiResponse"/>?&gt;</returns>
-        Task<IAddFilesClearFileDeletionRecordApiResponse?> AddFilesClearFileDeletionRecordOrDefaultAsync(ClearFileDeletionRecordRequest? clearFileDeletionRecordRequest = default, System.Threading.CancellationToken cancellationToken = default);
+        Task<IAddFilesClearFileDeletionRecordApiResponse?> AddFilesClearFileDeletionRecordOrDefaultAsync(ClearFileDeletionRecordRequest clearFileDeletionRecordRequest, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Delete files from the client.
@@ -114,7 +114,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="addFilesDeleteFilesRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IAddFilesDeleteFilesApiResponse"/>&gt;</returns>
-        Task<IAddFilesDeleteFilesApiResponse> AddFilesDeleteFilesAsync(AddFilesDeleteFilesRequest? addFilesDeleteFilesRequest = default, System.Threading.CancellationToken cancellationToken = default);
+        Task<IAddFilesDeleteFilesApiResponse> AddFilesDeleteFilesAsync(AddFilesDeleteFilesRequest addFilesDeleteFilesRequest, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Delete files from the client.
@@ -125,7 +125,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="addFilesDeleteFilesRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IAddFilesDeleteFilesApiResponse"/>?&gt;</returns>
-        Task<IAddFilesDeleteFilesApiResponse?> AddFilesDeleteFilesOrDefaultAsync(AddFilesDeleteFilesRequest? addFilesDeleteFilesRequest = default, System.Threading.CancellationToken cancellationToken = default);
+        Task<IAddFilesDeleteFilesApiResponse?> AddFilesDeleteFilesOrDefaultAsync(AddFilesDeleteFilesRequest addFilesDeleteFilesRequest, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Generate hashes for an arbitrary file
@@ -160,7 +160,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="migrateFilesRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IAddFilesMigrateFilesApiResponse"/>&gt;</returns>
-        Task<IAddFilesMigrateFilesApiResponse> AddFilesMigrateFilesAsync(MigrateFilesRequest? migrateFilesRequest = default, System.Threading.CancellationToken cancellationToken = default);
+        Task<IAddFilesMigrateFilesApiResponse> AddFilesMigrateFilesAsync(MigrateFilesRequest migrateFilesRequest, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Copy files from one local file domain to another.
@@ -171,7 +171,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="migrateFilesRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IAddFilesMigrateFilesApiResponse"/>?&gt;</returns>
-        Task<IAddFilesMigrateFilesApiResponse?> AddFilesMigrateFilesOrDefaultAsync(MigrateFilesRequest? migrateFilesRequest = default, System.Threading.CancellationToken cancellationToken = default);
+        Task<IAddFilesMigrateFilesApiResponse?> AddFilesMigrateFilesOrDefaultAsync(MigrateFilesRequest migrateFilesRequest, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Unarchive files by putting them back into the inbox.
@@ -183,7 +183,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="unarchiveFilesRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IAddFilesUnarchiveFilesApiResponse"/>&gt;</returns>
-        Task<IAddFilesUnarchiveFilesApiResponse> AddFilesUnarchiveFilesAsync(UnarchiveFilesRequest? unarchiveFilesRequest = default, System.Threading.CancellationToken cancellationToken = default);
+        Task<IAddFilesUnarchiveFilesApiResponse> AddFilesUnarchiveFilesAsync(UnarchiveFilesRequest unarchiveFilesRequest, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Unarchive files by putting them back into the inbox.
@@ -194,7 +194,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="unarchiveFilesRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IAddFilesUnarchiveFilesApiResponse"/>?&gt;</returns>
-        Task<IAddFilesUnarchiveFilesApiResponse?> AddFilesUnarchiveFilesOrDefaultAsync(UnarchiveFilesRequest? unarchiveFilesRequest = default, System.Threading.CancellationToken cancellationToken = default);
+        Task<IAddFilesUnarchiveFilesApiResponse?> AddFilesUnarchiveFilesOrDefaultAsync(UnarchiveFilesRequest unarchiveFilesRequest, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Undelete files that were previously deleted.
@@ -206,7 +206,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="addFilesUndeleteFilesRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IAddFilesUndeleteFilesApiResponse"/>&gt;</returns>
-        Task<IAddFilesUndeleteFilesApiResponse> AddFilesUndeleteFilesAsync(AddFilesUndeleteFilesRequest? addFilesUndeleteFilesRequest = default, System.Threading.CancellationToken cancellationToken = default);
+        Task<IAddFilesUndeleteFilesApiResponse> AddFilesUndeleteFilesAsync(AddFilesUndeleteFilesRequest addFilesUndeleteFilesRequest, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Undelete files that were previously deleted.
@@ -217,7 +217,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="addFilesUndeleteFilesRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IAddFilesUndeleteFilesApiResponse"/>?&gt;</returns>
-        Task<IAddFilesUndeleteFilesApiResponse?> AddFilesUndeleteFilesOrDefaultAsync(AddFilesUndeleteFilesRequest? addFilesUndeleteFilesRequest = default, System.Threading.CancellationToken cancellationToken = default);
+        Task<IAddFilesUndeleteFilesApiResponse?> AddFilesUndeleteFilesOrDefaultAsync(AddFilesUndeleteFilesRequest addFilesUndeleteFilesRequest, System.Threading.CancellationToken cancellationToken = default);
     }
 
     /// <summary>
@@ -870,11 +870,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<AddFilesAddFileApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<AddFilesAddFileApiResponse>();
+                        AddFilesAddFileApiResponse apiResponseLocalVar;
 
-                        AddFilesAddFileApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/add_files/add_file", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/add_files/add_file", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterAddFilesAddFileDefaultImplementation(apiResponseLocalVar, addFilesAddFileRequest);
 
@@ -917,6 +923,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public AddFilesAddFileApiResponse(ILogger<AddFilesAddFileApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="AddFilesAddFileApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public AddFilesAddFileApiResponse(ILogger<AddFilesAddFileApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -1130,11 +1152,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<AddFilesArchiveFilesApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<AddFilesArchiveFilesApiResponse>();
+                        AddFilesArchiveFilesApiResponse apiResponseLocalVar;
 
-                        AddFilesArchiveFilesApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/add_files/archive_files", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/add_files/archive_files", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterAddFilesArchiveFilesDefaultImplementation(apiResponseLocalVar, archiveFilesRequest);
 
@@ -1182,222 +1210,17 @@ namespace HydrusAPI.NET.Api
                 OnCreated(httpRequestMessage, httpResponseMessage);
             }
 
-            partial void OnCreated(global::System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage);
-
             /// <summary>
-            /// Returns true if the response is 200 Ok
-            /// </summary>
-            /// <returns></returns>
-            public bool IsOk => 200 == (int)StatusCode;
-
-            /// <summary>
-            /// Returns true if the response is 400 BadRequest
-            /// </summary>
-            /// <returns></returns>
-            public bool IsBadRequest => 400 == (int)StatusCode;
-
-            /// <summary>
-            /// Returns true if the response is 401 Unauthorized
-            /// </summary>
-            /// <returns></returns>
-            public bool IsUnauthorized => 401 == (int)StatusCode;
-
-            /// <summary>
-            /// Returns true if the response is 403 Forbidden
-            /// </summary>
-            /// <returns></returns>
-            public bool IsForbidden => 403 == (int)StatusCode;
-
-            /// <summary>
-            /// Returns true if the response is 419 CustomHttpStatusCode419
-            /// </summary>
-            /// <returns></returns>
-            public bool IsCustomHttpStatusCode419 => 419 == (int)StatusCode;
-
-            /// <summary>
-            /// Returns true if the response is 500 InternalServerError
-            /// </summary>
-            /// <returns></returns>
-            public bool IsInternalServerError => 500 == (int)StatusCode;
-
-            private void OnDeserializationErrorDefaultImplementation(Exception exception, HttpStatusCode httpStatusCode)
-            {
-                bool suppressDefaultLog = false;
-                OnDeserializationError(ref suppressDefaultLog, exception, httpStatusCode);
-                if (!suppressDefaultLog)
-                    Logger.LogError(exception, "An error occurred while deserializing the {code} response.", httpStatusCode);
-            }
-
-            partial void OnDeserializationError(ref bool suppressDefaultLog, Exception exception, HttpStatusCode httpStatusCode);
-        }
-
-        partial void FormatAddFilesClearFileDeletionRecord(ClearFileDeletionRecordRequest? clearFileDeletionRecordRequest);
-
-        /// <summary>
-        /// Processes the server response
-        /// </summary>
-        /// <param name="apiResponseLocalVar"></param>
-        /// <param name="clearFileDeletionRecordRequest"></param>
-        private void AfterAddFilesClearFileDeletionRecordDefaultImplementation(IAddFilesClearFileDeletionRecordApiResponse apiResponseLocalVar, ClearFileDeletionRecordRequest? clearFileDeletionRecordRequest)
-        {
-            bool suppressDefaultLog = false;
-            AfterAddFilesClearFileDeletionRecord(ref suppressDefaultLog, apiResponseLocalVar, clearFileDeletionRecordRequest);
-            if (!suppressDefaultLog)
-                Logger.LogInformation("{0,-9} | {1} | {3}", (apiResponseLocalVar.DownloadedAt - apiResponseLocalVar.RequestedAt).TotalSeconds, apiResponseLocalVar.StatusCode, apiResponseLocalVar.Path);
-        }
-
-        /// <summary>
-        /// Processes the server response
-        /// </summary>
-        /// <param name="suppressDefaultLog"></param>
-        /// <param name="apiResponseLocalVar"></param>
-        /// <param name="clearFileDeletionRecordRequest"></param>
-        partial void AfterAddFilesClearFileDeletionRecord(ref bool suppressDefaultLog, IAddFilesClearFileDeletionRecordApiResponse apiResponseLocalVar, ClearFileDeletionRecordRequest? clearFileDeletionRecordRequest);
-
-        /// <summary>
-        /// Logs exceptions that occur while retrieving the server response
-        /// </summary>
-        /// <param name="exceptionLocalVar"></param>
-        /// <param name="pathFormatLocalVar"></param>
-        /// <param name="pathLocalVar"></param>
-        /// <param name="clearFileDeletionRecordRequest"></param>
-        private void OnErrorAddFilesClearFileDeletionRecordDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, ClearFileDeletionRecordRequest? clearFileDeletionRecordRequest)
-        {
-            bool suppressDefaultLogLocalVar = false;
-            OnErrorAddFilesClearFileDeletionRecord(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, clearFileDeletionRecordRequest);
-            if (!suppressDefaultLogLocalVar)
-                Logger.LogError(exceptionLocalVar, "An error occurred while sending the request to the server.");
-        }
-
-        /// <summary>
-        /// A partial method that gives developers a way to provide customized exception handling
-        /// </summary>
-        /// <param name="suppressDefaultLogLocalVar"></param>
-        /// <param name="exceptionLocalVar"></param>
-        /// <param name="pathFormatLocalVar"></param>
-        /// <param name="pathLocalVar"></param>
-        /// <param name="clearFileDeletionRecordRequest"></param>
-        partial void OnErrorAddFilesClearFileDeletionRecord(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, ClearFileDeletionRecordRequest? clearFileDeletionRecordRequest);
-
-        /// <summary>
-        /// Clear file deletion record Tell the client to forget that it once deleted files.
-        /// </summary>
-        /// <param name="clearFileDeletionRecordRequest"></param>
-        /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns><see cref="Task"/>&lt;<see cref="IAddFilesClearFileDeletionRecordApiResponse"/>&gt;</returns>
-        public async Task<IAddFilesClearFileDeletionRecordApiResponse?> AddFilesClearFileDeletionRecordOrDefaultAsync(ClearFileDeletionRecordRequest? clearFileDeletionRecordRequest = default, System.Threading.CancellationToken cancellationToken = default)
-        {
-            try
-            {
-                return await AddFilesClearFileDeletionRecordAsync(clearFileDeletionRecordRequest, cancellationToken).ConfigureAwait(false);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Clear file deletion record Tell the client to forget that it once deleted files.
-        /// </summary>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="clearFileDeletionRecordRequest"></param>
-        /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns><see cref="Task"/>&lt;<see cref="IAddFilesClearFileDeletionRecordApiResponse"/>&gt;</returns>
-        public async Task<IAddFilesClearFileDeletionRecordApiResponse> AddFilesClearFileDeletionRecordAsync(ClearFileDeletionRecordRequest? clearFileDeletionRecordRequest = default, System.Threading.CancellationToken cancellationToken = default)
-        {
-            UriBuilder uriBuilderLocalVar = new UriBuilder();
-
-            try
-            {
-                FormatAddFilesClearFileDeletionRecord(clearFileDeletionRecordRequest);
-
-                using (HttpRequestMessage httpRequestMessageLocalVar = new HttpRequestMessage())
-                {
-                    uriBuilderLocalVar.Host = HttpClient.BaseAddress!.Host;
-                    uriBuilderLocalVar.Port = HttpClient.BaseAddress.Port;
-                    uriBuilderLocalVar.Scheme = HttpClient.BaseAddress.Scheme;
-                    uriBuilderLocalVar.Path = HttpClient.BaseAddress.AbsolutePath == "/"
-                        ? "/add_files/clear_file_deletion_record"
-                        : string.Concat(HttpClient.BaseAddress.AbsolutePath, "/add_files/clear_file_deletion_record");
-
-                    httpRequestMessageLocalVar.Content = (clearFileDeletionRecordRequest as object) is System.IO.Stream stream
-                        ? httpRequestMessageLocalVar.Content = new StreamContent(stream)
-                        : httpRequestMessageLocalVar.Content = new StringContent(JsonSerializer.Serialize(clearFileDeletionRecordRequest, _jsonSerializerOptions));
-
-                    List<TokenBase> tokenBaseLocalVars = new List<TokenBase>();
-                    ApiKeyToken apiKeyTokenLocalVar1 = (ApiKeyToken) await ApiKeyProvider.GetAsync("Hydrus-Client-API-Access-Key", cancellationToken).ConfigureAwait(false);
-                    tokenBaseLocalVars.Add(apiKeyTokenLocalVar1);
-                    apiKeyTokenLocalVar1.UseInHeader(httpRequestMessageLocalVar);
-
-                    ApiKeyToken apiKeyTokenLocalVar2 = (ApiKeyToken) await ApiKeyProvider.GetAsync("Hydrus-Client-API-Session-Key", cancellationToken).ConfigureAwait(false);
-                    tokenBaseLocalVars.Add(apiKeyTokenLocalVar2);
-                    apiKeyTokenLocalVar2.UseInHeader(httpRequestMessageLocalVar);
-
-                    httpRequestMessageLocalVar.RequestUri = uriBuilderLocalVar.Uri;
-
-                    string[] contentTypes = new string[] {
-                        "application/json"
-                    };
-
-                    string? contentTypeLocalVar = ClientUtils.SelectHeaderContentType(contentTypes);
-
-                    if (contentTypeLocalVar != null && httpRequestMessageLocalVar.Content != null)
-                        httpRequestMessageLocalVar.Content.Headers.ContentType = new MediaTypeHeaderValue(contentTypeLocalVar);
-
-                    httpRequestMessageLocalVar.Method = HttpMethod.Post;
-
-                    DateTime requestedAtLocalVar = DateTime.UtcNow;
-
-                    using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
-                    {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
-                        ILogger<AddFilesClearFileDeletionRecordApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<AddFilesClearFileDeletionRecordApiResponse>();
-
-                        AddFilesClearFileDeletionRecordApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/add_files/clear_file_deletion_record", requestedAtLocalVar, _jsonSerializerOptions);
-
-                        AfterAddFilesClearFileDeletionRecordDefaultImplementation(apiResponseLocalVar, clearFileDeletionRecordRequest);
-
-                        Events.ExecuteOnAddFilesClearFileDeletionRecord(apiResponseLocalVar);
-
-                        if (apiResponseLocalVar.StatusCode == (HttpStatusCode) 429)
-                            foreach(TokenBase tokenBaseLocalVar in tokenBaseLocalVars)
-                                tokenBaseLocalVar.BeginRateLimit();
-
-                        return apiResponseLocalVar;
-                    }
-                }
-            }
-            catch(Exception e)
-            {
-                OnErrorAddFilesClearFileDeletionRecordDefaultImplementation(e, "/add_files/clear_file_deletion_record", uriBuilderLocalVar.Path, clearFileDeletionRecordRequest);
-                Events.ExecuteOnErrorAddFilesClearFileDeletionRecord(e);
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// The <see cref="AddFilesClearFileDeletionRecordApiResponse"/>
-        /// </summary>
-        public partial class AddFilesClearFileDeletionRecordApiResponse : HydrusAPI.NET.Client.ApiResponse, IAddFilesClearFileDeletionRecordApiResponse
-        {
-            /// <summary>
-            /// The logger
-            /// </summary>
-            public ILogger<AddFilesClearFileDeletionRecordApiResponse> Logger { get; }
-
-            /// <summary>
-            /// The <see cref="AddFilesClearFileDeletionRecordApiResponse"/>
+            /// The <see cref="AddFilesArchiveFilesApiResponse"/>
             /// </summary>
             /// <param name="logger"></param>
             /// <param name="httpRequestMessage"></param>
             /// <param name="httpResponseMessage"></param>
-            /// <param name="rawContent"></param>
+            /// <param name="contentStream"></param>
             /// <param name="path"></param>
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
-            public AddFilesClearFileDeletionRecordApiResponse(ILogger<AddFilesClearFileDeletionRecordApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            public AddFilesArchiveFilesApiResponse(ILogger<AddFilesArchiveFilesApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -1452,14 +1275,281 @@ namespace HydrusAPI.NET.Api
             partial void OnDeserializationError(ref bool suppressDefaultLog, Exception exception, HttpStatusCode httpStatusCode);
         }
 
-        partial void FormatAddFilesDeleteFiles(AddFilesDeleteFilesRequest? addFilesDeleteFilesRequest);
+        partial void FormatAddFilesClearFileDeletionRecord(ClearFileDeletionRecordRequest clearFileDeletionRecordRequest);
+
+        /// <summary>
+        /// Validates the request parameters
+        /// </summary>
+        /// <param name="clearFileDeletionRecordRequest"></param>
+        /// <returns></returns>
+        private void ValidateAddFilesClearFileDeletionRecord(ClearFileDeletionRecordRequest clearFileDeletionRecordRequest)
+        {
+            if (clearFileDeletionRecordRequest == null)
+                throw new ArgumentNullException(nameof(clearFileDeletionRecordRequest));
+        }
+
+        /// <summary>
+        /// Processes the server response
+        /// </summary>
+        /// <param name="apiResponseLocalVar"></param>
+        /// <param name="clearFileDeletionRecordRequest"></param>
+        private void AfterAddFilesClearFileDeletionRecordDefaultImplementation(IAddFilesClearFileDeletionRecordApiResponse apiResponseLocalVar, ClearFileDeletionRecordRequest clearFileDeletionRecordRequest)
+        {
+            bool suppressDefaultLog = false;
+            AfterAddFilesClearFileDeletionRecord(ref suppressDefaultLog, apiResponseLocalVar, clearFileDeletionRecordRequest);
+            if (!suppressDefaultLog)
+                Logger.LogInformation("{0,-9} | {1} | {3}", (apiResponseLocalVar.DownloadedAt - apiResponseLocalVar.RequestedAt).TotalSeconds, apiResponseLocalVar.StatusCode, apiResponseLocalVar.Path);
+        }
+
+        /// <summary>
+        /// Processes the server response
+        /// </summary>
+        /// <param name="suppressDefaultLog"></param>
+        /// <param name="apiResponseLocalVar"></param>
+        /// <param name="clearFileDeletionRecordRequest"></param>
+        partial void AfterAddFilesClearFileDeletionRecord(ref bool suppressDefaultLog, IAddFilesClearFileDeletionRecordApiResponse apiResponseLocalVar, ClearFileDeletionRecordRequest clearFileDeletionRecordRequest);
+
+        /// <summary>
+        /// Logs exceptions that occur while retrieving the server response
+        /// </summary>
+        /// <param name="exceptionLocalVar"></param>
+        /// <param name="pathFormatLocalVar"></param>
+        /// <param name="pathLocalVar"></param>
+        /// <param name="clearFileDeletionRecordRequest"></param>
+        private void OnErrorAddFilesClearFileDeletionRecordDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, ClearFileDeletionRecordRequest clearFileDeletionRecordRequest)
+        {
+            bool suppressDefaultLogLocalVar = false;
+            OnErrorAddFilesClearFileDeletionRecord(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, clearFileDeletionRecordRequest);
+            if (!suppressDefaultLogLocalVar)
+                Logger.LogError(exceptionLocalVar, "An error occurred while sending the request to the server.");
+        }
+
+        /// <summary>
+        /// A partial method that gives developers a way to provide customized exception handling
+        /// </summary>
+        /// <param name="suppressDefaultLogLocalVar"></param>
+        /// <param name="exceptionLocalVar"></param>
+        /// <param name="pathFormatLocalVar"></param>
+        /// <param name="pathLocalVar"></param>
+        /// <param name="clearFileDeletionRecordRequest"></param>
+        partial void OnErrorAddFilesClearFileDeletionRecord(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, ClearFileDeletionRecordRequest clearFileDeletionRecordRequest);
+
+        /// <summary>
+        /// Clear file deletion record Tell the client to forget that it once deleted files.
+        /// </summary>
+        /// <param name="clearFileDeletionRecordRequest"></param>
+        /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
+        /// <returns><see cref="Task"/>&lt;<see cref="IAddFilesClearFileDeletionRecordApiResponse"/>&gt;</returns>
+        public async Task<IAddFilesClearFileDeletionRecordApiResponse?> AddFilesClearFileDeletionRecordOrDefaultAsync(ClearFileDeletionRecordRequest clearFileDeletionRecordRequest, System.Threading.CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                return await AddFilesClearFileDeletionRecordAsync(clearFileDeletionRecordRequest, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Clear file deletion record Tell the client to forget that it once deleted files.
+        /// </summary>
+        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
+        /// <param name="clearFileDeletionRecordRequest"></param>
+        /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
+        /// <returns><see cref="Task"/>&lt;<see cref="IAddFilesClearFileDeletionRecordApiResponse"/>&gt;</returns>
+        public async Task<IAddFilesClearFileDeletionRecordApiResponse> AddFilesClearFileDeletionRecordAsync(ClearFileDeletionRecordRequest clearFileDeletionRecordRequest, System.Threading.CancellationToken cancellationToken = default)
+        {
+            UriBuilder uriBuilderLocalVar = new UriBuilder();
+
+            try
+            {
+                ValidateAddFilesClearFileDeletionRecord(clearFileDeletionRecordRequest);
+
+                FormatAddFilesClearFileDeletionRecord(clearFileDeletionRecordRequest);
+
+                using (HttpRequestMessage httpRequestMessageLocalVar = new HttpRequestMessage())
+                {
+                    uriBuilderLocalVar.Host = HttpClient.BaseAddress!.Host;
+                    uriBuilderLocalVar.Port = HttpClient.BaseAddress.Port;
+                    uriBuilderLocalVar.Scheme = HttpClient.BaseAddress.Scheme;
+                    uriBuilderLocalVar.Path = HttpClient.BaseAddress.AbsolutePath == "/"
+                        ? "/add_files/clear_file_deletion_record"
+                        : string.Concat(HttpClient.BaseAddress.AbsolutePath, "/add_files/clear_file_deletion_record");
+
+                    httpRequestMessageLocalVar.Content = (clearFileDeletionRecordRequest as object) is System.IO.Stream stream
+                        ? httpRequestMessageLocalVar.Content = new StreamContent(stream)
+                        : httpRequestMessageLocalVar.Content = new StringContent(JsonSerializer.Serialize(clearFileDeletionRecordRequest, _jsonSerializerOptions));
+
+                    List<TokenBase> tokenBaseLocalVars = new List<TokenBase>();
+                    ApiKeyToken apiKeyTokenLocalVar1 = (ApiKeyToken) await ApiKeyProvider.GetAsync("Hydrus-Client-API-Access-Key", cancellationToken).ConfigureAwait(false);
+                    tokenBaseLocalVars.Add(apiKeyTokenLocalVar1);
+                    apiKeyTokenLocalVar1.UseInHeader(httpRequestMessageLocalVar);
+
+                    ApiKeyToken apiKeyTokenLocalVar2 = (ApiKeyToken) await ApiKeyProvider.GetAsync("Hydrus-Client-API-Session-Key", cancellationToken).ConfigureAwait(false);
+                    tokenBaseLocalVars.Add(apiKeyTokenLocalVar2);
+                    apiKeyTokenLocalVar2.UseInHeader(httpRequestMessageLocalVar);
+
+                    httpRequestMessageLocalVar.RequestUri = uriBuilderLocalVar.Uri;
+
+                    string[] contentTypes = new string[] {
+                        "application/json"
+                    };
+
+                    string? contentTypeLocalVar = ClientUtils.SelectHeaderContentType(contentTypes);
+
+                    if (contentTypeLocalVar != null && httpRequestMessageLocalVar.Content != null)
+                        httpRequestMessageLocalVar.Content.Headers.ContentType = new MediaTypeHeaderValue(contentTypeLocalVar);
+
+                    httpRequestMessageLocalVar.Method = HttpMethod.Post;
+
+                    DateTime requestedAtLocalVar = DateTime.UtcNow;
+
+                    using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
+                    {
+                        ILogger<AddFilesClearFileDeletionRecordApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<AddFilesClearFileDeletionRecordApiResponse>();
+                        AddFilesClearFileDeletionRecordApiResponse apiResponseLocalVar;
+
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/add_files/clear_file_deletion_record", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
+
+                        AfterAddFilesClearFileDeletionRecordDefaultImplementation(apiResponseLocalVar, clearFileDeletionRecordRequest);
+
+                        Events.ExecuteOnAddFilesClearFileDeletionRecord(apiResponseLocalVar);
+
+                        if (apiResponseLocalVar.StatusCode == (HttpStatusCode) 429)
+                            foreach(TokenBase tokenBaseLocalVar in tokenBaseLocalVars)
+                                tokenBaseLocalVar.BeginRateLimit();
+
+                        return apiResponseLocalVar;
+                    }
+                }
+            }
+            catch(Exception e)
+            {
+                OnErrorAddFilesClearFileDeletionRecordDefaultImplementation(e, "/add_files/clear_file_deletion_record", uriBuilderLocalVar.Path, clearFileDeletionRecordRequest);
+                Events.ExecuteOnErrorAddFilesClearFileDeletionRecord(e);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="AddFilesClearFileDeletionRecordApiResponse"/>
+        /// </summary>
+        public partial class AddFilesClearFileDeletionRecordApiResponse : HydrusAPI.NET.Client.ApiResponse, IAddFilesClearFileDeletionRecordApiResponse
+        {
+            /// <summary>
+            /// The logger
+            /// </summary>
+            public ILogger<AddFilesClearFileDeletionRecordApiResponse> Logger { get; }
+
+            /// <summary>
+            /// The <see cref="AddFilesClearFileDeletionRecordApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="rawContent"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public AddFilesClearFileDeletionRecordApiResponse(ILogger<AddFilesClearFileDeletionRecordApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="AddFilesClearFileDeletionRecordApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public AddFilesClearFileDeletionRecordApiResponse(ILogger<AddFilesClearFileDeletionRecordApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            partial void OnCreated(global::System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage);
+
+            /// <summary>
+            /// Returns true if the response is 200 Ok
+            /// </summary>
+            /// <returns></returns>
+            public bool IsOk => 200 == (int)StatusCode;
+
+            /// <summary>
+            /// Returns true if the response is 400 BadRequest
+            /// </summary>
+            /// <returns></returns>
+            public bool IsBadRequest => 400 == (int)StatusCode;
+
+            /// <summary>
+            /// Returns true if the response is 401 Unauthorized
+            /// </summary>
+            /// <returns></returns>
+            public bool IsUnauthorized => 401 == (int)StatusCode;
+
+            /// <summary>
+            /// Returns true if the response is 403 Forbidden
+            /// </summary>
+            /// <returns></returns>
+            public bool IsForbidden => 403 == (int)StatusCode;
+
+            /// <summary>
+            /// Returns true if the response is 419 CustomHttpStatusCode419
+            /// </summary>
+            /// <returns></returns>
+            public bool IsCustomHttpStatusCode419 => 419 == (int)StatusCode;
+
+            /// <summary>
+            /// Returns true if the response is 500 InternalServerError
+            /// </summary>
+            /// <returns></returns>
+            public bool IsInternalServerError => 500 == (int)StatusCode;
+
+            private void OnDeserializationErrorDefaultImplementation(Exception exception, HttpStatusCode httpStatusCode)
+            {
+                bool suppressDefaultLog = false;
+                OnDeserializationError(ref suppressDefaultLog, exception, httpStatusCode);
+                if (!suppressDefaultLog)
+                    Logger.LogError(exception, "An error occurred while deserializing the {code} response.", httpStatusCode);
+            }
+
+            partial void OnDeserializationError(ref bool suppressDefaultLog, Exception exception, HttpStatusCode httpStatusCode);
+        }
+
+        partial void FormatAddFilesDeleteFiles(AddFilesDeleteFilesRequest addFilesDeleteFilesRequest);
+
+        /// <summary>
+        /// Validates the request parameters
+        /// </summary>
+        /// <param name="addFilesDeleteFilesRequest"></param>
+        /// <returns></returns>
+        private void ValidateAddFilesDeleteFiles(AddFilesDeleteFilesRequest addFilesDeleteFilesRequest)
+        {
+            if (addFilesDeleteFilesRequest == null)
+                throw new ArgumentNullException(nameof(addFilesDeleteFilesRequest));
+        }
 
         /// <summary>
         /// Processes the server response
         /// </summary>
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="addFilesDeleteFilesRequest"></param>
-        private void AfterAddFilesDeleteFilesDefaultImplementation(IAddFilesDeleteFilesApiResponse apiResponseLocalVar, AddFilesDeleteFilesRequest? addFilesDeleteFilesRequest)
+        private void AfterAddFilesDeleteFilesDefaultImplementation(IAddFilesDeleteFilesApiResponse apiResponseLocalVar, AddFilesDeleteFilesRequest addFilesDeleteFilesRequest)
         {
             bool suppressDefaultLog = false;
             AfterAddFilesDeleteFiles(ref suppressDefaultLog, apiResponseLocalVar, addFilesDeleteFilesRequest);
@@ -1473,7 +1563,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="suppressDefaultLog"></param>
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="addFilesDeleteFilesRequest"></param>
-        partial void AfterAddFilesDeleteFiles(ref bool suppressDefaultLog, IAddFilesDeleteFilesApiResponse apiResponseLocalVar, AddFilesDeleteFilesRequest? addFilesDeleteFilesRequest);
+        partial void AfterAddFilesDeleteFiles(ref bool suppressDefaultLog, IAddFilesDeleteFilesApiResponse apiResponseLocalVar, AddFilesDeleteFilesRequest addFilesDeleteFilesRequest);
 
         /// <summary>
         /// Logs exceptions that occur while retrieving the server response
@@ -1482,7 +1572,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="pathFormatLocalVar"></param>
         /// <param name="pathLocalVar"></param>
         /// <param name="addFilesDeleteFilesRequest"></param>
-        private void OnErrorAddFilesDeleteFilesDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, AddFilesDeleteFilesRequest? addFilesDeleteFilesRequest)
+        private void OnErrorAddFilesDeleteFilesDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, AddFilesDeleteFilesRequest addFilesDeleteFilesRequest)
         {
             bool suppressDefaultLogLocalVar = false;
             OnErrorAddFilesDeleteFiles(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, addFilesDeleteFilesRequest);
@@ -1498,7 +1588,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="pathFormatLocalVar"></param>
         /// <param name="pathLocalVar"></param>
         /// <param name="addFilesDeleteFilesRequest"></param>
-        partial void OnErrorAddFilesDeleteFiles(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, AddFilesDeleteFilesRequest? addFilesDeleteFilesRequest);
+        partial void OnErrorAddFilesDeleteFiles(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, AddFilesDeleteFilesRequest addFilesDeleteFilesRequest);
 
         /// <summary>
         /// Delete files from the client. Sends specified files to the trash or performs physical deletion based on the file domain.
@@ -1506,7 +1596,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="addFilesDeleteFilesRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IAddFilesDeleteFilesApiResponse"/>&gt;</returns>
-        public async Task<IAddFilesDeleteFilesApiResponse?> AddFilesDeleteFilesOrDefaultAsync(AddFilesDeleteFilesRequest? addFilesDeleteFilesRequest = default, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IAddFilesDeleteFilesApiResponse?> AddFilesDeleteFilesOrDefaultAsync(AddFilesDeleteFilesRequest addFilesDeleteFilesRequest, System.Threading.CancellationToken cancellationToken = default)
         {
             try
             {
@@ -1525,12 +1615,14 @@ namespace HydrusAPI.NET.Api
         /// <param name="addFilesDeleteFilesRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IAddFilesDeleteFilesApiResponse"/>&gt;</returns>
-        public async Task<IAddFilesDeleteFilesApiResponse> AddFilesDeleteFilesAsync(AddFilesDeleteFilesRequest? addFilesDeleteFilesRequest = default, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IAddFilesDeleteFilesApiResponse> AddFilesDeleteFilesAsync(AddFilesDeleteFilesRequest addFilesDeleteFilesRequest, System.Threading.CancellationToken cancellationToken = default)
         {
             UriBuilder uriBuilderLocalVar = new UriBuilder();
 
             try
             {
+                ValidateAddFilesDeleteFiles(addFilesDeleteFilesRequest);
+
                 FormatAddFilesDeleteFiles(addFilesDeleteFilesRequest);
 
                 using (HttpRequestMessage httpRequestMessageLocalVar = new HttpRequestMessage())
@@ -1572,11 +1664,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<AddFilesDeleteFilesApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<AddFilesDeleteFilesApiResponse>();
+                        AddFilesDeleteFilesApiResponse apiResponseLocalVar;
 
-                        AddFilesDeleteFilesApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/add_files/delete_files", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/add_files/delete_files", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterAddFilesDeleteFilesDefaultImplementation(apiResponseLocalVar, addFilesDeleteFilesRequest);
 
@@ -1619,6 +1717,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public AddFilesDeleteFilesApiResponse(ILogger<AddFilesDeleteFilesApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="AddFilesDeleteFilesApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public AddFilesDeleteFilesApiResponse(ILogger<AddFilesDeleteFilesApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -1816,11 +1930,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<AddFilesGenerateHashesApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<AddFilesGenerateHashesApiResponse>();
+                        AddFilesGenerateHashesApiResponse apiResponseLocalVar;
 
-                        AddFilesGenerateHashesApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/add_files/generate_hashes", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/add_files/generate_hashes", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterAddFilesGenerateHashesDefaultImplementation(apiResponseLocalVar, addFilesGenerateHashesRequest);
 
@@ -1863,6 +1983,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public AddFilesGenerateHashesApiResponse(ILogger<AddFilesGenerateHashesApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="AddFilesGenerateHashesApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public AddFilesGenerateHashesApiResponse(ILogger<AddFilesGenerateHashesApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -1943,14 +2079,25 @@ namespace HydrusAPI.NET.Api
             partial void OnDeserializationError(ref bool suppressDefaultLog, Exception exception, HttpStatusCode httpStatusCode);
         }
 
-        partial void FormatAddFilesMigrateFiles(MigrateFilesRequest? migrateFilesRequest);
+        partial void FormatAddFilesMigrateFiles(MigrateFilesRequest migrateFilesRequest);
+
+        /// <summary>
+        /// Validates the request parameters
+        /// </summary>
+        /// <param name="migrateFilesRequest"></param>
+        /// <returns></returns>
+        private void ValidateAddFilesMigrateFiles(MigrateFilesRequest migrateFilesRequest)
+        {
+            if (migrateFilesRequest == null)
+                throw new ArgumentNullException(nameof(migrateFilesRequest));
+        }
 
         /// <summary>
         /// Processes the server response
         /// </summary>
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="migrateFilesRequest"></param>
-        private void AfterAddFilesMigrateFilesDefaultImplementation(IAddFilesMigrateFilesApiResponse apiResponseLocalVar, MigrateFilesRequest? migrateFilesRequest)
+        private void AfterAddFilesMigrateFilesDefaultImplementation(IAddFilesMigrateFilesApiResponse apiResponseLocalVar, MigrateFilesRequest migrateFilesRequest)
         {
             bool suppressDefaultLog = false;
             AfterAddFilesMigrateFiles(ref suppressDefaultLog, apiResponseLocalVar, migrateFilesRequest);
@@ -1964,7 +2111,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="suppressDefaultLog"></param>
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="migrateFilesRequest"></param>
-        partial void AfterAddFilesMigrateFiles(ref bool suppressDefaultLog, IAddFilesMigrateFilesApiResponse apiResponseLocalVar, MigrateFilesRequest? migrateFilesRequest);
+        partial void AfterAddFilesMigrateFiles(ref bool suppressDefaultLog, IAddFilesMigrateFilesApiResponse apiResponseLocalVar, MigrateFilesRequest migrateFilesRequest);
 
         /// <summary>
         /// Logs exceptions that occur while retrieving the server response
@@ -1973,7 +2120,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="pathFormatLocalVar"></param>
         /// <param name="pathLocalVar"></param>
         /// <param name="migrateFilesRequest"></param>
-        private void OnErrorAddFilesMigrateFilesDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, MigrateFilesRequest? migrateFilesRequest)
+        private void OnErrorAddFilesMigrateFilesDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, MigrateFilesRequest migrateFilesRequest)
         {
             bool suppressDefaultLogLocalVar = false;
             OnErrorAddFilesMigrateFiles(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, migrateFilesRequest);
@@ -1989,7 +2136,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="pathFormatLocalVar"></param>
         /// <param name="pathLocalVar"></param>
         /// <param name="migrateFilesRequest"></param>
-        partial void OnErrorAddFilesMigrateFiles(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, MigrateFilesRequest? migrateFilesRequest);
+        partial void OnErrorAddFilesMigrateFiles(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, MigrateFilesRequest migrateFilesRequest);
 
         /// <summary>
         /// Copy files from one local file domain to another. This endpoint migrates files (by hash or ID) from one local file domain to another or multiple domains. Restricted to users with the Import Files permission.
@@ -1997,7 +2144,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="migrateFilesRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IAddFilesMigrateFilesApiResponse"/>&gt;</returns>
-        public async Task<IAddFilesMigrateFilesApiResponse?> AddFilesMigrateFilesOrDefaultAsync(MigrateFilesRequest? migrateFilesRequest = default, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IAddFilesMigrateFilesApiResponse?> AddFilesMigrateFilesOrDefaultAsync(MigrateFilesRequest migrateFilesRequest, System.Threading.CancellationToken cancellationToken = default)
         {
             try
             {
@@ -2016,12 +2163,14 @@ namespace HydrusAPI.NET.Api
         /// <param name="migrateFilesRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IAddFilesMigrateFilesApiResponse"/>&gt;</returns>
-        public async Task<IAddFilesMigrateFilesApiResponse> AddFilesMigrateFilesAsync(MigrateFilesRequest? migrateFilesRequest = default, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IAddFilesMigrateFilesApiResponse> AddFilesMigrateFilesAsync(MigrateFilesRequest migrateFilesRequest, System.Threading.CancellationToken cancellationToken = default)
         {
             UriBuilder uriBuilderLocalVar = new UriBuilder();
 
             try
             {
+                ValidateAddFilesMigrateFiles(migrateFilesRequest);
+
                 FormatAddFilesMigrateFiles(migrateFilesRequest);
 
                 using (HttpRequestMessage httpRequestMessageLocalVar = new HttpRequestMessage())
@@ -2063,11 +2212,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<AddFilesMigrateFilesApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<AddFilesMigrateFilesApiResponse>();
+                        AddFilesMigrateFilesApiResponse apiResponseLocalVar;
 
-                        AddFilesMigrateFilesApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/add_files/migrate_files", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/add_files/migrate_files", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterAddFilesMigrateFilesDefaultImplementation(apiResponseLocalVar, migrateFilesRequest);
 
@@ -2110,6 +2265,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public AddFilesMigrateFilesApiResponse(ILogger<AddFilesMigrateFilesApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="AddFilesMigrateFilesApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public AddFilesMigrateFilesApiResponse(ILogger<AddFilesMigrateFilesApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -2164,14 +2335,25 @@ namespace HydrusAPI.NET.Api
             partial void OnDeserializationError(ref bool suppressDefaultLog, Exception exception, HttpStatusCode httpStatusCode);
         }
 
-        partial void FormatAddFilesUnarchiveFiles(UnarchiveFilesRequest? unarchiveFilesRequest);
+        partial void FormatAddFilesUnarchiveFiles(UnarchiveFilesRequest unarchiveFilesRequest);
+
+        /// <summary>
+        /// Validates the request parameters
+        /// </summary>
+        /// <param name="unarchiveFilesRequest"></param>
+        /// <returns></returns>
+        private void ValidateAddFilesUnarchiveFiles(UnarchiveFilesRequest unarchiveFilesRequest)
+        {
+            if (unarchiveFilesRequest == null)
+                throw new ArgumentNullException(nameof(unarchiveFilesRequest));
+        }
 
         /// <summary>
         /// Processes the server response
         /// </summary>
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="unarchiveFilesRequest"></param>
-        private void AfterAddFilesUnarchiveFilesDefaultImplementation(IAddFilesUnarchiveFilesApiResponse apiResponseLocalVar, UnarchiveFilesRequest? unarchiveFilesRequest)
+        private void AfterAddFilesUnarchiveFilesDefaultImplementation(IAddFilesUnarchiveFilesApiResponse apiResponseLocalVar, UnarchiveFilesRequest unarchiveFilesRequest)
         {
             bool suppressDefaultLog = false;
             AfterAddFilesUnarchiveFiles(ref suppressDefaultLog, apiResponseLocalVar, unarchiveFilesRequest);
@@ -2185,7 +2367,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="suppressDefaultLog"></param>
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="unarchiveFilesRequest"></param>
-        partial void AfterAddFilesUnarchiveFiles(ref bool suppressDefaultLog, IAddFilesUnarchiveFilesApiResponse apiResponseLocalVar, UnarchiveFilesRequest? unarchiveFilesRequest);
+        partial void AfterAddFilesUnarchiveFiles(ref bool suppressDefaultLog, IAddFilesUnarchiveFilesApiResponse apiResponseLocalVar, UnarchiveFilesRequest unarchiveFilesRequest);
 
         /// <summary>
         /// Logs exceptions that occur while retrieving the server response
@@ -2194,7 +2376,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="pathFormatLocalVar"></param>
         /// <param name="pathLocalVar"></param>
         /// <param name="unarchiveFilesRequest"></param>
-        private void OnErrorAddFilesUnarchiveFilesDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, UnarchiveFilesRequest? unarchiveFilesRequest)
+        private void OnErrorAddFilesUnarchiveFilesDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, UnarchiveFilesRequest unarchiveFilesRequest)
         {
             bool suppressDefaultLogLocalVar = false;
             OnErrorAddFilesUnarchiveFiles(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, unarchiveFilesRequest);
@@ -2210,7 +2392,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="pathFormatLocalVar"></param>
         /// <param name="pathLocalVar"></param>
         /// <param name="unarchiveFilesRequest"></param>
-        partial void OnErrorAddFilesUnarchiveFiles(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, UnarchiveFilesRequest? unarchiveFilesRequest);
+        partial void OnErrorAddFilesUnarchiveFiles(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, UnarchiveFilesRequest unarchiveFilesRequest);
 
         /// <summary>
         /// Unarchive files by putting them back into the inbox. This endpoint tells the client to re-inbox archived files, removing them from the archive. It only affects files in &#39;my files&#39; or &#39;trash&#39;. No error is returned if files do not exist or are already in the inbox.
@@ -2218,7 +2400,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="unarchiveFilesRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IAddFilesUnarchiveFilesApiResponse"/>&gt;</returns>
-        public async Task<IAddFilesUnarchiveFilesApiResponse?> AddFilesUnarchiveFilesOrDefaultAsync(UnarchiveFilesRequest? unarchiveFilesRequest = default, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IAddFilesUnarchiveFilesApiResponse?> AddFilesUnarchiveFilesOrDefaultAsync(UnarchiveFilesRequest unarchiveFilesRequest, System.Threading.CancellationToken cancellationToken = default)
         {
             try
             {
@@ -2237,12 +2419,14 @@ namespace HydrusAPI.NET.Api
         /// <param name="unarchiveFilesRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IAddFilesUnarchiveFilesApiResponse"/>&gt;</returns>
-        public async Task<IAddFilesUnarchiveFilesApiResponse> AddFilesUnarchiveFilesAsync(UnarchiveFilesRequest? unarchiveFilesRequest = default, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IAddFilesUnarchiveFilesApiResponse> AddFilesUnarchiveFilesAsync(UnarchiveFilesRequest unarchiveFilesRequest, System.Threading.CancellationToken cancellationToken = default)
         {
             UriBuilder uriBuilderLocalVar = new UriBuilder();
 
             try
             {
+                ValidateAddFilesUnarchiveFiles(unarchiveFilesRequest);
+
                 FormatAddFilesUnarchiveFiles(unarchiveFilesRequest);
 
                 using (HttpRequestMessage httpRequestMessageLocalVar = new HttpRequestMessage())
@@ -2284,11 +2468,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<AddFilesUnarchiveFilesApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<AddFilesUnarchiveFilesApiResponse>();
+                        AddFilesUnarchiveFilesApiResponse apiResponseLocalVar;
 
-                        AddFilesUnarchiveFilesApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/add_files/unarchive_files", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/add_files/unarchive_files", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterAddFilesUnarchiveFilesDefaultImplementation(apiResponseLocalVar, unarchiveFilesRequest);
 
@@ -2336,6 +2526,22 @@ namespace HydrusAPI.NET.Api
                 OnCreated(httpRequestMessage, httpResponseMessage);
             }
 
+            /// <summary>
+            /// The <see cref="AddFilesUnarchiveFilesApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public AddFilesUnarchiveFilesApiResponse(ILogger<AddFilesUnarchiveFilesApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
             partial void OnCreated(global::System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage);
 
             /// <summary>
@@ -2355,14 +2561,25 @@ namespace HydrusAPI.NET.Api
             partial void OnDeserializationError(ref bool suppressDefaultLog, Exception exception, HttpStatusCode httpStatusCode);
         }
 
-        partial void FormatAddFilesUndeleteFiles(AddFilesUndeleteFilesRequest? addFilesUndeleteFilesRequest);
+        partial void FormatAddFilesUndeleteFiles(AddFilesUndeleteFilesRequest addFilesUndeleteFilesRequest);
+
+        /// <summary>
+        /// Validates the request parameters
+        /// </summary>
+        /// <param name="addFilesUndeleteFilesRequest"></param>
+        /// <returns></returns>
+        private void ValidateAddFilesUndeleteFiles(AddFilesUndeleteFilesRequest addFilesUndeleteFilesRequest)
+        {
+            if (addFilesUndeleteFilesRequest == null)
+                throw new ArgumentNullException(nameof(addFilesUndeleteFilesRequest));
+        }
 
         /// <summary>
         /// Processes the server response
         /// </summary>
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="addFilesUndeleteFilesRequest"></param>
-        private void AfterAddFilesUndeleteFilesDefaultImplementation(IAddFilesUndeleteFilesApiResponse apiResponseLocalVar, AddFilesUndeleteFilesRequest? addFilesUndeleteFilesRequest)
+        private void AfterAddFilesUndeleteFilesDefaultImplementation(IAddFilesUndeleteFilesApiResponse apiResponseLocalVar, AddFilesUndeleteFilesRequest addFilesUndeleteFilesRequest)
         {
             bool suppressDefaultLog = false;
             AfterAddFilesUndeleteFiles(ref suppressDefaultLog, apiResponseLocalVar, addFilesUndeleteFilesRequest);
@@ -2376,7 +2593,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="suppressDefaultLog"></param>
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="addFilesUndeleteFilesRequest"></param>
-        partial void AfterAddFilesUndeleteFiles(ref bool suppressDefaultLog, IAddFilesUndeleteFilesApiResponse apiResponseLocalVar, AddFilesUndeleteFilesRequest? addFilesUndeleteFilesRequest);
+        partial void AfterAddFilesUndeleteFiles(ref bool suppressDefaultLog, IAddFilesUndeleteFilesApiResponse apiResponseLocalVar, AddFilesUndeleteFilesRequest addFilesUndeleteFilesRequest);
 
         /// <summary>
         /// Logs exceptions that occur while retrieving the server response
@@ -2385,7 +2602,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="pathFormatLocalVar"></param>
         /// <param name="pathLocalVar"></param>
         /// <param name="addFilesUndeleteFilesRequest"></param>
-        private void OnErrorAddFilesUndeleteFilesDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, AddFilesUndeleteFilesRequest? addFilesUndeleteFilesRequest)
+        private void OnErrorAddFilesUndeleteFilesDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, AddFilesUndeleteFilesRequest addFilesUndeleteFilesRequest)
         {
             bool suppressDefaultLogLocalVar = false;
             OnErrorAddFilesUndeleteFiles(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, addFilesUndeleteFilesRequest);
@@ -2401,7 +2618,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="pathFormatLocalVar"></param>
         /// <param name="pathLocalVar"></param>
         /// <param name="addFilesUndeleteFilesRequest"></param>
-        partial void OnErrorAddFilesUndeleteFiles(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, AddFilesUndeleteFilesRequest? addFilesUndeleteFilesRequest);
+        partial void OnErrorAddFilesUndeleteFiles(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, AddFilesUndeleteFilesRequest addFilesUndeleteFilesRequest);
 
         /// <summary>
         /// Undelete files that were previously deleted. Tell the client to restore files that were previously deleted to their old file service(s). This operation will only occur on files that are currently in your file store. 
@@ -2409,7 +2626,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="addFilesUndeleteFilesRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IAddFilesUndeleteFilesApiResponse"/>&gt;</returns>
-        public async Task<IAddFilesUndeleteFilesApiResponse?> AddFilesUndeleteFilesOrDefaultAsync(AddFilesUndeleteFilesRequest? addFilesUndeleteFilesRequest = default, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IAddFilesUndeleteFilesApiResponse?> AddFilesUndeleteFilesOrDefaultAsync(AddFilesUndeleteFilesRequest addFilesUndeleteFilesRequest, System.Threading.CancellationToken cancellationToken = default)
         {
             try
             {
@@ -2428,12 +2645,14 @@ namespace HydrusAPI.NET.Api
         /// <param name="addFilesUndeleteFilesRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IAddFilesUndeleteFilesApiResponse"/>&gt;</returns>
-        public async Task<IAddFilesUndeleteFilesApiResponse> AddFilesUndeleteFilesAsync(AddFilesUndeleteFilesRequest? addFilesUndeleteFilesRequest = default, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IAddFilesUndeleteFilesApiResponse> AddFilesUndeleteFilesAsync(AddFilesUndeleteFilesRequest addFilesUndeleteFilesRequest, System.Threading.CancellationToken cancellationToken = default)
         {
             UriBuilder uriBuilderLocalVar = new UriBuilder();
 
             try
             {
+                ValidateAddFilesUndeleteFiles(addFilesUndeleteFilesRequest);
+
                 FormatAddFilesUndeleteFiles(addFilesUndeleteFilesRequest);
 
                 using (HttpRequestMessage httpRequestMessageLocalVar = new HttpRequestMessage())
@@ -2475,11 +2694,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<AddFilesUndeleteFilesApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<AddFilesUndeleteFilesApiResponse>();
+                        AddFilesUndeleteFilesApiResponse apiResponseLocalVar;
 
-                        AddFilesUndeleteFilesApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/add_files/undelete_files", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/add_files/undelete_files", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterAddFilesUndeleteFilesDefaultImplementation(apiResponseLocalVar, addFilesUndeleteFilesRequest);
 
@@ -2522,6 +2747,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public AddFilesUndeleteFilesApiResponse(ILogger<AddFilesUndeleteFilesApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="AddFilesUndeleteFilesApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public AddFilesUndeleteFilesApiResponse(ILogger<AddFilesUndeleteFilesApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);

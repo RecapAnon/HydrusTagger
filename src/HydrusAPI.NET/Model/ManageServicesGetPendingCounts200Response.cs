@@ -138,22 +138,16 @@ namespace HydrusAPI.NET.Model
                     switch (localVarJsonPropertyName)
                     {
                         case "services":
-                            services = new Option<Dictionary<string, Service>?>(JsonSerializer.Deserialize<Dictionary<string, Service>>(ref utf8JsonReader, jsonSerializerOptions)!);
+                            services = new Option<Dictionary<string, Service>?>(JsonSerializer.Deserialize<Dictionary<string, Service>>(ref utf8JsonReader, jsonSerializerOptions));
                             break;
                         case "pending_counts":
-                            pendingCounts = new Option<Dictionary<string, ManageServicesGetPendingCounts200ResponsePendingCountsValue>?>(JsonSerializer.Deserialize<Dictionary<string, ManageServicesGetPendingCounts200ResponsePendingCountsValue>>(ref utf8JsonReader, jsonSerializerOptions)!);
+                            pendingCounts = new Option<Dictionary<string, ManageServicesGetPendingCounts200ResponsePendingCountsValue>?>(JsonSerializer.Deserialize<Dictionary<string, ManageServicesGetPendingCounts200ResponsePendingCountsValue>>(ref utf8JsonReader, jsonSerializerOptions));
                             break;
                         default:
                             break;
                     }
                 }
             }
-
-            if (services.IsSet && services.Value == null)
-                throw new ArgumentNullException(nameof(services), "Property is not nullable for class ManageServicesGetPendingCounts200Response.");
-
-            if (pendingCounts.IsSet && pendingCounts.Value == null)
-                throw new ArgumentNullException(nameof(pendingCounts), "Property is not nullable for class ManageServicesGetPendingCounts200Response.");
 
             return new ManageServicesGetPendingCounts200Response(services, pendingCounts);
         }
@@ -182,22 +176,22 @@ namespace HydrusAPI.NET.Model
         /// <exception cref="NotImplementedException"></exception>
         public void WriteProperties(Utf8JsonWriter writer, ManageServicesGetPendingCounts200Response manageServicesGetPendingCounts200Response, JsonSerializerOptions jsonSerializerOptions)
         {
-            if (manageServicesGetPendingCounts200Response.ServicesOption.IsSet && manageServicesGetPendingCounts200Response.Services == null)
-                throw new ArgumentNullException(nameof(manageServicesGetPendingCounts200Response.Services), "Property is required for class ManageServicesGetPendingCounts200Response.");
-
-            if (manageServicesGetPendingCounts200Response.PendingCountsOption.IsSet && manageServicesGetPendingCounts200Response.PendingCounts == null)
-                throw new ArgumentNullException(nameof(manageServicesGetPendingCounts200Response.PendingCounts), "Property is required for class ManageServicesGetPendingCounts200Response.");
-
             if (manageServicesGetPendingCounts200Response.ServicesOption.IsSet)
-            {
-                writer.WritePropertyName("services");
-                JsonSerializer.Serialize(writer, manageServicesGetPendingCounts200Response.Services, jsonSerializerOptions);
-            }
+                if (manageServicesGetPendingCounts200Response.ServicesOption.Value != null)
+                {
+                    writer.WritePropertyName("services");
+                    JsonSerializer.Serialize(writer, manageServicesGetPendingCounts200Response.Services, jsonSerializerOptions);
+                }
+                else
+                    writer.WriteNull("services");
             if (manageServicesGetPendingCounts200Response.PendingCountsOption.IsSet)
-            {
-                writer.WritePropertyName("pending_counts");
-                JsonSerializer.Serialize(writer, manageServicesGetPendingCounts200Response.PendingCounts, jsonSerializerOptions);
-            }
+                if (manageServicesGetPendingCounts200Response.PendingCountsOption.Value != null)
+                {
+                    writer.WritePropertyName("pending_counts");
+                    JsonSerializer.Serialize(writer, manageServicesGetPendingCounts200Response.PendingCounts, jsonSerializerOptions);
+                }
+                else
+                    writer.WriteNull("pending_counts");
         }
     }
 

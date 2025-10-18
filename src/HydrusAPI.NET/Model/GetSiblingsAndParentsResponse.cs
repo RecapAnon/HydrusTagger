@@ -37,7 +37,7 @@ namespace HydrusAPI.NET.Model
         /// <param name="services">services</param>
         /// <param name="tags">tags</param>
         [JsonConstructor]
-        public GetSiblingsAndParentsResponse(Dictionary<string, Service> services, Dictionary<string, Dictionary<string, GetSiblingsAndParentsResponseTagsValueValue>> tags)
+        public GetSiblingsAndParentsResponse(Dictionary<string, Service>? services = default, Dictionary<string, Dictionary<string, GetSiblingsAndParentsResponseTagsValueValue>>? tags = default)
         {
             Services = services;
             Tags = tags;
@@ -50,13 +50,13 @@ namespace HydrusAPI.NET.Model
         /// Gets or Sets Services
         /// </summary>
         [JsonPropertyName("services")]
-        public Dictionary<string, Service> Services { get; set; }
+        public Dictionary<string, Service>? Services { get; set; }
 
         /// <summary>
         /// Gets or Sets Tags
         /// </summary>
         [JsonPropertyName("tags")]
-        public Dictionary<string, Dictionary<string, GetSiblingsAndParentsResponseTagsValueValue>> Tags { get; set; }
+        public Dictionary<string, Dictionary<string, GetSiblingsAndParentsResponseTagsValueValue>>? Tags { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -124,10 +124,10 @@ namespace HydrusAPI.NET.Model
                     switch (localVarJsonPropertyName)
                     {
                         case "services":
-                            services = new Option<Dictionary<string, Service>?>(JsonSerializer.Deserialize<Dictionary<string, Service>>(ref utf8JsonReader, jsonSerializerOptions)!);
+                            services = new Option<Dictionary<string, Service>?>(JsonSerializer.Deserialize<Dictionary<string, Service>>(ref utf8JsonReader, jsonSerializerOptions));
                             break;
                         case "tags":
-                            tags = new Option<Dictionary<string, Dictionary<string, GetSiblingsAndParentsResponseTagsValueValue>>?>(JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, GetSiblingsAndParentsResponseTagsValueValue>>>(ref utf8JsonReader, jsonSerializerOptions)!);
+                            tags = new Option<Dictionary<string, Dictionary<string, GetSiblingsAndParentsResponseTagsValueValue>>?>(JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, GetSiblingsAndParentsResponseTagsValueValue>>>(ref utf8JsonReader, jsonSerializerOptions));
                             break;
                         default:
                             break;
@@ -140,12 +140,6 @@ namespace HydrusAPI.NET.Model
 
             if (!tags.IsSet)
                 throw new ArgumentException("Property is required for class GetSiblingsAndParentsResponse.", nameof(tags));
-
-            if (services.IsSet && services.Value == null)
-                throw new ArgumentNullException(nameof(services), "Property is not nullable for class GetSiblingsAndParentsResponse.");
-
-            if (tags.IsSet && tags.Value == null)
-                throw new ArgumentNullException(nameof(tags), "Property is not nullable for class GetSiblingsAndParentsResponse.");
 
             return new GetSiblingsAndParentsResponse(services.Value!, tags.Value!);
         }
@@ -174,16 +168,20 @@ namespace HydrusAPI.NET.Model
         /// <exception cref="NotImplementedException"></exception>
         public void WriteProperties(Utf8JsonWriter writer, GetSiblingsAndParentsResponse getSiblingsAndParentsResponse, JsonSerializerOptions jsonSerializerOptions)
         {
-            if (getSiblingsAndParentsResponse.Services == null)
-                throw new ArgumentNullException(nameof(getSiblingsAndParentsResponse.Services), "Property is required for class GetSiblingsAndParentsResponse.");
-
-            if (getSiblingsAndParentsResponse.Tags == null)
-                throw new ArgumentNullException(nameof(getSiblingsAndParentsResponse.Tags), "Property is required for class GetSiblingsAndParentsResponse.");
-
-            writer.WritePropertyName("services");
-            JsonSerializer.Serialize(writer, getSiblingsAndParentsResponse.Services, jsonSerializerOptions);
-            writer.WritePropertyName("tags");
-            JsonSerializer.Serialize(writer, getSiblingsAndParentsResponse.Tags, jsonSerializerOptions);
+            if (getSiblingsAndParentsResponse.Services != null)
+            {
+                writer.WritePropertyName("services");
+                JsonSerializer.Serialize(writer, getSiblingsAndParentsResponse.Services, jsonSerializerOptions);
+            }
+            else
+                writer.WriteNull("services");
+            if (getSiblingsAndParentsResponse.Tags != null)
+            {
+                writer.WritePropertyName("tags");
+                JsonSerializer.Serialize(writer, getSiblingsAndParentsResponse.Tags, jsonSerializerOptions);
+            }
+            else
+                writer.WriteNull("tags");
         }
     }
 

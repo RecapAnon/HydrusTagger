@@ -45,7 +45,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="incrementFileViewtimeRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IEditTimesIncrementFileViewtimeApiResponse"/>&gt;</returns>
-        Task<IEditTimesIncrementFileViewtimeApiResponse> EditTimesIncrementFileViewtimeAsync(IncrementFileViewtimeRequest? incrementFileViewtimeRequest = default, System.Threading.CancellationToken cancellationToken = default);
+        Task<IEditTimesIncrementFileViewtimeApiResponse> EditTimesIncrementFileViewtimeAsync(IncrementFileViewtimeRequest incrementFileViewtimeRequest, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Increment file viewtime statistics
@@ -56,7 +56,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="incrementFileViewtimeRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IEditTimesIncrementFileViewtimeApiResponse"/>?&gt;</returns>
-        Task<IEditTimesIncrementFileViewtimeApiResponse?> EditTimesIncrementFileViewtimeOrDefaultAsync(IncrementFileViewtimeRequest? incrementFileViewtimeRequest = default, System.Threading.CancellationToken cancellationToken = default);
+        Task<IEditTimesIncrementFileViewtimeApiResponse?> EditTimesIncrementFileViewtimeOrDefaultAsync(IncrementFileViewtimeRequest incrementFileViewtimeRequest, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Set fixed values in the file viewing statistics system
@@ -68,7 +68,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="editTimesSetFileViewtimeRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IEditTimesSetFileViewtimeApiResponse"/>&gt;</returns>
-        Task<IEditTimesSetFileViewtimeApiResponse> EditTimesSetFileViewtimeAsync(EditTimesSetFileViewtimeRequest? editTimesSetFileViewtimeRequest = default, System.Threading.CancellationToken cancellationToken = default);
+        Task<IEditTimesSetFileViewtimeApiResponse> EditTimesSetFileViewtimeAsync(EditTimesSetFileViewtimeRequest editTimesSetFileViewtimeRequest, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Set fixed values in the file viewing statistics system
@@ -79,7 +79,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="editTimesSetFileViewtimeRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IEditTimesSetFileViewtimeApiResponse"/>?&gt;</returns>
-        Task<IEditTimesSetFileViewtimeApiResponse?> EditTimesSetFileViewtimeOrDefaultAsync(EditTimesSetFileViewtimeRequest? editTimesSetFileViewtimeRequest = default, System.Threading.CancellationToken cancellationToken = default);
+        Task<IEditTimesSetFileViewtimeApiResponse?> EditTimesSetFileViewtimeOrDefaultAsync(EditTimesSetFileViewtimeRequest editTimesSetFileViewtimeRequest, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Add or remove timestamps associated with a file.
@@ -91,7 +91,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="editTimesSetTimeRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IEditTimesSetTimeApiResponse"/>&gt;</returns>
-        Task<IEditTimesSetTimeApiResponse> EditTimesSetTimeAsync(EditTimesSetTimeRequest? editTimesSetTimeRequest = default, System.Threading.CancellationToken cancellationToken = default);
+        Task<IEditTimesSetTimeApiResponse> EditTimesSetTimeAsync(EditTimesSetTimeRequest editTimesSetTimeRequest, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Add or remove timestamps associated with a file.
@@ -102,7 +102,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="editTimesSetTimeRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IEditTimesSetTimeApiResponse"/>?&gt;</returns>
-        Task<IEditTimesSetTimeApiResponse?> EditTimesSetTimeOrDefaultAsync(EditTimesSetTimeRequest? editTimesSetTimeRequest = default, System.Threading.CancellationToken cancellationToken = default);
+        Task<IEditTimesSetTimeApiResponse?> EditTimesSetTimeOrDefaultAsync(EditTimesSetTimeRequest editTimesSetTimeRequest, System.Threading.CancellationToken cancellationToken = default);
     }
 
     /// <summary>
@@ -314,14 +314,25 @@ namespace HydrusAPI.NET.Api
             ApiKeyProvider = apiKeyProvider;
         }
 
-        partial void FormatEditTimesIncrementFileViewtime(IncrementFileViewtimeRequest? incrementFileViewtimeRequest);
+        partial void FormatEditTimesIncrementFileViewtime(IncrementFileViewtimeRequest incrementFileViewtimeRequest);
+
+        /// <summary>
+        /// Validates the request parameters
+        /// </summary>
+        /// <param name="incrementFileViewtimeRequest"></param>
+        /// <returns></returns>
+        private void ValidateEditTimesIncrementFileViewtime(IncrementFileViewtimeRequest incrementFileViewtimeRequest)
+        {
+            if (incrementFileViewtimeRequest == null)
+                throw new ArgumentNullException(nameof(incrementFileViewtimeRequest));
+        }
 
         /// <summary>
         /// Processes the server response
         /// </summary>
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="incrementFileViewtimeRequest"></param>
-        private void AfterEditTimesIncrementFileViewtimeDefaultImplementation(IEditTimesIncrementFileViewtimeApiResponse apiResponseLocalVar, IncrementFileViewtimeRequest? incrementFileViewtimeRequest)
+        private void AfterEditTimesIncrementFileViewtimeDefaultImplementation(IEditTimesIncrementFileViewtimeApiResponse apiResponseLocalVar, IncrementFileViewtimeRequest incrementFileViewtimeRequest)
         {
             bool suppressDefaultLog = false;
             AfterEditTimesIncrementFileViewtime(ref suppressDefaultLog, apiResponseLocalVar, incrementFileViewtimeRequest);
@@ -335,7 +346,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="suppressDefaultLog"></param>
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="incrementFileViewtimeRequest"></param>
-        partial void AfterEditTimesIncrementFileViewtime(ref bool suppressDefaultLog, IEditTimesIncrementFileViewtimeApiResponse apiResponseLocalVar, IncrementFileViewtimeRequest? incrementFileViewtimeRequest);
+        partial void AfterEditTimesIncrementFileViewtime(ref bool suppressDefaultLog, IEditTimesIncrementFileViewtimeApiResponse apiResponseLocalVar, IncrementFileViewtimeRequest incrementFileViewtimeRequest);
 
         /// <summary>
         /// Logs exceptions that occur while retrieving the server response
@@ -344,7 +355,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="pathFormatLocalVar"></param>
         /// <param name="pathLocalVar"></param>
         /// <param name="incrementFileViewtimeRequest"></param>
-        private void OnErrorEditTimesIncrementFileViewtimeDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, IncrementFileViewtimeRequest? incrementFileViewtimeRequest)
+        private void OnErrorEditTimesIncrementFileViewtimeDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, IncrementFileViewtimeRequest incrementFileViewtimeRequest)
         {
             bool suppressDefaultLogLocalVar = false;
             OnErrorEditTimesIncrementFileViewtime(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, incrementFileViewtimeRequest);
@@ -360,7 +371,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="pathFormatLocalVar"></param>
         /// <param name="pathLocalVar"></param>
         /// <param name="incrementFileViewtimeRequest"></param>
-        partial void OnErrorEditTimesIncrementFileViewtime(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, IncrementFileViewtimeRequest? incrementFileViewtimeRequest);
+        partial void OnErrorEditTimesIncrementFileViewtime(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, IncrementFileViewtimeRequest incrementFileViewtimeRequest);
 
         /// <summary>
         /// Increment file viewtime statistics Adds a file view to the file viewing statistics system.
@@ -368,7 +379,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="incrementFileViewtimeRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IEditTimesIncrementFileViewtimeApiResponse"/>&gt;</returns>
-        public async Task<IEditTimesIncrementFileViewtimeApiResponse?> EditTimesIncrementFileViewtimeOrDefaultAsync(IncrementFileViewtimeRequest? incrementFileViewtimeRequest = default, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IEditTimesIncrementFileViewtimeApiResponse?> EditTimesIncrementFileViewtimeOrDefaultAsync(IncrementFileViewtimeRequest incrementFileViewtimeRequest, System.Threading.CancellationToken cancellationToken = default)
         {
             try
             {
@@ -387,12 +398,14 @@ namespace HydrusAPI.NET.Api
         /// <param name="incrementFileViewtimeRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IEditTimesIncrementFileViewtimeApiResponse"/>&gt;</returns>
-        public async Task<IEditTimesIncrementFileViewtimeApiResponse> EditTimesIncrementFileViewtimeAsync(IncrementFileViewtimeRequest? incrementFileViewtimeRequest = default, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IEditTimesIncrementFileViewtimeApiResponse> EditTimesIncrementFileViewtimeAsync(IncrementFileViewtimeRequest incrementFileViewtimeRequest, System.Threading.CancellationToken cancellationToken = default)
         {
             UriBuilder uriBuilderLocalVar = new UriBuilder();
 
             try
             {
+                ValidateEditTimesIncrementFileViewtime(incrementFileViewtimeRequest);
+
                 FormatEditTimesIncrementFileViewtime(incrementFileViewtimeRequest);
 
                 using (HttpRequestMessage httpRequestMessageLocalVar = new HttpRequestMessage())
@@ -434,11 +447,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<EditTimesIncrementFileViewtimeApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<EditTimesIncrementFileViewtimeApiResponse>();
+                        EditTimesIncrementFileViewtimeApiResponse apiResponseLocalVar;
 
-                        EditTimesIncrementFileViewtimeApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/edit_times/increment_file_viewtime", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/edit_times/increment_file_viewtime", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterEditTimesIncrementFileViewtimeDefaultImplementation(apiResponseLocalVar, incrementFileViewtimeRequest);
 
@@ -486,222 +505,17 @@ namespace HydrusAPI.NET.Api
                 OnCreated(httpRequestMessage, httpResponseMessage);
             }
 
-            partial void OnCreated(global::System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage);
-
             /// <summary>
-            /// Returns true if the response is 200 Ok
-            /// </summary>
-            /// <returns></returns>
-            public bool IsOk => 200 == (int)StatusCode;
-
-            /// <summary>
-            /// Returns true if the response is 400 BadRequest
-            /// </summary>
-            /// <returns></returns>
-            public bool IsBadRequest => 400 == (int)StatusCode;
-
-            /// <summary>
-            /// Returns true if the response is 401 Unauthorized
-            /// </summary>
-            /// <returns></returns>
-            public bool IsUnauthorized => 401 == (int)StatusCode;
-
-            /// <summary>
-            /// Returns true if the response is 403 Forbidden
-            /// </summary>
-            /// <returns></returns>
-            public bool IsForbidden => 403 == (int)StatusCode;
-
-            /// <summary>
-            /// Returns true if the response is 419 CustomHttpStatusCode419
-            /// </summary>
-            /// <returns></returns>
-            public bool IsCustomHttpStatusCode419 => 419 == (int)StatusCode;
-
-            /// <summary>
-            /// Returns true if the response is 500 InternalServerError
-            /// </summary>
-            /// <returns></returns>
-            public bool IsInternalServerError => 500 == (int)StatusCode;
-
-            private void OnDeserializationErrorDefaultImplementation(Exception exception, HttpStatusCode httpStatusCode)
-            {
-                bool suppressDefaultLog = false;
-                OnDeserializationError(ref suppressDefaultLog, exception, httpStatusCode);
-                if (!suppressDefaultLog)
-                    Logger.LogError(exception, "An error occurred while deserializing the {code} response.", httpStatusCode);
-            }
-
-            partial void OnDeserializationError(ref bool suppressDefaultLog, Exception exception, HttpStatusCode httpStatusCode);
-        }
-
-        partial void FormatEditTimesSetFileViewtime(EditTimesSetFileViewtimeRequest? editTimesSetFileViewtimeRequest);
-
-        /// <summary>
-        /// Processes the server response
-        /// </summary>
-        /// <param name="apiResponseLocalVar"></param>
-        /// <param name="editTimesSetFileViewtimeRequest"></param>
-        private void AfterEditTimesSetFileViewtimeDefaultImplementation(IEditTimesSetFileViewtimeApiResponse apiResponseLocalVar, EditTimesSetFileViewtimeRequest? editTimesSetFileViewtimeRequest)
-        {
-            bool suppressDefaultLog = false;
-            AfterEditTimesSetFileViewtime(ref suppressDefaultLog, apiResponseLocalVar, editTimesSetFileViewtimeRequest);
-            if (!suppressDefaultLog)
-                Logger.LogInformation("{0,-9} | {1} | {3}", (apiResponseLocalVar.DownloadedAt - apiResponseLocalVar.RequestedAt).TotalSeconds, apiResponseLocalVar.StatusCode, apiResponseLocalVar.Path);
-        }
-
-        /// <summary>
-        /// Processes the server response
-        /// </summary>
-        /// <param name="suppressDefaultLog"></param>
-        /// <param name="apiResponseLocalVar"></param>
-        /// <param name="editTimesSetFileViewtimeRequest"></param>
-        partial void AfterEditTimesSetFileViewtime(ref bool suppressDefaultLog, IEditTimesSetFileViewtimeApiResponse apiResponseLocalVar, EditTimesSetFileViewtimeRequest? editTimesSetFileViewtimeRequest);
-
-        /// <summary>
-        /// Logs exceptions that occur while retrieving the server response
-        /// </summary>
-        /// <param name="exceptionLocalVar"></param>
-        /// <param name="pathFormatLocalVar"></param>
-        /// <param name="pathLocalVar"></param>
-        /// <param name="editTimesSetFileViewtimeRequest"></param>
-        private void OnErrorEditTimesSetFileViewtimeDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, EditTimesSetFileViewtimeRequest? editTimesSetFileViewtimeRequest)
-        {
-            bool suppressDefaultLogLocalVar = false;
-            OnErrorEditTimesSetFileViewtime(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, editTimesSetFileViewtimeRequest);
-            if (!suppressDefaultLogLocalVar)
-                Logger.LogError(exceptionLocalVar, "An error occurred while sending the request to the server.");
-        }
-
-        /// <summary>
-        /// A partial method that gives developers a way to provide customized exception handling
-        /// </summary>
-        /// <param name="suppressDefaultLogLocalVar"></param>
-        /// <param name="exceptionLocalVar"></param>
-        /// <param name="pathFormatLocalVar"></param>
-        /// <param name="pathLocalVar"></param>
-        /// <param name="editTimesSetFileViewtimeRequest"></param>
-        partial void OnErrorEditTimesSetFileViewtime(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, EditTimesSetFileViewtimeRequest? editTimesSetFileViewtimeRequest);
-
-        /// <summary>
-        /// Set fixed values in the file viewing statistics system This endpoint allows setting fixed values in the file viewing statistics system. Recommended for maintenance, migration, or reset scenarios.
-        /// </summary>
-        /// <param name="editTimesSetFileViewtimeRequest"></param>
-        /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns><see cref="Task"/>&lt;<see cref="IEditTimesSetFileViewtimeApiResponse"/>&gt;</returns>
-        public async Task<IEditTimesSetFileViewtimeApiResponse?> EditTimesSetFileViewtimeOrDefaultAsync(EditTimesSetFileViewtimeRequest? editTimesSetFileViewtimeRequest = default, System.Threading.CancellationToken cancellationToken = default)
-        {
-            try
-            {
-                return await EditTimesSetFileViewtimeAsync(editTimesSetFileViewtimeRequest, cancellationToken).ConfigureAwait(false);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Set fixed values in the file viewing statistics system This endpoint allows setting fixed values in the file viewing statistics system. Recommended for maintenance, migration, or reset scenarios.
-        /// </summary>
-        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
-        /// <param name="editTimesSetFileViewtimeRequest"></param>
-        /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
-        /// <returns><see cref="Task"/>&lt;<see cref="IEditTimesSetFileViewtimeApiResponse"/>&gt;</returns>
-        public async Task<IEditTimesSetFileViewtimeApiResponse> EditTimesSetFileViewtimeAsync(EditTimesSetFileViewtimeRequest? editTimesSetFileViewtimeRequest = default, System.Threading.CancellationToken cancellationToken = default)
-        {
-            UriBuilder uriBuilderLocalVar = new UriBuilder();
-
-            try
-            {
-                FormatEditTimesSetFileViewtime(editTimesSetFileViewtimeRequest);
-
-                using (HttpRequestMessage httpRequestMessageLocalVar = new HttpRequestMessage())
-                {
-                    uriBuilderLocalVar.Host = HttpClient.BaseAddress!.Host;
-                    uriBuilderLocalVar.Port = HttpClient.BaseAddress.Port;
-                    uriBuilderLocalVar.Scheme = HttpClient.BaseAddress.Scheme;
-                    uriBuilderLocalVar.Path = HttpClient.BaseAddress.AbsolutePath == "/"
-                        ? "/edit_times/set_file_viewtime"
-                        : string.Concat(HttpClient.BaseAddress.AbsolutePath, "/edit_times/set_file_viewtime");
-
-                    httpRequestMessageLocalVar.Content = (editTimesSetFileViewtimeRequest as object) is System.IO.Stream stream
-                        ? httpRequestMessageLocalVar.Content = new StreamContent(stream)
-                        : httpRequestMessageLocalVar.Content = new StringContent(JsonSerializer.Serialize(editTimesSetFileViewtimeRequest, _jsonSerializerOptions));
-
-                    List<TokenBase> tokenBaseLocalVars = new List<TokenBase>();
-                    ApiKeyToken apiKeyTokenLocalVar1 = (ApiKeyToken) await ApiKeyProvider.GetAsync("Hydrus-Client-API-Access-Key", cancellationToken).ConfigureAwait(false);
-                    tokenBaseLocalVars.Add(apiKeyTokenLocalVar1);
-                    apiKeyTokenLocalVar1.UseInHeader(httpRequestMessageLocalVar);
-
-                    ApiKeyToken apiKeyTokenLocalVar2 = (ApiKeyToken) await ApiKeyProvider.GetAsync("Hydrus-Client-API-Session-Key", cancellationToken).ConfigureAwait(false);
-                    tokenBaseLocalVars.Add(apiKeyTokenLocalVar2);
-                    apiKeyTokenLocalVar2.UseInHeader(httpRequestMessageLocalVar);
-
-                    httpRequestMessageLocalVar.RequestUri = uriBuilderLocalVar.Uri;
-
-                    string[] contentTypes = new string[] {
-                        "application/json"
-                    };
-
-                    string? contentTypeLocalVar = ClientUtils.SelectHeaderContentType(contentTypes);
-
-                    if (contentTypeLocalVar != null && httpRequestMessageLocalVar.Content != null)
-                        httpRequestMessageLocalVar.Content.Headers.ContentType = new MediaTypeHeaderValue(contentTypeLocalVar);
-
-                    httpRequestMessageLocalVar.Method = HttpMethod.Post;
-
-                    DateTime requestedAtLocalVar = DateTime.UtcNow;
-
-                    using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
-                    {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
-                        ILogger<EditTimesSetFileViewtimeApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<EditTimesSetFileViewtimeApiResponse>();
-
-                        EditTimesSetFileViewtimeApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/edit_times/set_file_viewtime", requestedAtLocalVar, _jsonSerializerOptions);
-
-                        AfterEditTimesSetFileViewtimeDefaultImplementation(apiResponseLocalVar, editTimesSetFileViewtimeRequest);
-
-                        Events.ExecuteOnEditTimesSetFileViewtime(apiResponseLocalVar);
-
-                        if (apiResponseLocalVar.StatusCode == (HttpStatusCode) 429)
-                            foreach(TokenBase tokenBaseLocalVar in tokenBaseLocalVars)
-                                tokenBaseLocalVar.BeginRateLimit();
-
-                        return apiResponseLocalVar;
-                    }
-                }
-            }
-            catch(Exception e)
-            {
-                OnErrorEditTimesSetFileViewtimeDefaultImplementation(e, "/edit_times/set_file_viewtime", uriBuilderLocalVar.Path, editTimesSetFileViewtimeRequest);
-                Events.ExecuteOnErrorEditTimesSetFileViewtime(e);
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// The <see cref="EditTimesSetFileViewtimeApiResponse"/>
-        /// </summary>
-        public partial class EditTimesSetFileViewtimeApiResponse : HydrusAPI.NET.Client.ApiResponse, IEditTimesSetFileViewtimeApiResponse
-        {
-            /// <summary>
-            /// The logger
-            /// </summary>
-            public ILogger<EditTimesSetFileViewtimeApiResponse> Logger { get; }
-
-            /// <summary>
-            /// The <see cref="EditTimesSetFileViewtimeApiResponse"/>
+            /// The <see cref="EditTimesIncrementFileViewtimeApiResponse"/>
             /// </summary>
             /// <param name="logger"></param>
             /// <param name="httpRequestMessage"></param>
             /// <param name="httpResponseMessage"></param>
-            /// <param name="rawContent"></param>
+            /// <param name="contentStream"></param>
             /// <param name="path"></param>
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
-            public EditTimesSetFileViewtimeApiResponse(ILogger<EditTimesSetFileViewtimeApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            public EditTimesIncrementFileViewtimeApiResponse(ILogger<EditTimesIncrementFileViewtimeApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -756,14 +570,281 @@ namespace HydrusAPI.NET.Api
             partial void OnDeserializationError(ref bool suppressDefaultLog, Exception exception, HttpStatusCode httpStatusCode);
         }
 
-        partial void FormatEditTimesSetTime(EditTimesSetTimeRequest? editTimesSetTimeRequest);
+        partial void FormatEditTimesSetFileViewtime(EditTimesSetFileViewtimeRequest editTimesSetFileViewtimeRequest);
+
+        /// <summary>
+        /// Validates the request parameters
+        /// </summary>
+        /// <param name="editTimesSetFileViewtimeRequest"></param>
+        /// <returns></returns>
+        private void ValidateEditTimesSetFileViewtime(EditTimesSetFileViewtimeRequest editTimesSetFileViewtimeRequest)
+        {
+            if (editTimesSetFileViewtimeRequest == null)
+                throw new ArgumentNullException(nameof(editTimesSetFileViewtimeRequest));
+        }
+
+        /// <summary>
+        /// Processes the server response
+        /// </summary>
+        /// <param name="apiResponseLocalVar"></param>
+        /// <param name="editTimesSetFileViewtimeRequest"></param>
+        private void AfterEditTimesSetFileViewtimeDefaultImplementation(IEditTimesSetFileViewtimeApiResponse apiResponseLocalVar, EditTimesSetFileViewtimeRequest editTimesSetFileViewtimeRequest)
+        {
+            bool suppressDefaultLog = false;
+            AfterEditTimesSetFileViewtime(ref suppressDefaultLog, apiResponseLocalVar, editTimesSetFileViewtimeRequest);
+            if (!suppressDefaultLog)
+                Logger.LogInformation("{0,-9} | {1} | {3}", (apiResponseLocalVar.DownloadedAt - apiResponseLocalVar.RequestedAt).TotalSeconds, apiResponseLocalVar.StatusCode, apiResponseLocalVar.Path);
+        }
+
+        /// <summary>
+        /// Processes the server response
+        /// </summary>
+        /// <param name="suppressDefaultLog"></param>
+        /// <param name="apiResponseLocalVar"></param>
+        /// <param name="editTimesSetFileViewtimeRequest"></param>
+        partial void AfterEditTimesSetFileViewtime(ref bool suppressDefaultLog, IEditTimesSetFileViewtimeApiResponse apiResponseLocalVar, EditTimesSetFileViewtimeRequest editTimesSetFileViewtimeRequest);
+
+        /// <summary>
+        /// Logs exceptions that occur while retrieving the server response
+        /// </summary>
+        /// <param name="exceptionLocalVar"></param>
+        /// <param name="pathFormatLocalVar"></param>
+        /// <param name="pathLocalVar"></param>
+        /// <param name="editTimesSetFileViewtimeRequest"></param>
+        private void OnErrorEditTimesSetFileViewtimeDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, EditTimesSetFileViewtimeRequest editTimesSetFileViewtimeRequest)
+        {
+            bool suppressDefaultLogLocalVar = false;
+            OnErrorEditTimesSetFileViewtime(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, editTimesSetFileViewtimeRequest);
+            if (!suppressDefaultLogLocalVar)
+                Logger.LogError(exceptionLocalVar, "An error occurred while sending the request to the server.");
+        }
+
+        /// <summary>
+        /// A partial method that gives developers a way to provide customized exception handling
+        /// </summary>
+        /// <param name="suppressDefaultLogLocalVar"></param>
+        /// <param name="exceptionLocalVar"></param>
+        /// <param name="pathFormatLocalVar"></param>
+        /// <param name="pathLocalVar"></param>
+        /// <param name="editTimesSetFileViewtimeRequest"></param>
+        partial void OnErrorEditTimesSetFileViewtime(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, EditTimesSetFileViewtimeRequest editTimesSetFileViewtimeRequest);
+
+        /// <summary>
+        /// Set fixed values in the file viewing statistics system This endpoint allows setting fixed values in the file viewing statistics system. Recommended for maintenance, migration, or reset scenarios.
+        /// </summary>
+        /// <param name="editTimesSetFileViewtimeRequest"></param>
+        /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
+        /// <returns><see cref="Task"/>&lt;<see cref="IEditTimesSetFileViewtimeApiResponse"/>&gt;</returns>
+        public async Task<IEditTimesSetFileViewtimeApiResponse?> EditTimesSetFileViewtimeOrDefaultAsync(EditTimesSetFileViewtimeRequest editTimesSetFileViewtimeRequest, System.Threading.CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                return await EditTimesSetFileViewtimeAsync(editTimesSetFileViewtimeRequest, cancellationToken).ConfigureAwait(false);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Set fixed values in the file viewing statistics system This endpoint allows setting fixed values in the file viewing statistics system. Recommended for maintenance, migration, or reset scenarios.
+        /// </summary>
+        /// <exception cref="ApiException">Thrown when fails to make API call</exception>
+        /// <param name="editTimesSetFileViewtimeRequest"></param>
+        /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
+        /// <returns><see cref="Task"/>&lt;<see cref="IEditTimesSetFileViewtimeApiResponse"/>&gt;</returns>
+        public async Task<IEditTimesSetFileViewtimeApiResponse> EditTimesSetFileViewtimeAsync(EditTimesSetFileViewtimeRequest editTimesSetFileViewtimeRequest, System.Threading.CancellationToken cancellationToken = default)
+        {
+            UriBuilder uriBuilderLocalVar = new UriBuilder();
+
+            try
+            {
+                ValidateEditTimesSetFileViewtime(editTimesSetFileViewtimeRequest);
+
+                FormatEditTimesSetFileViewtime(editTimesSetFileViewtimeRequest);
+
+                using (HttpRequestMessage httpRequestMessageLocalVar = new HttpRequestMessage())
+                {
+                    uriBuilderLocalVar.Host = HttpClient.BaseAddress!.Host;
+                    uriBuilderLocalVar.Port = HttpClient.BaseAddress.Port;
+                    uriBuilderLocalVar.Scheme = HttpClient.BaseAddress.Scheme;
+                    uriBuilderLocalVar.Path = HttpClient.BaseAddress.AbsolutePath == "/"
+                        ? "/edit_times/set_file_viewtime"
+                        : string.Concat(HttpClient.BaseAddress.AbsolutePath, "/edit_times/set_file_viewtime");
+
+                    httpRequestMessageLocalVar.Content = (editTimesSetFileViewtimeRequest as object) is System.IO.Stream stream
+                        ? httpRequestMessageLocalVar.Content = new StreamContent(stream)
+                        : httpRequestMessageLocalVar.Content = new StringContent(JsonSerializer.Serialize(editTimesSetFileViewtimeRequest, _jsonSerializerOptions));
+
+                    List<TokenBase> tokenBaseLocalVars = new List<TokenBase>();
+                    ApiKeyToken apiKeyTokenLocalVar1 = (ApiKeyToken) await ApiKeyProvider.GetAsync("Hydrus-Client-API-Access-Key", cancellationToken).ConfigureAwait(false);
+                    tokenBaseLocalVars.Add(apiKeyTokenLocalVar1);
+                    apiKeyTokenLocalVar1.UseInHeader(httpRequestMessageLocalVar);
+
+                    ApiKeyToken apiKeyTokenLocalVar2 = (ApiKeyToken) await ApiKeyProvider.GetAsync("Hydrus-Client-API-Session-Key", cancellationToken).ConfigureAwait(false);
+                    tokenBaseLocalVars.Add(apiKeyTokenLocalVar2);
+                    apiKeyTokenLocalVar2.UseInHeader(httpRequestMessageLocalVar);
+
+                    httpRequestMessageLocalVar.RequestUri = uriBuilderLocalVar.Uri;
+
+                    string[] contentTypes = new string[] {
+                        "application/json"
+                    };
+
+                    string? contentTypeLocalVar = ClientUtils.SelectHeaderContentType(contentTypes);
+
+                    if (contentTypeLocalVar != null && httpRequestMessageLocalVar.Content != null)
+                        httpRequestMessageLocalVar.Content.Headers.ContentType = new MediaTypeHeaderValue(contentTypeLocalVar);
+
+                    httpRequestMessageLocalVar.Method = HttpMethod.Post;
+
+                    DateTime requestedAtLocalVar = DateTime.UtcNow;
+
+                    using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
+                    {
+                        ILogger<EditTimesSetFileViewtimeApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<EditTimesSetFileViewtimeApiResponse>();
+                        EditTimesSetFileViewtimeApiResponse apiResponseLocalVar;
+
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/edit_times/set_file_viewtime", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
+
+                        AfterEditTimesSetFileViewtimeDefaultImplementation(apiResponseLocalVar, editTimesSetFileViewtimeRequest);
+
+                        Events.ExecuteOnEditTimesSetFileViewtime(apiResponseLocalVar);
+
+                        if (apiResponseLocalVar.StatusCode == (HttpStatusCode) 429)
+                            foreach(TokenBase tokenBaseLocalVar in tokenBaseLocalVars)
+                                tokenBaseLocalVar.BeginRateLimit();
+
+                        return apiResponseLocalVar;
+                    }
+                }
+            }
+            catch(Exception e)
+            {
+                OnErrorEditTimesSetFileViewtimeDefaultImplementation(e, "/edit_times/set_file_viewtime", uriBuilderLocalVar.Path, editTimesSetFileViewtimeRequest);
+                Events.ExecuteOnErrorEditTimesSetFileViewtime(e);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// The <see cref="EditTimesSetFileViewtimeApiResponse"/>
+        /// </summary>
+        public partial class EditTimesSetFileViewtimeApiResponse : HydrusAPI.NET.Client.ApiResponse, IEditTimesSetFileViewtimeApiResponse
+        {
+            /// <summary>
+            /// The logger
+            /// </summary>
+            public ILogger<EditTimesSetFileViewtimeApiResponse> Logger { get; }
+
+            /// <summary>
+            /// The <see cref="EditTimesSetFileViewtimeApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="rawContent"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public EditTimesSetFileViewtimeApiResponse(ILogger<EditTimesSetFileViewtimeApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="EditTimesSetFileViewtimeApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public EditTimesSetFileViewtimeApiResponse(ILogger<EditTimesSetFileViewtimeApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            partial void OnCreated(global::System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage);
+
+            /// <summary>
+            /// Returns true if the response is 200 Ok
+            /// </summary>
+            /// <returns></returns>
+            public bool IsOk => 200 == (int)StatusCode;
+
+            /// <summary>
+            /// Returns true if the response is 400 BadRequest
+            /// </summary>
+            /// <returns></returns>
+            public bool IsBadRequest => 400 == (int)StatusCode;
+
+            /// <summary>
+            /// Returns true if the response is 401 Unauthorized
+            /// </summary>
+            /// <returns></returns>
+            public bool IsUnauthorized => 401 == (int)StatusCode;
+
+            /// <summary>
+            /// Returns true if the response is 403 Forbidden
+            /// </summary>
+            /// <returns></returns>
+            public bool IsForbidden => 403 == (int)StatusCode;
+
+            /// <summary>
+            /// Returns true if the response is 419 CustomHttpStatusCode419
+            /// </summary>
+            /// <returns></returns>
+            public bool IsCustomHttpStatusCode419 => 419 == (int)StatusCode;
+
+            /// <summary>
+            /// Returns true if the response is 500 InternalServerError
+            /// </summary>
+            /// <returns></returns>
+            public bool IsInternalServerError => 500 == (int)StatusCode;
+
+            private void OnDeserializationErrorDefaultImplementation(Exception exception, HttpStatusCode httpStatusCode)
+            {
+                bool suppressDefaultLog = false;
+                OnDeserializationError(ref suppressDefaultLog, exception, httpStatusCode);
+                if (!suppressDefaultLog)
+                    Logger.LogError(exception, "An error occurred while deserializing the {code} response.", httpStatusCode);
+            }
+
+            partial void OnDeserializationError(ref bool suppressDefaultLog, Exception exception, HttpStatusCode httpStatusCode);
+        }
+
+        partial void FormatEditTimesSetTime(EditTimesSetTimeRequest editTimesSetTimeRequest);
+
+        /// <summary>
+        /// Validates the request parameters
+        /// </summary>
+        /// <param name="editTimesSetTimeRequest"></param>
+        /// <returns></returns>
+        private void ValidateEditTimesSetTime(EditTimesSetTimeRequest editTimesSetTimeRequest)
+        {
+            if (editTimesSetTimeRequest == null)
+                throw new ArgumentNullException(nameof(editTimesSetTimeRequest));
+        }
 
         /// <summary>
         /// Processes the server response
         /// </summary>
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="editTimesSetTimeRequest"></param>
-        private void AfterEditTimesSetTimeDefaultImplementation(IEditTimesSetTimeApiResponse apiResponseLocalVar, EditTimesSetTimeRequest? editTimesSetTimeRequest)
+        private void AfterEditTimesSetTimeDefaultImplementation(IEditTimesSetTimeApiResponse apiResponseLocalVar, EditTimesSetTimeRequest editTimesSetTimeRequest)
         {
             bool suppressDefaultLog = false;
             AfterEditTimesSetTime(ref suppressDefaultLog, apiResponseLocalVar, editTimesSetTimeRequest);
@@ -777,7 +858,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="suppressDefaultLog"></param>
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="editTimesSetTimeRequest"></param>
-        partial void AfterEditTimesSetTime(ref bool suppressDefaultLog, IEditTimesSetTimeApiResponse apiResponseLocalVar, EditTimesSetTimeRequest? editTimesSetTimeRequest);
+        partial void AfterEditTimesSetTime(ref bool suppressDefaultLog, IEditTimesSetTimeApiResponse apiResponseLocalVar, EditTimesSetTimeRequest editTimesSetTimeRequest);
 
         /// <summary>
         /// Logs exceptions that occur while retrieving the server response
@@ -786,7 +867,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="pathFormatLocalVar"></param>
         /// <param name="pathLocalVar"></param>
         /// <param name="editTimesSetTimeRequest"></param>
-        private void OnErrorEditTimesSetTimeDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, EditTimesSetTimeRequest? editTimesSetTimeRequest)
+        private void OnErrorEditTimesSetTimeDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, EditTimesSetTimeRequest editTimesSetTimeRequest)
         {
             bool suppressDefaultLogLocalVar = false;
             OnErrorEditTimesSetTime(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, editTimesSetTimeRequest);
@@ -802,7 +883,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="pathFormatLocalVar"></param>
         /// <param name="pathLocalVar"></param>
         /// <param name="editTimesSetTimeRequest"></param>
-        partial void OnErrorEditTimesSetTime(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, EditTimesSetTimeRequest? editTimesSetTimeRequest);
+        partial void OnErrorEditTimesSetTime(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, EditTimesSetTimeRequest editTimesSetTimeRequest);
 
         /// <summary>
         /// Add or remove timestamps associated with a file. 
@@ -810,7 +891,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="editTimesSetTimeRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IEditTimesSetTimeApiResponse"/>&gt;</returns>
-        public async Task<IEditTimesSetTimeApiResponse?> EditTimesSetTimeOrDefaultAsync(EditTimesSetTimeRequest? editTimesSetTimeRequest = default, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IEditTimesSetTimeApiResponse?> EditTimesSetTimeOrDefaultAsync(EditTimesSetTimeRequest editTimesSetTimeRequest, System.Threading.CancellationToken cancellationToken = default)
         {
             try
             {
@@ -829,12 +910,14 @@ namespace HydrusAPI.NET.Api
         /// <param name="editTimesSetTimeRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IEditTimesSetTimeApiResponse"/>&gt;</returns>
-        public async Task<IEditTimesSetTimeApiResponse> EditTimesSetTimeAsync(EditTimesSetTimeRequest? editTimesSetTimeRequest = default, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IEditTimesSetTimeApiResponse> EditTimesSetTimeAsync(EditTimesSetTimeRequest editTimesSetTimeRequest, System.Threading.CancellationToken cancellationToken = default)
         {
             UriBuilder uriBuilderLocalVar = new UriBuilder();
 
             try
             {
+                ValidateEditTimesSetTime(editTimesSetTimeRequest);
+
                 FormatEditTimesSetTime(editTimesSetTimeRequest);
 
                 using (HttpRequestMessage httpRequestMessageLocalVar = new HttpRequestMessage())
@@ -876,11 +959,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<EditTimesSetTimeApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<EditTimesSetTimeApiResponse>();
+                        EditTimesSetTimeApiResponse apiResponseLocalVar;
 
-                        EditTimesSetTimeApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/edit_times/set_time", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/edit_times/set_time", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterEditTimesSetTimeDefaultImplementation(apiResponseLocalVar, editTimesSetTimeRequest);
 
@@ -923,6 +1012,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public EditTimesSetTimeApiResponse(ILogger<EditTimesSetTimeApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="EditTimesSetTimeApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public EditTimesSetTimeApiResponse(ILogger<EditTimesSetTimeApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);

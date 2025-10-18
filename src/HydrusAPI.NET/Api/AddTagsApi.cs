@@ -174,7 +174,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="addTagsSetFavouriteTagsRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IAddTagsSetFavouriteTagsApiResponse"/>&gt;</returns>
-        Task<IAddTagsSetFavouriteTagsApiResponse> AddTagsSetFavouriteTagsAsync(AddTagsSetFavouriteTagsRequest? addTagsSetFavouriteTagsRequest = default, System.Threading.CancellationToken cancellationToken = default);
+        Task<IAddTagsSetFavouriteTagsApiResponse> AddTagsSetFavouriteTagsAsync(AddTagsSetFavouriteTagsRequest addTagsSetFavouriteTagsRequest, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Set or modify the client&#39;s favourite tags
@@ -185,7 +185,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="addTagsSetFavouriteTagsRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IAddTagsSetFavouriteTagsApiResponse"/>?&gt;</returns>
-        Task<IAddTagsSetFavouriteTagsApiResponse?> AddTagsSetFavouriteTagsOrDefaultAsync(AddTagsSetFavouriteTagsRequest? addTagsSetFavouriteTagsRequest = default, System.Threading.CancellationToken cancellationToken = default);
+        Task<IAddTagsSetFavouriteTagsApiResponse?> AddTagsSetFavouriteTagsOrDefaultAsync(AddTagsSetFavouriteTagsRequest addTagsSetFavouriteTagsRequest, System.Threading.CancellationToken cancellationToken = default);
     }
 
     /// <summary>
@@ -734,11 +734,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<AddTagsAddTagsApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<AddTagsAddTagsApiResponse>();
+                        AddTagsAddTagsApiResponse apiResponseLocalVar;
 
-                        AddTagsAddTagsApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/add_tags/add_tags", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/add_tags/add_tags", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterAddTagsAddTagsDefaultImplementation(apiResponseLocalVar, addTagsAddTagsRequest);
 
@@ -781,6 +787,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public AddTagsAddTagsApiResponse(ILogger<AddTagsAddTagsApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="AddTagsAddTagsApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public AddTagsAddTagsApiResponse(ILogger<AddTagsAddTagsApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -970,11 +992,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<AddTagsCleanTagsApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<AddTagsCleanTagsApiResponse>();
+                        AddTagsCleanTagsApiResponse apiResponseLocalVar;
 
-                        AddTagsCleanTagsApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/add_tags/clean_tags", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/add_tags/clean_tags", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterAddTagsCleanTagsDefaultImplementation(apiResponseLocalVar, tags);
 
@@ -1017,6 +1045,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public AddTagsCleanTagsApiResponse(ILogger<AddTagsCleanTagsApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="AddTagsCleanTagsApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public AddTagsCleanTagsApiResponse(ILogger<AddTagsCleanTagsApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -1209,11 +1253,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<AddTagsGetFavouriteTagsApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<AddTagsGetFavouriteTagsApiResponse>();
+                        AddTagsGetFavouriteTagsApiResponse apiResponseLocalVar;
 
-                        AddTagsGetFavouriteTagsApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/add_tags/get_favourite_tags", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/add_tags/get_favourite_tags", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterAddTagsGetFavouriteTagsDefaultImplementation(apiResponseLocalVar);
 
@@ -1256,6 +1306,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public AddTagsGetFavouriteTagsApiResponse(ILogger<AddTagsGetFavouriteTagsApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="AddTagsGetFavouriteTagsApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public AddTagsGetFavouriteTagsApiResponse(ILogger<AddTagsGetFavouriteTagsApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -1465,11 +1531,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<AddTagsGetSiblingsAndParentsApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<AddTagsGetSiblingsAndParentsApiResponse>();
+                        AddTagsGetSiblingsAndParentsApiResponse apiResponseLocalVar;
 
-                        AddTagsGetSiblingsAndParentsApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/add_tags/get_siblings_and_parents", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/add_tags/get_siblings_and_parents", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterAddTagsGetSiblingsAndParentsDefaultImplementation(apiResponseLocalVar, tags);
 
@@ -1512,6 +1584,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public AddTagsGetSiblingsAndParentsApiResponse(ILogger<AddTagsGetSiblingsAndParentsApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="AddTagsGetSiblingsAndParentsApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public AddTagsGetSiblingsAndParentsApiResponse(ILogger<AddTagsGetSiblingsAndParentsApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -1837,11 +1925,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<AddTagsSearchTagsApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<AddTagsSearchTagsApiResponse>();
+                        AddTagsSearchTagsApiResponse apiResponseLocalVar;
 
-                        AddTagsSearchTagsApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/add_tags/search_tags", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/add_tags/search_tags", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterAddTagsSearchTagsDefaultImplementation(apiResponseLocalVar, search, fileServiceKey, fileServiceKeys, deletedFileServiceKey, deletedFileServiceKeys, tagServiceKey, tagDisplayType, hydrusClientAPIAccessKey, hydrusClientAPISessionKey);
 
@@ -1884,6 +1978,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public AddTagsSearchTagsApiResponse(ILogger<AddTagsSearchTagsApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="AddTagsSearchTagsApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public AddTagsSearchTagsApiResponse(ILogger<AddTagsSearchTagsApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -1970,14 +2080,25 @@ namespace HydrusAPI.NET.Api
             partial void OnDeserializationError(ref bool suppressDefaultLog, Exception exception, HttpStatusCode httpStatusCode);
         }
 
-        partial void FormatAddTagsSetFavouriteTags(AddTagsSetFavouriteTagsRequest? addTagsSetFavouriteTagsRequest);
+        partial void FormatAddTagsSetFavouriteTags(AddTagsSetFavouriteTagsRequest addTagsSetFavouriteTagsRequest);
+
+        /// <summary>
+        /// Validates the request parameters
+        /// </summary>
+        /// <param name="addTagsSetFavouriteTagsRequest"></param>
+        /// <returns></returns>
+        private void ValidateAddTagsSetFavouriteTags(AddTagsSetFavouriteTagsRequest addTagsSetFavouriteTagsRequest)
+        {
+            if (addTagsSetFavouriteTagsRequest == null)
+                throw new ArgumentNullException(nameof(addTagsSetFavouriteTagsRequest));
+        }
 
         /// <summary>
         /// Processes the server response
         /// </summary>
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="addTagsSetFavouriteTagsRequest"></param>
-        private void AfterAddTagsSetFavouriteTagsDefaultImplementation(IAddTagsSetFavouriteTagsApiResponse apiResponseLocalVar, AddTagsSetFavouriteTagsRequest? addTagsSetFavouriteTagsRequest)
+        private void AfterAddTagsSetFavouriteTagsDefaultImplementation(IAddTagsSetFavouriteTagsApiResponse apiResponseLocalVar, AddTagsSetFavouriteTagsRequest addTagsSetFavouriteTagsRequest)
         {
             bool suppressDefaultLog = false;
             AfterAddTagsSetFavouriteTags(ref suppressDefaultLog, apiResponseLocalVar, addTagsSetFavouriteTagsRequest);
@@ -1991,7 +2112,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="suppressDefaultLog"></param>
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="addTagsSetFavouriteTagsRequest"></param>
-        partial void AfterAddTagsSetFavouriteTags(ref bool suppressDefaultLog, IAddTagsSetFavouriteTagsApiResponse apiResponseLocalVar, AddTagsSetFavouriteTagsRequest? addTagsSetFavouriteTagsRequest);
+        partial void AfterAddTagsSetFavouriteTags(ref bool suppressDefaultLog, IAddTagsSetFavouriteTagsApiResponse apiResponseLocalVar, AddTagsSetFavouriteTagsRequest addTagsSetFavouriteTagsRequest);
 
         /// <summary>
         /// Logs exceptions that occur while retrieving the server response
@@ -2000,7 +2121,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="pathFormatLocalVar"></param>
         /// <param name="pathLocalVar"></param>
         /// <param name="addTagsSetFavouriteTagsRequest"></param>
-        private void OnErrorAddTagsSetFavouriteTagsDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, AddTagsSetFavouriteTagsRequest? addTagsSetFavouriteTagsRequest)
+        private void OnErrorAddTagsSetFavouriteTagsDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, AddTagsSetFavouriteTagsRequest addTagsSetFavouriteTagsRequest)
         {
             bool suppressDefaultLogLocalVar = false;
             OnErrorAddTagsSetFavouriteTags(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, addTagsSetFavouriteTagsRequest);
@@ -2016,7 +2137,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="pathFormatLocalVar"></param>
         /// <param name="pathLocalVar"></param>
         /// <param name="addTagsSetFavouriteTagsRequest"></param>
-        partial void OnErrorAddTagsSetFavouriteTags(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, AddTagsSetFavouriteTagsRequest? addTagsSetFavouriteTagsRequest);
+        partial void OnErrorAddTagsSetFavouriteTags(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, AddTagsSetFavouriteTagsRequest addTagsSetFavouriteTagsRequest);
 
         /// <summary>
         /// Set or modify the client&#39;s favourite tags Edits the client&#39;s list of favourite tags either by setting a new list entirely or modifying the existing list with additions or removals.
@@ -2024,7 +2145,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="addTagsSetFavouriteTagsRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IAddTagsSetFavouriteTagsApiResponse"/>&gt;</returns>
-        public async Task<IAddTagsSetFavouriteTagsApiResponse?> AddTagsSetFavouriteTagsOrDefaultAsync(AddTagsSetFavouriteTagsRequest? addTagsSetFavouriteTagsRequest = default, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IAddTagsSetFavouriteTagsApiResponse?> AddTagsSetFavouriteTagsOrDefaultAsync(AddTagsSetFavouriteTagsRequest addTagsSetFavouriteTagsRequest, System.Threading.CancellationToken cancellationToken = default)
         {
             try
             {
@@ -2043,12 +2164,14 @@ namespace HydrusAPI.NET.Api
         /// <param name="addTagsSetFavouriteTagsRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IAddTagsSetFavouriteTagsApiResponse"/>&gt;</returns>
-        public async Task<IAddTagsSetFavouriteTagsApiResponse> AddTagsSetFavouriteTagsAsync(AddTagsSetFavouriteTagsRequest? addTagsSetFavouriteTagsRequest = default, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IAddTagsSetFavouriteTagsApiResponse> AddTagsSetFavouriteTagsAsync(AddTagsSetFavouriteTagsRequest addTagsSetFavouriteTagsRequest, System.Threading.CancellationToken cancellationToken = default)
         {
             UriBuilder uriBuilderLocalVar = new UriBuilder();
 
             try
             {
+                ValidateAddTagsSetFavouriteTags(addTagsSetFavouriteTagsRequest);
+
                 FormatAddTagsSetFavouriteTags(addTagsSetFavouriteTagsRequest);
 
                 using (HttpRequestMessage httpRequestMessageLocalVar = new HttpRequestMessage())
@@ -2099,11 +2222,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<AddTagsSetFavouriteTagsApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<AddTagsSetFavouriteTagsApiResponse>();
+                        AddTagsSetFavouriteTagsApiResponse apiResponseLocalVar;
 
-                        AddTagsSetFavouriteTagsApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/add_tags/set_favourite_tags", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/add_tags/set_favourite_tags", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterAddTagsSetFavouriteTagsDefaultImplementation(apiResponseLocalVar, addTagsSetFavouriteTagsRequest);
 
@@ -2146,6 +2275,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public AddTagsSetFavouriteTagsApiResponse(ILogger<AddTagsSetFavouriteTagsApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="AddTagsSetFavouriteTagsApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public AddTagsSetFavouriteTagsApiResponse(ILogger<AddTagsSetFavouriteTagsApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);

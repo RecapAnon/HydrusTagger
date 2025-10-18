@@ -198,6 +198,9 @@ namespace HydrusAPI.NET.Model
             if (idealWeight.IsSet && idealWeight.Value == null)
                 throw new ArgumentNullException(nameof(idealWeight), "Property is not nullable for class GetLocalFileStorageLocations200ResponseLocationsInner.");
 
+            if (maxNumBytes.IsSet && maxNumBytes.Value == null)
+                throw new ArgumentNullException(nameof(maxNumBytes), "Property is not nullable for class GetLocalFileStorageLocations200ResponseLocationsInner.");
+
             if (prefixes.IsSet && prefixes.Value == null)
                 throw new ArgumentNullException(nameof(prefixes), "Property is not nullable for class GetLocalFileStorageLocations200ResponseLocationsInner.");
 
@@ -241,10 +244,7 @@ namespace HydrusAPI.NET.Model
                 writer.WriteNumber("ideal_weight", getLocalFileStorageLocations200ResponseLocationsInner.IdealWeightOption.Value!.Value);
 
             if (getLocalFileStorageLocations200ResponseLocationsInner.MaxNumBytesOption.IsSet)
-                if (getLocalFileStorageLocations200ResponseLocationsInner.MaxNumBytesOption.Value != null)
-                    writer.WriteNumber("max_num_bytes", getLocalFileStorageLocations200ResponseLocationsInner.MaxNumBytesOption.Value!.Value);
-                else
-                    writer.WriteNull("max_num_bytes");
+                writer.WriteNumber("max_num_bytes", getLocalFileStorageLocations200ResponseLocationsInner.MaxNumBytesOption.Value!.Value);
 
             if (getLocalFileStorageLocations200ResponseLocationsInner.PrefixesOption.IsSet)
             {

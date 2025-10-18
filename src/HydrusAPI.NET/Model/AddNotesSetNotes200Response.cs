@@ -121,16 +121,13 @@ namespace HydrusAPI.NET.Model
                     switch (localVarJsonPropertyName)
                     {
                         case "notes":
-                            notes = new Option<Dictionary<string, string>?>(JsonSerializer.Deserialize<Dictionary<string, string>>(ref utf8JsonReader, jsonSerializerOptions)!);
+                            notes = new Option<Dictionary<string, string>?>(JsonSerializer.Deserialize<Dictionary<string, string>>(ref utf8JsonReader, jsonSerializerOptions));
                             break;
                         default:
                             break;
                     }
                 }
             }
-
-            if (notes.IsSet && notes.Value == null)
-                throw new ArgumentNullException(nameof(notes), "Property is not nullable for class AddNotesSetNotes200Response.");
 
             return new AddNotesSetNotes200Response(notes);
         }
@@ -159,14 +156,14 @@ namespace HydrusAPI.NET.Model
         /// <exception cref="NotImplementedException"></exception>
         public void WriteProperties(Utf8JsonWriter writer, AddNotesSetNotes200Response addNotesSetNotes200Response, JsonSerializerOptions jsonSerializerOptions)
         {
-            if (addNotesSetNotes200Response.NotesOption.IsSet && addNotesSetNotes200Response.Notes == null)
-                throw new ArgumentNullException(nameof(addNotesSetNotes200Response.Notes), "Property is required for class AddNotesSetNotes200Response.");
-
             if (addNotesSetNotes200Response.NotesOption.IsSet)
-            {
-                writer.WritePropertyName("notes");
-                JsonSerializer.Serialize(writer, addNotesSetNotes200Response.Notes, jsonSerializerOptions);
-            }
+                if (addNotesSetNotes200Response.NotesOption.Value != null)
+                {
+                    writer.WritePropertyName("notes");
+                    JsonSerializer.Serialize(writer, addNotesSetNotes200Response.Notes, jsonSerializerOptions);
+                }
+                else
+                    writer.WriteNull("notes");
         }
     }
 

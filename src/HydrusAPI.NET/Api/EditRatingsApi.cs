@@ -45,7 +45,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="editRatingsSetRatingRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IEditRatingsSetRatingApiResponse"/>&gt;</returns>
-        Task<IEditRatingsSetRatingApiResponse> EditRatingsSetRatingAsync(EditRatingsSetRatingRequest? editRatingsSetRatingRequest = default, System.Threading.CancellationToken cancellationToken = default);
+        Task<IEditRatingsSetRatingApiResponse> EditRatingsSetRatingAsync(EditRatingsSetRatingRequest editRatingsSetRatingRequest, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Add or remove ratings associated with a file.
@@ -56,7 +56,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="editRatingsSetRatingRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IEditRatingsSetRatingApiResponse"/>?&gt;</returns>
-        Task<IEditRatingsSetRatingApiResponse?> EditRatingsSetRatingOrDefaultAsync(EditRatingsSetRatingRequest? editRatingsSetRatingRequest = default, System.Threading.CancellationToken cancellationToken = default);
+        Task<IEditRatingsSetRatingApiResponse?> EditRatingsSetRatingOrDefaultAsync(EditRatingsSetRatingRequest editRatingsSetRatingRequest, System.Threading.CancellationToken cancellationToken = default);
     }
 
     /// <summary>
@@ -144,14 +144,25 @@ namespace HydrusAPI.NET.Api
             ApiKeyProvider = apiKeyProvider;
         }
 
-        partial void FormatEditRatingsSetRating(EditRatingsSetRatingRequest? editRatingsSetRatingRequest);
+        partial void FormatEditRatingsSetRating(EditRatingsSetRatingRequest editRatingsSetRatingRequest);
+
+        /// <summary>
+        /// Validates the request parameters
+        /// </summary>
+        /// <param name="editRatingsSetRatingRequest"></param>
+        /// <returns></returns>
+        private void ValidateEditRatingsSetRating(EditRatingsSetRatingRequest editRatingsSetRatingRequest)
+        {
+            if (editRatingsSetRatingRequest == null)
+                throw new ArgumentNullException(nameof(editRatingsSetRatingRequest));
+        }
 
         /// <summary>
         /// Processes the server response
         /// </summary>
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="editRatingsSetRatingRequest"></param>
-        private void AfterEditRatingsSetRatingDefaultImplementation(IEditRatingsSetRatingApiResponse apiResponseLocalVar, EditRatingsSetRatingRequest? editRatingsSetRatingRequest)
+        private void AfterEditRatingsSetRatingDefaultImplementation(IEditRatingsSetRatingApiResponse apiResponseLocalVar, EditRatingsSetRatingRequest editRatingsSetRatingRequest)
         {
             bool suppressDefaultLog = false;
             AfterEditRatingsSetRating(ref suppressDefaultLog, apiResponseLocalVar, editRatingsSetRatingRequest);
@@ -165,7 +176,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="suppressDefaultLog"></param>
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="editRatingsSetRatingRequest"></param>
-        partial void AfterEditRatingsSetRating(ref bool suppressDefaultLog, IEditRatingsSetRatingApiResponse apiResponseLocalVar, EditRatingsSetRatingRequest? editRatingsSetRatingRequest);
+        partial void AfterEditRatingsSetRating(ref bool suppressDefaultLog, IEditRatingsSetRatingApiResponse apiResponseLocalVar, EditRatingsSetRatingRequest editRatingsSetRatingRequest);
 
         /// <summary>
         /// Logs exceptions that occur while retrieving the server response
@@ -174,7 +185,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="pathFormatLocalVar"></param>
         /// <param name="pathLocalVar"></param>
         /// <param name="editRatingsSetRatingRequest"></param>
-        private void OnErrorEditRatingsSetRatingDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, EditRatingsSetRatingRequest? editRatingsSetRatingRequest)
+        private void OnErrorEditRatingsSetRatingDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, EditRatingsSetRatingRequest editRatingsSetRatingRequest)
         {
             bool suppressDefaultLogLocalVar = false;
             OnErrorEditRatingsSetRating(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, editRatingsSetRatingRequest);
@@ -190,7 +201,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="pathFormatLocalVar"></param>
         /// <param name="pathLocalVar"></param>
         /// <param name="editRatingsSetRatingRequest"></param>
-        partial void OnErrorEditRatingsSetRating(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, EditRatingsSetRatingRequest? editRatingsSetRatingRequest);
+        partial void OnErrorEditRatingsSetRating(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, EditRatingsSetRatingRequest editRatingsSetRatingRequest);
 
         /// <summary>
         /// Add or remove ratings associated with a file. 
@@ -198,7 +209,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="editRatingsSetRatingRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IEditRatingsSetRatingApiResponse"/>&gt;</returns>
-        public async Task<IEditRatingsSetRatingApiResponse?> EditRatingsSetRatingOrDefaultAsync(EditRatingsSetRatingRequest? editRatingsSetRatingRequest = default, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IEditRatingsSetRatingApiResponse?> EditRatingsSetRatingOrDefaultAsync(EditRatingsSetRatingRequest editRatingsSetRatingRequest, System.Threading.CancellationToken cancellationToken = default)
         {
             try
             {
@@ -217,12 +228,14 @@ namespace HydrusAPI.NET.Api
         /// <param name="editRatingsSetRatingRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IEditRatingsSetRatingApiResponse"/>&gt;</returns>
-        public async Task<IEditRatingsSetRatingApiResponse> EditRatingsSetRatingAsync(EditRatingsSetRatingRequest? editRatingsSetRatingRequest = default, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IEditRatingsSetRatingApiResponse> EditRatingsSetRatingAsync(EditRatingsSetRatingRequest editRatingsSetRatingRequest, System.Threading.CancellationToken cancellationToken = default)
         {
             UriBuilder uriBuilderLocalVar = new UriBuilder();
 
             try
             {
+                ValidateEditRatingsSetRating(editRatingsSetRatingRequest);
+
                 FormatEditRatingsSetRating(editRatingsSetRatingRequest);
 
                 using (HttpRequestMessage httpRequestMessageLocalVar = new HttpRequestMessage())
@@ -264,11 +277,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<EditRatingsSetRatingApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<EditRatingsSetRatingApiResponse>();
+                        EditRatingsSetRatingApiResponse apiResponseLocalVar;
 
-                        EditRatingsSetRatingApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/edit_ratings/set_rating", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/edit_ratings/set_rating", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterEditRatingsSetRatingDefaultImplementation(apiResponseLocalVar, editRatingsSetRatingRequest);
 
@@ -311,6 +330,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public EditRatingsSetRatingApiResponse(ILogger<EditRatingsSetRatingApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="EditRatingsSetRatingApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public EditRatingsSetRatingApiResponse(ILogger<EditRatingsSetRatingApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);

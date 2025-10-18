@@ -52,7 +52,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="deletedFileServiceKeys">Optional list of file domains (service keys) to search deleted files from. (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IManageFileRelationshipsGetFileRelationshipsApiResponse"/>&gt;</returns>
-        Task<IManageFileRelationshipsGetFileRelationshipsApiResponse> ManageFileRelationshipsGetFileRelationshipsAsync(Option<int?> fileId = default, Option<string> fileIds = default, Option<string> hash = default, Option<string> hashes = default, Option<string> fileServiceKey = default, Option<string> fileServiceKeys = default, Option<string> deletedFileServiceKey = default, Option<string> deletedFileServiceKeys = default, System.Threading.CancellationToken cancellationToken = default);
+        Task<IManageFileRelationshipsGetFileRelationshipsApiResponse> ManageFileRelationshipsGetFileRelationshipsAsync(Option<int> fileId = default, Option<string> fileIds = default, Option<string> hash = default, Option<string> hashes = default, Option<string> fileServiceKey = default, Option<string> fileServiceKeys = default, Option<string> deletedFileServiceKey = default, Option<string> deletedFileServiceKeys = default, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Get file relationships for specified files.
@@ -70,7 +70,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="deletedFileServiceKeys">Optional list of file domains (service keys) to search deleted files from. (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IManageFileRelationshipsGetFileRelationshipsApiResponse"/>?&gt;</returns>
-        Task<IManageFileRelationshipsGetFileRelationshipsApiResponse?> ManageFileRelationshipsGetFileRelationshipsOrDefaultAsync(Option<int?> fileId = default, Option<string> fileIds = default, Option<string> hash = default, Option<string> hashes = default, Option<string> fileServiceKey = default, Option<string> fileServiceKeys = default, Option<string> deletedFileServiceKey = default, Option<string> deletedFileServiceKeys = default, System.Threading.CancellationToken cancellationToken = default);
+        Task<IManageFileRelationshipsGetFileRelationshipsApiResponse?> ManageFileRelationshipsGetFileRelationshipsOrDefaultAsync(Option<int> fileId = default, Option<string> fileIds = default, Option<string> hash = default, Option<string> hashes = default, Option<string> fileServiceKey = default, Option<string> fileServiceKeys = default, Option<string> deletedFileServiceKey = default, Option<string> deletedFileServiceKeys = default, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Get potential duplicate pairs for processing
@@ -180,7 +180,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="maxHammingDistance"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IManageFileRelationshipsGetRandomPotentialsApiResponse"/>&gt;</returns>
-        Task<IManageFileRelationshipsGetRandomPotentialsApiResponse> ManageFileRelationshipsGetRandomPotentialsAsync(Option<string> fileServiceKey = default, Option<List<string>> fileServiceKeys = default, Option<string> deletedFileServiceKey = default, Option<List<string>> deletedFileServiceKeys = default, Option<string> tagServiceKey1 = default, Option<List<string>> tags1 = default, Option<string> tagServiceKey2 = default, Option<List<string>> tags2 = default, Option<int> potentialsSearchType = default, Option<int> pixelDuplicates = default, Option<int?> maxHammingDistance = default, System.Threading.CancellationToken cancellationToken = default);
+        Task<IManageFileRelationshipsGetRandomPotentialsApiResponse> ManageFileRelationshipsGetRandomPotentialsAsync(Option<string> fileServiceKey = default, Option<List<string>> fileServiceKeys = default, Option<string> deletedFileServiceKey = default, Option<List<string>> deletedFileServiceKeys = default, Option<string> tagServiceKey1 = default, Option<List<string>> tags1 = default, Option<string> tagServiceKey2 = default, Option<List<string>> tags2 = default, Option<int> potentialsSearchType = default, Option<int> pixelDuplicates = default, Option<int> maxHammingDistance = default, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Get some random potentially duplicate file hashes.
@@ -201,7 +201,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="maxHammingDistance"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IManageFileRelationshipsGetRandomPotentialsApiResponse"/>?&gt;</returns>
-        Task<IManageFileRelationshipsGetRandomPotentialsApiResponse?> ManageFileRelationshipsGetRandomPotentialsOrDefaultAsync(Option<string> fileServiceKey = default, Option<List<string>> fileServiceKeys = default, Option<string> deletedFileServiceKey = default, Option<List<string>> deletedFileServiceKeys = default, Option<string> tagServiceKey1 = default, Option<List<string>> tags1 = default, Option<string> tagServiceKey2 = default, Option<List<string>> tags2 = default, Option<int> potentialsSearchType = default, Option<int> pixelDuplicates = default, Option<int?> maxHammingDistance = default, System.Threading.CancellationToken cancellationToken = default);
+        Task<IManageFileRelationshipsGetRandomPotentialsApiResponse?> ManageFileRelationshipsGetRandomPotentialsOrDefaultAsync(Option<string> fileServiceKey = default, Option<List<string>> fileServiceKeys = default, Option<string> deletedFileServiceKey = default, Option<List<string>> deletedFileServiceKeys = default, Option<string> tagServiceKey1 = default, Option<List<string>> tags1 = default, Option<string> tagServiceKey2 = default, Option<List<string>> tags2 = default, Option<int> potentialsSearchType = default, Option<int> pixelDuplicates = default, Option<int> maxHammingDistance = default, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Remove all potential file relationships for specified files
@@ -213,7 +213,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="files"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IManageFileRelationshipsRemovePotentialsApiResponse"/>&gt;</returns>
-        Task<IManageFileRelationshipsRemovePotentialsApiResponse> ManageFileRelationshipsRemovePotentialsAsync(Files? files = default, System.Threading.CancellationToken cancellationToken = default);
+        Task<IManageFileRelationshipsRemovePotentialsApiResponse> ManageFileRelationshipsRemovePotentialsAsync(Files files, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Remove all potential file relationships for specified files
@@ -224,7 +224,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="files"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IManageFileRelationshipsRemovePotentialsApiResponse"/>?&gt;</returns>
-        Task<IManageFileRelationshipsRemovePotentialsApiResponse?> ManageFileRelationshipsRemovePotentialsOrDefaultAsync(Files? files = default, System.Threading.CancellationToken cancellationToken = default);
+        Task<IManageFileRelationshipsRemovePotentialsApiResponse?> ManageFileRelationshipsRemovePotentialsOrDefaultAsync(Files files, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Set file relationships
@@ -259,7 +259,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="manageFileRelationshipsSetKingsRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IManageFileRelationshipsSetKingsApiResponse"/>&gt;</returns>
-        Task<IManageFileRelationshipsSetKingsApiResponse> ManageFileRelationshipsSetKingsAsync(ManageFileRelationshipsSetKingsRequest? manageFileRelationshipsSetKingsRequest = default, System.Threading.CancellationToken cancellationToken = default);
+        Task<IManageFileRelationshipsSetKingsApiResponse> ManageFileRelationshipsSetKingsAsync(ManageFileRelationshipsSetKingsRequest manageFileRelationshipsSetKingsRequest, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Set files as kings of their duplicate groups
@@ -270,7 +270,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="manageFileRelationshipsSetKingsRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IManageFileRelationshipsSetKingsApiResponse"/>?&gt;</returns>
-        Task<IManageFileRelationshipsSetKingsApiResponse?> ManageFileRelationshipsSetKingsOrDefaultAsync(ManageFileRelationshipsSetKingsRequest? manageFileRelationshipsSetKingsRequest = default, System.Threading.CancellationToken cancellationToken = default);
+        Task<IManageFileRelationshipsSetKingsApiResponse?> ManageFileRelationshipsSetKingsOrDefaultAsync(ManageFileRelationshipsSetKingsRequest manageFileRelationshipsSetKingsRequest, System.Threading.CancellationToken cancellationToken = default);
     }
 
     /// <summary>
@@ -730,7 +730,7 @@ namespace HydrusAPI.NET.Api
             ApiKeyProvider = apiKeyProvider;
         }
 
-        partial void FormatManageFileRelationshipsGetFileRelationships(ref Option<int?> fileId, ref Option<string> fileIds, ref Option<string> hash, ref Option<string> hashes, ref Option<string> fileServiceKey, ref Option<string> fileServiceKeys, ref Option<string> deletedFileServiceKey, ref Option<string> deletedFileServiceKeys);
+        partial void FormatManageFileRelationshipsGetFileRelationships(ref Option<int> fileId, ref Option<string> fileIds, ref Option<string> hash, ref Option<string> hashes, ref Option<string> fileServiceKey, ref Option<string> fileServiceKeys, ref Option<string> deletedFileServiceKey, ref Option<string> deletedFileServiceKeys);
 
         /// <summary>
         /// Validates the request parameters
@@ -779,7 +779,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="fileServiceKeys"></param>
         /// <param name="deletedFileServiceKey"></param>
         /// <param name="deletedFileServiceKeys"></param>
-        private void AfterManageFileRelationshipsGetFileRelationshipsDefaultImplementation(IManageFileRelationshipsGetFileRelationshipsApiResponse apiResponseLocalVar, Option<int?> fileId, Option<string> fileIds, Option<string> hash, Option<string> hashes, Option<string> fileServiceKey, Option<string> fileServiceKeys, Option<string> deletedFileServiceKey, Option<string> deletedFileServiceKeys)
+        private void AfterManageFileRelationshipsGetFileRelationshipsDefaultImplementation(IManageFileRelationshipsGetFileRelationshipsApiResponse apiResponseLocalVar, Option<int> fileId, Option<string> fileIds, Option<string> hash, Option<string> hashes, Option<string> fileServiceKey, Option<string> fileServiceKeys, Option<string> deletedFileServiceKey, Option<string> deletedFileServiceKeys)
         {
             bool suppressDefaultLog = false;
             AfterManageFileRelationshipsGetFileRelationships(ref suppressDefaultLog, apiResponseLocalVar, fileId, fileIds, hash, hashes, fileServiceKey, fileServiceKeys, deletedFileServiceKey, deletedFileServiceKeys);
@@ -800,7 +800,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="fileServiceKeys"></param>
         /// <param name="deletedFileServiceKey"></param>
         /// <param name="deletedFileServiceKeys"></param>
-        partial void AfterManageFileRelationshipsGetFileRelationships(ref bool suppressDefaultLog, IManageFileRelationshipsGetFileRelationshipsApiResponse apiResponseLocalVar, Option<int?> fileId, Option<string> fileIds, Option<string> hash, Option<string> hashes, Option<string> fileServiceKey, Option<string> fileServiceKeys, Option<string> deletedFileServiceKey, Option<string> deletedFileServiceKeys);
+        partial void AfterManageFileRelationshipsGetFileRelationships(ref bool suppressDefaultLog, IManageFileRelationshipsGetFileRelationshipsApiResponse apiResponseLocalVar, Option<int> fileId, Option<string> fileIds, Option<string> hash, Option<string> hashes, Option<string> fileServiceKey, Option<string> fileServiceKeys, Option<string> deletedFileServiceKey, Option<string> deletedFileServiceKeys);
 
         /// <summary>
         /// Logs exceptions that occur while retrieving the server response
@@ -816,7 +816,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="fileServiceKeys"></param>
         /// <param name="deletedFileServiceKey"></param>
         /// <param name="deletedFileServiceKeys"></param>
-        private void OnErrorManageFileRelationshipsGetFileRelationshipsDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, Option<int?> fileId, Option<string> fileIds, Option<string> hash, Option<string> hashes, Option<string> fileServiceKey, Option<string> fileServiceKeys, Option<string> deletedFileServiceKey, Option<string> deletedFileServiceKeys)
+        private void OnErrorManageFileRelationshipsGetFileRelationshipsDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, Option<int> fileId, Option<string> fileIds, Option<string> hash, Option<string> hashes, Option<string> fileServiceKey, Option<string> fileServiceKeys, Option<string> deletedFileServiceKey, Option<string> deletedFileServiceKeys)
         {
             bool suppressDefaultLogLocalVar = false;
             OnErrorManageFileRelationshipsGetFileRelationships(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, fileId, fileIds, hash, hashes, fileServiceKey, fileServiceKeys, deletedFileServiceKey, deletedFileServiceKeys);
@@ -839,7 +839,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="fileServiceKeys"></param>
         /// <param name="deletedFileServiceKey"></param>
         /// <param name="deletedFileServiceKeys"></param>
-        partial void OnErrorManageFileRelationshipsGetFileRelationships(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, Option<int?> fileId, Option<string> fileIds, Option<string> hash, Option<string> hashes, Option<string> fileServiceKey, Option<string> fileServiceKeys, Option<string> deletedFileServiceKey, Option<string> deletedFileServiceKeys);
+        partial void OnErrorManageFileRelationshipsGetFileRelationships(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, Option<int> fileId, Option<string> fileIds, Option<string> hash, Option<string> hashes, Option<string> fileServiceKey, Option<string> fileServiceKeys, Option<string> deletedFileServiceKey, Option<string> deletedFileServiceKeys);
 
         /// <summary>
         /// Get file relationships for specified files. Retrieve the current file relationships (e.g., duplicates, alternates) for one or more files.
@@ -854,7 +854,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="deletedFileServiceKeys">Optional list of file domains (service keys) to search deleted files from. (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IManageFileRelationshipsGetFileRelationshipsApiResponse"/>&gt;</returns>
-        public async Task<IManageFileRelationshipsGetFileRelationshipsApiResponse?> ManageFileRelationshipsGetFileRelationshipsOrDefaultAsync(Option<int?> fileId = default, Option<string> fileIds = default, Option<string> hash = default, Option<string> hashes = default, Option<string> fileServiceKey = default, Option<string> fileServiceKeys = default, Option<string> deletedFileServiceKey = default, Option<string> deletedFileServiceKeys = default, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IManageFileRelationshipsGetFileRelationshipsApiResponse?> ManageFileRelationshipsGetFileRelationshipsOrDefaultAsync(Option<int> fileId = default, Option<string> fileIds = default, Option<string> hash = default, Option<string> hashes = default, Option<string> fileServiceKey = default, Option<string> fileServiceKeys = default, Option<string> deletedFileServiceKey = default, Option<string> deletedFileServiceKeys = default, System.Threading.CancellationToken cancellationToken = default)
         {
             try
             {
@@ -880,7 +880,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="deletedFileServiceKeys">Optional list of file domains (service keys) to search deleted files from. (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IManageFileRelationshipsGetFileRelationshipsApiResponse"/>&gt;</returns>
-        public async Task<IManageFileRelationshipsGetFileRelationshipsApiResponse> ManageFileRelationshipsGetFileRelationshipsAsync(Option<int?> fileId = default, Option<string> fileIds = default, Option<string> hash = default, Option<string> hashes = default, Option<string> fileServiceKey = default, Option<string> fileServiceKeys = default, Option<string> deletedFileServiceKey = default, Option<string> deletedFileServiceKeys = default, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IManageFileRelationshipsGetFileRelationshipsApiResponse> ManageFileRelationshipsGetFileRelationshipsAsync(Option<int> fileId = default, Option<string> fileIds = default, Option<string> hash = default, Option<string> hashes = default, Option<string> fileServiceKey = default, Option<string> fileServiceKeys = default, Option<string> deletedFileServiceKey = default, Option<string> deletedFileServiceKeys = default, System.Threading.CancellationToken cancellationToken = default)
         {
             UriBuilder uriBuilderLocalVar = new UriBuilder();
 
@@ -953,11 +953,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<ManageFileRelationshipsGetFileRelationshipsApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<ManageFileRelationshipsGetFileRelationshipsApiResponse>();
+                        ManageFileRelationshipsGetFileRelationshipsApiResponse apiResponseLocalVar;
 
-                        ManageFileRelationshipsGetFileRelationshipsApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_file_relationships/get_file_relationships", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_file_relationships/get_file_relationships", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterManageFileRelationshipsGetFileRelationshipsDefaultImplementation(apiResponseLocalVar, fileId, fileIds, hash, hashes, fileServiceKey, fileServiceKeys, deletedFileServiceKey, deletedFileServiceKeys);
 
@@ -1000,6 +1006,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public ManageFileRelationshipsGetFileRelationshipsApiResponse(ILogger<ManageFileRelationshipsGetFileRelationshipsApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="ManageFileRelationshipsGetFileRelationshipsApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public ManageFileRelationshipsGetFileRelationshipsApiResponse(ILogger<ManageFileRelationshipsGetFileRelationshipsApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -1349,11 +1371,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<ManageFileRelationshipsGetPotentialPairsApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<ManageFileRelationshipsGetPotentialPairsApiResponse>();
+                        ManageFileRelationshipsGetPotentialPairsApiResponse apiResponseLocalVar;
 
-                        ManageFileRelationshipsGetPotentialPairsApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_file_relationships/get_potential_pairs", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_file_relationships/get_potential_pairs", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterManageFileRelationshipsGetPotentialPairsDefaultImplementation(apiResponseLocalVar, fileServiceKey, fileServiceKeys, deletedFileServiceKey, deletedFileServiceKeys, tagServiceKey1, tags1, tagServiceKey2, tags2, potentialsSearchType, pixelDuplicates, maxHammingDistance, maxNumPairs);
 
@@ -1396,6 +1424,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public ManageFileRelationshipsGetPotentialPairsApiResponse(ILogger<ManageFileRelationshipsGetPotentialPairsApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="ManageFileRelationshipsGetPotentialPairsApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public ManageFileRelationshipsGetPotentialPairsApiResponse(ILogger<ManageFileRelationshipsGetPotentialPairsApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -1736,11 +1780,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<ManageFileRelationshipsGetPotentialsCountApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<ManageFileRelationshipsGetPotentialsCountApiResponse>();
+                        ManageFileRelationshipsGetPotentialsCountApiResponse apiResponseLocalVar;
 
-                        ManageFileRelationshipsGetPotentialsCountApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_file_relationships/get_potentials_count", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_file_relationships/get_potentials_count", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterManageFileRelationshipsGetPotentialsCountDefaultImplementation(apiResponseLocalVar, fileServiceKey, fileServiceKeys, deletedFileServiceKey, deletedFileServiceKeys, tagServiceKey1, tags1, tagServiceKey2, tags2, potentialsSearchType, pixelDuplicates, maxHammingDistance);
 
@@ -1783,6 +1833,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public ManageFileRelationshipsGetPotentialsCountApiResponse(ILogger<ManageFileRelationshipsGetPotentialsCountApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="ManageFileRelationshipsGetPotentialsCountApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public ManageFileRelationshipsGetPotentialsCountApiResponse(ILogger<ManageFileRelationshipsGetPotentialsCountApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -1869,7 +1935,7 @@ namespace HydrusAPI.NET.Api
             partial void OnDeserializationError(ref bool suppressDefaultLog, Exception exception, HttpStatusCode httpStatusCode);
         }
 
-        partial void FormatManageFileRelationshipsGetRandomPotentials(ref Option<string> fileServiceKey, Option<List<string>> fileServiceKeys, ref Option<string> deletedFileServiceKey, Option<List<string>> deletedFileServiceKeys, ref Option<string> tagServiceKey1, Option<List<string>> tags1, ref Option<string> tagServiceKey2, Option<List<string>> tags2, ref Option<int> potentialsSearchType, ref Option<int> pixelDuplicates, ref Option<int?> maxHammingDistance);
+        partial void FormatManageFileRelationshipsGetRandomPotentials(ref Option<string> fileServiceKey, Option<List<string>> fileServiceKeys, ref Option<string> deletedFileServiceKey, Option<List<string>> deletedFileServiceKeys, ref Option<string> tagServiceKey1, Option<List<string>> tags1, ref Option<string> tagServiceKey2, Option<List<string>> tags2, ref Option<int> potentialsSearchType, ref Option<int> pixelDuplicates, ref Option<int> maxHammingDistance);
 
         /// <summary>
         /// Validates the request parameters
@@ -1925,7 +1991,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="potentialsSearchType"></param>
         /// <param name="pixelDuplicates"></param>
         /// <param name="maxHammingDistance"></param>
-        private void AfterManageFileRelationshipsGetRandomPotentialsDefaultImplementation(IManageFileRelationshipsGetRandomPotentialsApiResponse apiResponseLocalVar, Option<string> fileServiceKey, Option<List<string>> fileServiceKeys, Option<string> deletedFileServiceKey, Option<List<string>> deletedFileServiceKeys, Option<string> tagServiceKey1, Option<List<string>> tags1, Option<string> tagServiceKey2, Option<List<string>> tags2, Option<int> potentialsSearchType, Option<int> pixelDuplicates, Option<int?> maxHammingDistance)
+        private void AfterManageFileRelationshipsGetRandomPotentialsDefaultImplementation(IManageFileRelationshipsGetRandomPotentialsApiResponse apiResponseLocalVar, Option<string> fileServiceKey, Option<List<string>> fileServiceKeys, Option<string> deletedFileServiceKey, Option<List<string>> deletedFileServiceKeys, Option<string> tagServiceKey1, Option<List<string>> tags1, Option<string> tagServiceKey2, Option<List<string>> tags2, Option<int> potentialsSearchType, Option<int> pixelDuplicates, Option<int> maxHammingDistance)
         {
             bool suppressDefaultLog = false;
             AfterManageFileRelationshipsGetRandomPotentials(ref suppressDefaultLog, apiResponseLocalVar, fileServiceKey, fileServiceKeys, deletedFileServiceKey, deletedFileServiceKeys, tagServiceKey1, tags1, tagServiceKey2, tags2, potentialsSearchType, pixelDuplicates, maxHammingDistance);
@@ -1949,7 +2015,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="potentialsSearchType"></param>
         /// <param name="pixelDuplicates"></param>
         /// <param name="maxHammingDistance"></param>
-        partial void AfterManageFileRelationshipsGetRandomPotentials(ref bool suppressDefaultLog, IManageFileRelationshipsGetRandomPotentialsApiResponse apiResponseLocalVar, Option<string> fileServiceKey, Option<List<string>> fileServiceKeys, Option<string> deletedFileServiceKey, Option<List<string>> deletedFileServiceKeys, Option<string> tagServiceKey1, Option<List<string>> tags1, Option<string> tagServiceKey2, Option<List<string>> tags2, Option<int> potentialsSearchType, Option<int> pixelDuplicates, Option<int?> maxHammingDistance);
+        partial void AfterManageFileRelationshipsGetRandomPotentials(ref bool suppressDefaultLog, IManageFileRelationshipsGetRandomPotentialsApiResponse apiResponseLocalVar, Option<string> fileServiceKey, Option<List<string>> fileServiceKeys, Option<string> deletedFileServiceKey, Option<List<string>> deletedFileServiceKeys, Option<string> tagServiceKey1, Option<List<string>> tags1, Option<string> tagServiceKey2, Option<List<string>> tags2, Option<int> potentialsSearchType, Option<int> pixelDuplicates, Option<int> maxHammingDistance);
 
         /// <summary>
         /// Logs exceptions that occur while retrieving the server response
@@ -1968,7 +2034,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="potentialsSearchType"></param>
         /// <param name="pixelDuplicates"></param>
         /// <param name="maxHammingDistance"></param>
-        private void OnErrorManageFileRelationshipsGetRandomPotentialsDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, Option<string> fileServiceKey, Option<List<string>> fileServiceKeys, Option<string> deletedFileServiceKey, Option<List<string>> deletedFileServiceKeys, Option<string> tagServiceKey1, Option<List<string>> tags1, Option<string> tagServiceKey2, Option<List<string>> tags2, Option<int> potentialsSearchType, Option<int> pixelDuplicates, Option<int?> maxHammingDistance)
+        private void OnErrorManageFileRelationshipsGetRandomPotentialsDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, Option<string> fileServiceKey, Option<List<string>> fileServiceKeys, Option<string> deletedFileServiceKey, Option<List<string>> deletedFileServiceKeys, Option<string> tagServiceKey1, Option<List<string>> tags1, Option<string> tagServiceKey2, Option<List<string>> tags2, Option<int> potentialsSearchType, Option<int> pixelDuplicates, Option<int> maxHammingDistance)
         {
             bool suppressDefaultLogLocalVar = false;
             OnErrorManageFileRelationshipsGetRandomPotentials(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, fileServiceKey, fileServiceKeys, deletedFileServiceKey, deletedFileServiceKeys, tagServiceKey1, tags1, tagServiceKey2, tags2, potentialsSearchType, pixelDuplicates, maxHammingDistance);
@@ -1994,7 +2060,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="potentialsSearchType"></param>
         /// <param name="pixelDuplicates"></param>
         /// <param name="maxHammingDistance"></param>
-        partial void OnErrorManageFileRelationshipsGetRandomPotentials(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, Option<string> fileServiceKey, Option<List<string>> fileServiceKeys, Option<string> deletedFileServiceKey, Option<List<string>> deletedFileServiceKeys, Option<string> tagServiceKey1, Option<List<string>> tags1, Option<string> tagServiceKey2, Option<List<string>> tags2, Option<int> potentialsSearchType, Option<int> pixelDuplicates, Option<int?> maxHammingDistance);
+        partial void OnErrorManageFileRelationshipsGetRandomPotentials(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, Option<string> fileServiceKey, Option<List<string>> fileServiceKeys, Option<string> deletedFileServiceKey, Option<List<string>> deletedFileServiceKeys, Option<string> tagServiceKey1, Option<List<string>> tags1, Option<string> tagServiceKey2, Option<List<string>> tags2, Option<int> potentialsSearchType, Option<int> pixelDuplicates, Option<int> maxHammingDistance);
 
         /// <summary>
         /// Get some random potentially duplicate file hashes. Exactly the same as the &#39;show some random potential dupes&#39; button in the duplicate processing page.
@@ -2012,7 +2078,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="maxHammingDistance"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IManageFileRelationshipsGetRandomPotentialsApiResponse"/>&gt;</returns>
-        public async Task<IManageFileRelationshipsGetRandomPotentialsApiResponse?> ManageFileRelationshipsGetRandomPotentialsOrDefaultAsync(Option<string> fileServiceKey = default, Option<List<string>> fileServiceKeys = default, Option<string> deletedFileServiceKey = default, Option<List<string>> deletedFileServiceKeys = default, Option<string> tagServiceKey1 = default, Option<List<string>> tags1 = default, Option<string> tagServiceKey2 = default, Option<List<string>> tags2 = default, Option<int> potentialsSearchType = default, Option<int> pixelDuplicates = default, Option<int?> maxHammingDistance = default, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IManageFileRelationshipsGetRandomPotentialsApiResponse?> ManageFileRelationshipsGetRandomPotentialsOrDefaultAsync(Option<string> fileServiceKey = default, Option<List<string>> fileServiceKeys = default, Option<string> deletedFileServiceKey = default, Option<List<string>> deletedFileServiceKeys = default, Option<string> tagServiceKey1 = default, Option<List<string>> tags1 = default, Option<string> tagServiceKey2 = default, Option<List<string>> tags2 = default, Option<int> potentialsSearchType = default, Option<int> pixelDuplicates = default, Option<int> maxHammingDistance = default, System.Threading.CancellationToken cancellationToken = default)
         {
             try
             {
@@ -2041,7 +2107,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="maxHammingDistance"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IManageFileRelationshipsGetRandomPotentialsApiResponse"/>&gt;</returns>
-        public async Task<IManageFileRelationshipsGetRandomPotentialsApiResponse> ManageFileRelationshipsGetRandomPotentialsAsync(Option<string> fileServiceKey = default, Option<List<string>> fileServiceKeys = default, Option<string> deletedFileServiceKey = default, Option<List<string>> deletedFileServiceKeys = default, Option<string> tagServiceKey1 = default, Option<List<string>> tags1 = default, Option<string> tagServiceKey2 = default, Option<List<string>> tags2 = default, Option<int> potentialsSearchType = default, Option<int> pixelDuplicates = default, Option<int?> maxHammingDistance = default, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IManageFileRelationshipsGetRandomPotentialsApiResponse> ManageFileRelationshipsGetRandomPotentialsAsync(Option<string> fileServiceKey = default, Option<List<string>> fileServiceKeys = default, Option<string> deletedFileServiceKey = default, Option<List<string>> deletedFileServiceKeys = default, Option<string> tagServiceKey1 = default, Option<List<string>> tags1 = default, Option<string> tagServiceKey2 = default, Option<List<string>> tags2 = default, Option<int> potentialsSearchType = default, Option<int> pixelDuplicates = default, Option<int> maxHammingDistance = default, System.Threading.CancellationToken cancellationToken = default)
         {
             UriBuilder uriBuilderLocalVar = new UriBuilder();
 
@@ -2124,11 +2190,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<ManageFileRelationshipsGetRandomPotentialsApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<ManageFileRelationshipsGetRandomPotentialsApiResponse>();
+                        ManageFileRelationshipsGetRandomPotentialsApiResponse apiResponseLocalVar;
 
-                        ManageFileRelationshipsGetRandomPotentialsApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_file_relationships/get_random_potentials", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_file_relationships/get_random_potentials", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterManageFileRelationshipsGetRandomPotentialsDefaultImplementation(apiResponseLocalVar, fileServiceKey, fileServiceKeys, deletedFileServiceKey, deletedFileServiceKeys, tagServiceKey1, tags1, tagServiceKey2, tags2, potentialsSearchType, pixelDuplicates, maxHammingDistance);
 
@@ -2171,6 +2243,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public ManageFileRelationshipsGetRandomPotentialsApiResponse(ILogger<ManageFileRelationshipsGetRandomPotentialsApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="ManageFileRelationshipsGetRandomPotentialsApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public ManageFileRelationshipsGetRandomPotentialsApiResponse(ILogger<ManageFileRelationshipsGetRandomPotentialsApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -2257,14 +2345,25 @@ namespace HydrusAPI.NET.Api
             partial void OnDeserializationError(ref bool suppressDefaultLog, Exception exception, HttpStatusCode httpStatusCode);
         }
 
-        partial void FormatManageFileRelationshipsRemovePotentials(Files? files);
+        partial void FormatManageFileRelationshipsRemovePotentials(Files files);
+
+        /// <summary>
+        /// Validates the request parameters
+        /// </summary>
+        /// <param name="files"></param>
+        /// <returns></returns>
+        private void ValidateManageFileRelationshipsRemovePotentials(Files files)
+        {
+            if (files == null)
+                throw new ArgumentNullException(nameof(files));
+        }
 
         /// <summary>
         /// Processes the server response
         /// </summary>
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="files"></param>
-        private void AfterManageFileRelationshipsRemovePotentialsDefaultImplementation(IManageFileRelationshipsRemovePotentialsApiResponse apiResponseLocalVar, Files? files)
+        private void AfterManageFileRelationshipsRemovePotentialsDefaultImplementation(IManageFileRelationshipsRemovePotentialsApiResponse apiResponseLocalVar, Files files)
         {
             bool suppressDefaultLog = false;
             AfterManageFileRelationshipsRemovePotentials(ref suppressDefaultLog, apiResponseLocalVar, files);
@@ -2278,7 +2377,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="suppressDefaultLog"></param>
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="files"></param>
-        partial void AfterManageFileRelationshipsRemovePotentials(ref bool suppressDefaultLog, IManageFileRelationshipsRemovePotentialsApiResponse apiResponseLocalVar, Files? files);
+        partial void AfterManageFileRelationshipsRemovePotentials(ref bool suppressDefaultLog, IManageFileRelationshipsRemovePotentialsApiResponse apiResponseLocalVar, Files files);
 
         /// <summary>
         /// Logs exceptions that occur while retrieving the server response
@@ -2287,7 +2386,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="pathFormatLocalVar"></param>
         /// <param name="pathLocalVar"></param>
         /// <param name="files"></param>
-        private void OnErrorManageFileRelationshipsRemovePotentialsDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, Files? files)
+        private void OnErrorManageFileRelationshipsRemovePotentialsDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, Files files)
         {
             bool suppressDefaultLogLocalVar = false;
             OnErrorManageFileRelationshipsRemovePotentials(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, files);
@@ -2303,7 +2402,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="pathFormatLocalVar"></param>
         /// <param name="pathLocalVar"></param>
         /// <param name="files"></param>
-        partial void OnErrorManageFileRelationshipsRemovePotentials(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, Files? files);
+        partial void OnErrorManageFileRelationshipsRemovePotentials(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, Files files);
 
         /// <summary>
         /// Remove all potential file relationships for specified files Removes all potential pairs that any of the specified files are a part of. This operation ensures that the files will no longer appear as part of any potential relationships.
@@ -2311,7 +2410,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="files"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IManageFileRelationshipsRemovePotentialsApiResponse"/>&gt;</returns>
-        public async Task<IManageFileRelationshipsRemovePotentialsApiResponse?> ManageFileRelationshipsRemovePotentialsOrDefaultAsync(Files? files = default, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IManageFileRelationshipsRemovePotentialsApiResponse?> ManageFileRelationshipsRemovePotentialsOrDefaultAsync(Files files, System.Threading.CancellationToken cancellationToken = default)
         {
             try
             {
@@ -2330,12 +2429,14 @@ namespace HydrusAPI.NET.Api
         /// <param name="files"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IManageFileRelationshipsRemovePotentialsApiResponse"/>&gt;</returns>
-        public async Task<IManageFileRelationshipsRemovePotentialsApiResponse> ManageFileRelationshipsRemovePotentialsAsync(Files? files = default, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IManageFileRelationshipsRemovePotentialsApiResponse> ManageFileRelationshipsRemovePotentialsAsync(Files files, System.Threading.CancellationToken cancellationToken = default)
         {
             UriBuilder uriBuilderLocalVar = new UriBuilder();
 
             try
             {
+                ValidateManageFileRelationshipsRemovePotentials(files);
+
                 FormatManageFileRelationshipsRemovePotentials(files);
 
                 using (HttpRequestMessage httpRequestMessageLocalVar = new HttpRequestMessage())
@@ -2377,11 +2478,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<ManageFileRelationshipsRemovePotentialsApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<ManageFileRelationshipsRemovePotentialsApiResponse>();
+                        ManageFileRelationshipsRemovePotentialsApiResponse apiResponseLocalVar;
 
-                        ManageFileRelationshipsRemovePotentialsApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_file_relationships/remove_potentials", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_file_relationships/remove_potentials", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterManageFileRelationshipsRemovePotentialsDefaultImplementation(apiResponseLocalVar, files);
 
@@ -2424,6 +2531,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public ManageFileRelationshipsRemovePotentialsApiResponse(ILogger<ManageFileRelationshipsRemovePotentialsApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="ManageFileRelationshipsRemovePotentialsApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public ManageFileRelationshipsRemovePotentialsApiResponse(ILogger<ManageFileRelationshipsRemovePotentialsApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -2611,11 +2734,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<ManageFileRelationshipsSetFileRelationshipsApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<ManageFileRelationshipsSetFileRelationshipsApiResponse>();
+                        ManageFileRelationshipsSetFileRelationshipsApiResponse apiResponseLocalVar;
 
-                        ManageFileRelationshipsSetFileRelationshipsApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_file_relationships/set_file_relationships", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_file_relationships/set_file_relationships", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterManageFileRelationshipsSetFileRelationshipsDefaultImplementation(apiResponseLocalVar, manageFileRelationshipsSetFileRelationshipsRequest);
 
@@ -2663,6 +2792,22 @@ namespace HydrusAPI.NET.Api
                 OnCreated(httpRequestMessage, httpResponseMessage);
             }
 
+            /// <summary>
+            /// The <see cref="ManageFileRelationshipsSetFileRelationshipsApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public ManageFileRelationshipsSetFileRelationshipsApiResponse(ILogger<ManageFileRelationshipsSetFileRelationshipsApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
             partial void OnCreated(global::System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage);
 
             /// <summary>
@@ -2682,14 +2827,25 @@ namespace HydrusAPI.NET.Api
             partial void OnDeserializationError(ref bool suppressDefaultLog, Exception exception, HttpStatusCode httpStatusCode);
         }
 
-        partial void FormatManageFileRelationshipsSetKings(ManageFileRelationshipsSetKingsRequest? manageFileRelationshipsSetKingsRequest);
+        partial void FormatManageFileRelationshipsSetKings(ManageFileRelationshipsSetKingsRequest manageFileRelationshipsSetKingsRequest);
+
+        /// <summary>
+        /// Validates the request parameters
+        /// </summary>
+        /// <param name="manageFileRelationshipsSetKingsRequest"></param>
+        /// <returns></returns>
+        private void ValidateManageFileRelationshipsSetKings(ManageFileRelationshipsSetKingsRequest manageFileRelationshipsSetKingsRequest)
+        {
+            if (manageFileRelationshipsSetKingsRequest == null)
+                throw new ArgumentNullException(nameof(manageFileRelationshipsSetKingsRequest));
+        }
 
         /// <summary>
         /// Processes the server response
         /// </summary>
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="manageFileRelationshipsSetKingsRequest"></param>
-        private void AfterManageFileRelationshipsSetKingsDefaultImplementation(IManageFileRelationshipsSetKingsApiResponse apiResponseLocalVar, ManageFileRelationshipsSetKingsRequest? manageFileRelationshipsSetKingsRequest)
+        private void AfterManageFileRelationshipsSetKingsDefaultImplementation(IManageFileRelationshipsSetKingsApiResponse apiResponseLocalVar, ManageFileRelationshipsSetKingsRequest manageFileRelationshipsSetKingsRequest)
         {
             bool suppressDefaultLog = false;
             AfterManageFileRelationshipsSetKings(ref suppressDefaultLog, apiResponseLocalVar, manageFileRelationshipsSetKingsRequest);
@@ -2703,7 +2859,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="suppressDefaultLog"></param>
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="manageFileRelationshipsSetKingsRequest"></param>
-        partial void AfterManageFileRelationshipsSetKings(ref bool suppressDefaultLog, IManageFileRelationshipsSetKingsApiResponse apiResponseLocalVar, ManageFileRelationshipsSetKingsRequest? manageFileRelationshipsSetKingsRequest);
+        partial void AfterManageFileRelationshipsSetKings(ref bool suppressDefaultLog, IManageFileRelationshipsSetKingsApiResponse apiResponseLocalVar, ManageFileRelationshipsSetKingsRequest manageFileRelationshipsSetKingsRequest);
 
         /// <summary>
         /// Logs exceptions that occur while retrieving the server response
@@ -2712,7 +2868,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="pathFormatLocalVar"></param>
         /// <param name="pathLocalVar"></param>
         /// <param name="manageFileRelationshipsSetKingsRequest"></param>
-        private void OnErrorManageFileRelationshipsSetKingsDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, ManageFileRelationshipsSetKingsRequest? manageFileRelationshipsSetKingsRequest)
+        private void OnErrorManageFileRelationshipsSetKingsDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, ManageFileRelationshipsSetKingsRequest manageFileRelationshipsSetKingsRequest)
         {
             bool suppressDefaultLogLocalVar = false;
             OnErrorManageFileRelationshipsSetKings(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, manageFileRelationshipsSetKingsRequest);
@@ -2728,7 +2884,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="pathFormatLocalVar"></param>
         /// <param name="pathLocalVar"></param>
         /// <param name="manageFileRelationshipsSetKingsRequest"></param>
-        partial void OnErrorManageFileRelationshipsSetKings(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, ManageFileRelationshipsSetKingsRequest? manageFileRelationshipsSetKingsRequest);
+        partial void OnErrorManageFileRelationshipsSetKings(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, ManageFileRelationshipsSetKingsRequest manageFileRelationshipsSetKingsRequest);
 
         /// <summary>
         /// Set files as kings of their duplicate groups Promotes the specified files to be the \&quot;king\&quot; of their respective duplicate groups. This operation is idempotent and processes files in the order they are provided.
@@ -2736,7 +2892,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="manageFileRelationshipsSetKingsRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IManageFileRelationshipsSetKingsApiResponse"/>&gt;</returns>
-        public async Task<IManageFileRelationshipsSetKingsApiResponse?> ManageFileRelationshipsSetKingsOrDefaultAsync(ManageFileRelationshipsSetKingsRequest? manageFileRelationshipsSetKingsRequest = default, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IManageFileRelationshipsSetKingsApiResponse?> ManageFileRelationshipsSetKingsOrDefaultAsync(ManageFileRelationshipsSetKingsRequest manageFileRelationshipsSetKingsRequest, System.Threading.CancellationToken cancellationToken = default)
         {
             try
             {
@@ -2755,12 +2911,14 @@ namespace HydrusAPI.NET.Api
         /// <param name="manageFileRelationshipsSetKingsRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IManageFileRelationshipsSetKingsApiResponse"/>&gt;</returns>
-        public async Task<IManageFileRelationshipsSetKingsApiResponse> ManageFileRelationshipsSetKingsAsync(ManageFileRelationshipsSetKingsRequest? manageFileRelationshipsSetKingsRequest = default, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IManageFileRelationshipsSetKingsApiResponse> ManageFileRelationshipsSetKingsAsync(ManageFileRelationshipsSetKingsRequest manageFileRelationshipsSetKingsRequest, System.Threading.CancellationToken cancellationToken = default)
         {
             UriBuilder uriBuilderLocalVar = new UriBuilder();
 
             try
             {
+                ValidateManageFileRelationshipsSetKings(manageFileRelationshipsSetKingsRequest);
+
                 FormatManageFileRelationshipsSetKings(manageFileRelationshipsSetKingsRequest);
 
                 using (HttpRequestMessage httpRequestMessageLocalVar = new HttpRequestMessage())
@@ -2802,11 +2960,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<ManageFileRelationshipsSetKingsApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<ManageFileRelationshipsSetKingsApiResponse>();
+                        ManageFileRelationshipsSetKingsApiResponse apiResponseLocalVar;
 
-                        ManageFileRelationshipsSetKingsApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_file_relationships/set_kings", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_file_relationships/set_kings", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterManageFileRelationshipsSetKingsDefaultImplementation(apiResponseLocalVar, manageFileRelationshipsSetKingsRequest);
 
@@ -2849,6 +3013,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public ManageFileRelationshipsSetKingsApiResponse(ILogger<ManageFileRelationshipsSetKingsApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="ManageFileRelationshipsSetKingsApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public ManageFileRelationshipsSetKingsApiResponse(ILogger<ManageFileRelationshipsSetKingsApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);

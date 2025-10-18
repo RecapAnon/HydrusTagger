@@ -264,35 +264,20 @@ namespace HydrusAPI.NET.Client
 
             _services.AddSingleton<IApiFactory, ApiFactory>();
             _services.AddSingleton<AccessManagementApiEvents>();
-            _services.AddTransient<IAccessManagementApi, AccessManagementApi>();
             _services.AddSingleton<AddFilesApiEvents>();
-            _services.AddTransient<IAddFilesApi, AddFilesApi>();
             _services.AddSingleton<AddNotesApiEvents>();
-            _services.AddTransient<IAddNotesApi, AddNotesApi>();
             _services.AddSingleton<AddTagsApiEvents>();
-            _services.AddTransient<IAddTagsApi, AddTagsApi>();
             _services.AddSingleton<AddUrlsApiEvents>();
-            _services.AddTransient<IAddUrlsApi, AddUrlsApi>();
             _services.AddSingleton<EditRatingsApiEvents>();
-            _services.AddTransient<IEditRatingsApi, EditRatingsApi>();
             _services.AddSingleton<EditTimesApiEvents>();
-            _services.AddTransient<IEditTimesApi, EditTimesApi>();
             _services.AddSingleton<GetFilesApiEvents>();
-            _services.AddTransient<IGetFilesApi, GetFilesApi>();
             _services.AddSingleton<ManageCookiesApiEvents>();
-            _services.AddTransient<IManageCookiesApi, ManageCookiesApi>();
             _services.AddSingleton<ManageDatabaseApiEvents>();
-            _services.AddTransient<IManageDatabaseApi, ManageDatabaseApi>();
             _services.AddSingleton<ManageFileRelationshipsApiEvents>();
-            _services.AddTransient<IManageFileRelationshipsApi, ManageFileRelationshipsApi>();
             _services.AddSingleton<ManageHeadersApiEvents>();
-            _services.AddTransient<IManageHeadersApi, ManageHeadersApi>();
             _services.AddSingleton<ManagePagesApiEvents>();
-            _services.AddTransient<IManagePagesApi, ManagePagesApi>();
             _services.AddSingleton<ManagePopupsApiEvents>();
-            _services.AddTransient<IManagePopupsApi, ManagePopupsApi>();
             _services.AddSingleton<ManageServicesApiEvents>();
-            _services.AddTransient<IManageServicesApi, ManageServicesApi>();
         }
 
         /// <summary>

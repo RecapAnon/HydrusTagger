@@ -37,7 +37,7 @@ namespace HydrusAPI.NET.Model
         /// <param name="value">value</param>
         /// <param name="count">count</param>
         [JsonConstructor]
-        public AddTagsSearchTags200ResponseTagsInner(string value, int? count = default)
+        public AddTagsSearchTags200ResponseTagsInner(string value, int count)
         {
             Value = value;
             Count = count;
@@ -56,7 +56,7 @@ namespace HydrusAPI.NET.Model
         /// Gets or Sets Count
         /// </summary>
         [JsonPropertyName("count")]
-        public int? Count { get; set; }
+        public int Count { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -144,7 +144,10 @@ namespace HydrusAPI.NET.Model
             if (value.IsSet && value.Value == null)
                 throw new ArgumentNullException(nameof(value), "Property is not nullable for class AddTagsSearchTags200ResponseTagsInner.");
 
-            return new AddTagsSearchTags200ResponseTagsInner(value.Value!, count.Value!);
+            if (count.IsSet && count.Value == null)
+                throw new ArgumentNullException(nameof(count), "Property is not nullable for class AddTagsSearchTags200ResponseTagsInner.");
+
+            return new AddTagsSearchTags200ResponseTagsInner(value.Value!, count.Value!.Value!);
         }
 
         /// <summary>
@@ -176,10 +179,7 @@ namespace HydrusAPI.NET.Model
 
             writer.WriteString("value", addTagsSearchTags200ResponseTagsInner.Value);
 
-            if (addTagsSearchTags200ResponseTagsInner.Count != null)
-                writer.WriteNumber("count", addTagsSearchTags200ResponseTagsInner.Count.Value);
-            else
-                writer.WriteNull("count");
+            writer.WriteNumber("count", addTagsSearchTags200ResponseTagsInner.Count);
         }
     }
 

@@ -221,6 +221,9 @@ namespace HydrusAPI.NET.Model
             if (viewtime.IsSet && viewtime.Value == null)
                 throw new ArgumentNullException(nameof(viewtime), "Property is not nullable for class FileMetadataFileViewingStatisticsInner.");
 
+            if (lastViewedTimestamp.IsSet && lastViewedTimestamp.Value == null)
+                throw new ArgumentNullException(nameof(lastViewedTimestamp), "Property is not nullable for class FileMetadataFileViewingStatisticsInner.");
+
             return new FileMetadataFileViewingStatisticsInner(canvasType, canvasTypePretty, views, viewtime, lastViewedTimestamp);
         }
 
@@ -264,10 +267,7 @@ namespace HydrusAPI.NET.Model
                 writer.WriteNumber("viewtime", fileMetadataFileViewingStatisticsInner.ViewtimeOption.Value!.Value);
 
             if (fileMetadataFileViewingStatisticsInner.LastViewedTimestampOption.IsSet)
-                if (fileMetadataFileViewingStatisticsInner.LastViewedTimestampOption.Value != null)
-                    writer.WriteNumber("last_viewed_timestamp", fileMetadataFileViewingStatisticsInner.LastViewedTimestampOption.Value!.Value);
-                else
-                    writer.WriteNull("last_viewed_timestamp");
+                writer.WriteNumber("last_viewed_timestamp", fileMetadataFileViewingStatisticsInner.LastViewedTimestampOption.Value!.Value);
         }
     }
 

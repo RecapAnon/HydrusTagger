@@ -290,6 +290,9 @@ namespace HydrusAPI.NET.Model
                 }
             }
 
+            if (fileId.IsSet && fileId.Value == null)
+                throw new ArgumentNullException(nameof(fileId), "Property is not nullable for class AddUrlsAssociateUrlRequest.");
+
             if (fileIds.IsSet && fileIds.Value == null)
                 throw new ArgumentNullException(nameof(fileIds), "Property is not nullable for class AddUrlsAssociateUrlRequest.");
 
@@ -363,10 +366,7 @@ namespace HydrusAPI.NET.Model
                 throw new ArgumentNullException(nameof(addUrlsAssociateUrlRequest.UrlsToDelete), "Property is required for class AddUrlsAssociateUrlRequest.");
 
             if (addUrlsAssociateUrlRequest.FileIdOption.IsSet)
-                if (addUrlsAssociateUrlRequest.FileIdOption.Value != null)
-                    writer.WriteNumber("file_id", addUrlsAssociateUrlRequest.FileIdOption.Value!.Value);
-                else
-                    writer.WriteNull("file_id");
+                writer.WriteNumber("file_id", addUrlsAssociateUrlRequest.FileIdOption.Value!.Value);
 
             if (addUrlsAssociateUrlRequest.FileIdsOption.IsSet)
             {

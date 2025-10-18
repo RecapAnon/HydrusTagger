@@ -45,7 +45,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="managePagesAddFilesRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IManagePagesAddFilesApiResponse"/>&gt;</returns>
-        Task<IManagePagesAddFilesApiResponse> ManagePagesAddFilesAsync(ManagePagesAddFilesRequest? managePagesAddFilesRequest = default, System.Threading.CancellationToken cancellationToken = default);
+        Task<IManagePagesAddFilesApiResponse> ManagePagesAddFilesAsync(ManagePagesAddFilesRequest managePagesAddFilesRequest, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Add files to a page
@@ -56,7 +56,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="managePagesAddFilesRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IManagePagesAddFilesApiResponse"/>?&gt;</returns>
-        Task<IManagePagesAddFilesApiResponse?> ManagePagesAddFilesOrDefaultAsync(ManagePagesAddFilesRequest? managePagesAddFilesRequest = default, System.Threading.CancellationToken cancellationToken = default);
+        Task<IManagePagesAddFilesApiResponse?> ManagePagesAddFilesOrDefaultAsync(ManagePagesAddFilesRequest managePagesAddFilesRequest, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Focus a specific page in the GUI
@@ -484,14 +484,25 @@ namespace HydrusAPI.NET.Api
             ApiKeyProvider = apiKeyProvider;
         }
 
-        partial void FormatManagePagesAddFiles(ManagePagesAddFilesRequest? managePagesAddFilesRequest);
+        partial void FormatManagePagesAddFiles(ManagePagesAddFilesRequest managePagesAddFilesRequest);
+
+        /// <summary>
+        /// Validates the request parameters
+        /// </summary>
+        /// <param name="managePagesAddFilesRequest"></param>
+        /// <returns></returns>
+        private void ValidateManagePagesAddFiles(ManagePagesAddFilesRequest managePagesAddFilesRequest)
+        {
+            if (managePagesAddFilesRequest == null)
+                throw new ArgumentNullException(nameof(managePagesAddFilesRequest));
+        }
 
         /// <summary>
         /// Processes the server response
         /// </summary>
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="managePagesAddFilesRequest"></param>
-        private void AfterManagePagesAddFilesDefaultImplementation(IManagePagesAddFilesApiResponse apiResponseLocalVar, ManagePagesAddFilesRequest? managePagesAddFilesRequest)
+        private void AfterManagePagesAddFilesDefaultImplementation(IManagePagesAddFilesApiResponse apiResponseLocalVar, ManagePagesAddFilesRequest managePagesAddFilesRequest)
         {
             bool suppressDefaultLog = false;
             AfterManagePagesAddFiles(ref suppressDefaultLog, apiResponseLocalVar, managePagesAddFilesRequest);
@@ -505,7 +516,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="suppressDefaultLog"></param>
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="managePagesAddFilesRequest"></param>
-        partial void AfterManagePagesAddFiles(ref bool suppressDefaultLog, IManagePagesAddFilesApiResponse apiResponseLocalVar, ManagePagesAddFilesRequest? managePagesAddFilesRequest);
+        partial void AfterManagePagesAddFiles(ref bool suppressDefaultLog, IManagePagesAddFilesApiResponse apiResponseLocalVar, ManagePagesAddFilesRequest managePagesAddFilesRequest);
 
         /// <summary>
         /// Logs exceptions that occur while retrieving the server response
@@ -514,7 +525,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="pathFormatLocalVar"></param>
         /// <param name="pathLocalVar"></param>
         /// <param name="managePagesAddFilesRequest"></param>
-        private void OnErrorManagePagesAddFilesDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, ManagePagesAddFilesRequest? managePagesAddFilesRequest)
+        private void OnErrorManagePagesAddFilesDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, ManagePagesAddFilesRequest managePagesAddFilesRequest)
         {
             bool suppressDefaultLogLocalVar = false;
             OnErrorManagePagesAddFiles(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, managePagesAddFilesRequest);
@@ -530,7 +541,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="pathFormatLocalVar"></param>
         /// <param name="pathLocalVar"></param>
         /// <param name="managePagesAddFilesRequest"></param>
-        partial void OnErrorManagePagesAddFiles(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, ManagePagesAddFilesRequest? managePagesAddFilesRequest);
+        partial void OnErrorManagePagesAddFiles(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, ManagePagesAddFilesRequest managePagesAddFilesRequest);
 
         /// <summary>
         /// Add files to a page Appends files to a specified page. Restricted to users with &#39;Manage Pages&#39; permission.
@@ -538,7 +549,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="managePagesAddFilesRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IManagePagesAddFilesApiResponse"/>&gt;</returns>
-        public async Task<IManagePagesAddFilesApiResponse?> ManagePagesAddFilesOrDefaultAsync(ManagePagesAddFilesRequest? managePagesAddFilesRequest = default, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IManagePagesAddFilesApiResponse?> ManagePagesAddFilesOrDefaultAsync(ManagePagesAddFilesRequest managePagesAddFilesRequest, System.Threading.CancellationToken cancellationToken = default)
         {
             try
             {
@@ -557,12 +568,14 @@ namespace HydrusAPI.NET.Api
         /// <param name="managePagesAddFilesRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IManagePagesAddFilesApiResponse"/>&gt;</returns>
-        public async Task<IManagePagesAddFilesApiResponse> ManagePagesAddFilesAsync(ManagePagesAddFilesRequest? managePagesAddFilesRequest = default, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IManagePagesAddFilesApiResponse> ManagePagesAddFilesAsync(ManagePagesAddFilesRequest managePagesAddFilesRequest, System.Threading.CancellationToken cancellationToken = default)
         {
             UriBuilder uriBuilderLocalVar = new UriBuilder();
 
             try
             {
+                ValidateManagePagesAddFiles(managePagesAddFilesRequest);
+
                 FormatManagePagesAddFiles(managePagesAddFilesRequest);
 
                 using (HttpRequestMessage httpRequestMessageLocalVar = new HttpRequestMessage())
@@ -604,11 +617,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<ManagePagesAddFilesApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<ManagePagesAddFilesApiResponse>();
+                        ManagePagesAddFilesApiResponse apiResponseLocalVar;
 
-                        ManagePagesAddFilesApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_pages/add_files", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_pages/add_files", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterManagePagesAddFilesDefaultImplementation(apiResponseLocalVar, managePagesAddFilesRequest);
 
@@ -651,6 +670,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public ManagePagesAddFilesApiResponse(ILogger<ManagePagesAddFilesApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="ManagePagesAddFilesApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public ManagePagesAddFilesApiResponse(ILogger<ManagePagesAddFilesApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -838,11 +873,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<ManagePagesFocusPageApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<ManagePagesFocusPageApiResponse>();
+                        ManagePagesFocusPageApiResponse apiResponseLocalVar;
 
-                        ManagePagesFocusPageApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_pages/focus_page", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_pages/focus_page", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterManagePagesFocusPageDefaultImplementation(apiResponseLocalVar, managePagesFocusPageRequest);
 
@@ -885,6 +926,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public ManagePagesFocusPageApiResponse(ILogger<ManagePagesFocusPageApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="ManagePagesFocusPageApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public ManagePagesFocusPageApiResponse(ILogger<ManagePagesFocusPageApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -1077,11 +1134,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<ManagePagesGetPageInfoApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<ManagePagesGetPageInfoApiResponse>();
+                        ManagePagesGetPageInfoApiResponse apiResponseLocalVar;
 
-                        ManagePagesGetPageInfoApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_pages/get_page_info", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_pages/get_page_info", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterManagePagesGetPageInfoDefaultImplementation(apiResponseLocalVar, pageKey, simple);
 
@@ -1124,6 +1187,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public ManagePagesGetPageInfoApiResponse(ILogger<ManagePagesGetPageInfoApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="ManagePagesGetPageInfoApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public ManagePagesGetPageInfoApiResponse(ILogger<ManagePagesGetPageInfoApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -1310,11 +1389,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<ManagePagesGetPagesApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<ManagePagesGetPagesApiResponse>();
+                        ManagePagesGetPagesApiResponse apiResponseLocalVar;
 
-                        ManagePagesGetPagesApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_pages/get_pages", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_pages/get_pages", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterManagePagesGetPagesDefaultImplementation(apiResponseLocalVar);
 
@@ -1357,6 +1442,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public ManagePagesGetPagesApiResponse(ILogger<ManagePagesGetPagesApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="ManagePagesGetPagesApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public ManagePagesGetPagesApiResponse(ILogger<ManagePagesGetPagesApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -1564,11 +1665,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<ManagePagesRefreshPageApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<ManagePagesRefreshPageApiResponse>();
+                        ManagePagesRefreshPageApiResponse apiResponseLocalVar;
 
-                        ManagePagesRefreshPageApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_pages/refresh_page", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_pages/refresh_page", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterManagePagesRefreshPageDefaultImplementation(apiResponseLocalVar, managePagesRefreshPageRequest);
 
@@ -1611,6 +1718,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public ManagePagesRefreshPageApiResponse(ILogger<ManagePagesRefreshPageApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="ManagePagesRefreshPageApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public ManagePagesRefreshPageApiResponse(ILogger<ManagePagesRefreshPageApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);

@@ -57,7 +57,7 @@ namespace HydrusAPI.NET.Model
         /// A list of numerical file IDs.
         /// </summary>
         /// <value>A list of numerical file IDs.</value>
-        /* <example>[125462,4852415,123]</example> */
+        /* <example>[125462, 4852415, 123]</example> */
         [JsonPropertyName("file_ids")]
         public List<int>? FileIds { get { return this.FileIdsOption; } set { this.FileIdsOption = new(value); } }
 
@@ -72,7 +72,7 @@ namespace HydrusAPI.NET.Model
         /// A list of SHA256 hashes.
         /// </summary>
         /// <value>A list of SHA256 hashes.</value>
-        /* <example>[&quot;1b04c4df7accd5a61c5d02b36658295686b0abfebdc863110e7d7249bba3f9ad&quot;,&quot;fe416723c731d679aa4d20e9fd36727f4a38cd0ac6d035431f0f452fad54563f&quot;]</example> */
+        /* <example>[1b04c4df7accd5a61c5d02b36658295686b0abfebdc863110e7d7249bba3f9ad, fe416723c731d679aa4d20e9fd36727f4a38cd0ac6d035431f0f452fad54563f]</example> */
         [JsonPropertyName("hashes")]
         public List<string>? Hashes { get { return this.HashesOption; } set { this.HashesOption = new(value); } }
 

@@ -138,7 +138,7 @@ namespace HydrusAPI.NET.Model
                     switch (localVarJsonPropertyName)
                     {
                         case "services":
-                            services = new Option<Dictionary<string, Service>?>(JsonSerializer.Deserialize<Dictionary<string, Service>>(ref utf8JsonReader, jsonSerializerOptions)!);
+                            services = new Option<Dictionary<string, Service>?>(JsonSerializer.Deserialize<Dictionary<string, Service>>(ref utf8JsonReader, jsonSerializerOptions));
                             break;
                         case "metadata":
                             metadata = new Option<List<FileMetadata>?>(JsonSerializer.Deserialize<List<FileMetadata>>(ref utf8JsonReader, jsonSerializerOptions)!);
@@ -148,9 +148,6 @@ namespace HydrusAPI.NET.Model
                     }
                 }
             }
-
-            if (services.IsSet && services.Value == null)
-                throw new ArgumentNullException(nameof(services), "Property is not nullable for class GetFilesFileMetadata200Response.");
 
             if (metadata.IsSet && metadata.Value == null)
                 throw new ArgumentNullException(nameof(metadata), "Property is not nullable for class GetFilesFileMetadata200Response.");
@@ -182,17 +179,17 @@ namespace HydrusAPI.NET.Model
         /// <exception cref="NotImplementedException"></exception>
         public void WriteProperties(Utf8JsonWriter writer, GetFilesFileMetadata200Response getFilesFileMetadata200Response, JsonSerializerOptions jsonSerializerOptions)
         {
-            if (getFilesFileMetadata200Response.ServicesOption.IsSet && getFilesFileMetadata200Response.Services == null)
-                throw new ArgumentNullException(nameof(getFilesFileMetadata200Response.Services), "Property is required for class GetFilesFileMetadata200Response.");
-
             if (getFilesFileMetadata200Response.MetadataOption.IsSet && getFilesFileMetadata200Response.Metadata == null)
                 throw new ArgumentNullException(nameof(getFilesFileMetadata200Response.Metadata), "Property is required for class GetFilesFileMetadata200Response.");
 
             if (getFilesFileMetadata200Response.ServicesOption.IsSet)
-            {
-                writer.WritePropertyName("services");
-                JsonSerializer.Serialize(writer, getFilesFileMetadata200Response.Services, jsonSerializerOptions);
-            }
+                if (getFilesFileMetadata200Response.ServicesOption.Value != null)
+                {
+                    writer.WritePropertyName("services");
+                    JsonSerializer.Serialize(writer, getFilesFileMetadata200Response.Services, jsonSerializerOptions);
+                }
+                else
+                    writer.WriteNull("services");
             if (getFilesFileMetadata200Response.MetadataOption.IsSet)
             {
                 writer.WritePropertyName("metadata");

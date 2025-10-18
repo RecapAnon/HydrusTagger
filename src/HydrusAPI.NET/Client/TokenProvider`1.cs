@@ -27,7 +27,7 @@ namespace HydrusAPI.NET
         /// </summary>
         protected TTokenBase[] _tokens;
 
-        public abstract System.Threading.Tasks.ValueTask<TTokenBase> GetAsync(string header = "", System.Threading.CancellationToken cancellation = default);
+        internal abstract System.Threading.Tasks.ValueTask<TTokenBase> GetAsync(string header = "", System.Threading.CancellationToken cancellation = default);
 
         /// <summary>
         /// Instantiates a TokenProvider.

@@ -45,7 +45,7 @@ namespace HydrusAPI.NET.Model
         /// <param name="serviceKeysToAdditionalTags">Tags to be added to the imported file, mapped by service key.</param>
         /// <param name="filterableTags">Tags to be filtered and processed by the tag import options.</param>
         [JsonConstructor]
-        public AddUrlsAddUrlRequest(Option<string?> url = default, Option<string?> destinationPageKey = default, Option<string?> destinationPageName = default, Option<string?> fileServiceKey = default, Option<List<string>?> fileServiceKeys = default, Option<string?> deletedFileServiceKey = default, Option<List<string>?> deletedFileServiceKeys = default, Option<bool?> showDestinationPage = default, Option<Dictionary<string, List<string>>?> serviceKeysToAdditionalTags = default, Option<List<string>?> filterableTags = default)
+        public AddUrlsAddUrlRequest(Option<string?> url = default, Option<string?> destinationPageKey = default, Option<string?> destinationPageName = default, Option<string?> fileServiceKey = default, Option<List<string>?> fileServiceKeys = default, Option<string?> deletedFileServiceKey = default, Option<List<string>?> deletedFileServiceKeys = default, Option<bool?> showDestinationPage = default, Option<Dictionary<string, Object>?> serviceKeysToAdditionalTags = default, Option<List<string>?> filterableTags = default)
         {
             UrlOption = url;
             DestinationPageKeyOption = destinationPageKey;
@@ -179,14 +179,14 @@ namespace HydrusAPI.NET.Model
         /// </summary>
         [JsonIgnore]
         [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-        public Option<Dictionary<string, List<string>>?> ServiceKeysToAdditionalTagsOption { get; private set; }
+        public Option<Dictionary<string, Object>?> ServiceKeysToAdditionalTagsOption { get; private set; }
 
         /// <summary>
         /// Tags to be added to the imported file, mapped by service key.
         /// </summary>
         /// <value>Tags to be added to the imported file, mapped by service key.</value>
         [JsonPropertyName("service_keys_to_additional_tags")]
-        public Dictionary<string, List<string>>? ServiceKeysToAdditionalTags { get { return this.ServiceKeysToAdditionalTagsOption; } set { this.ServiceKeysToAdditionalTagsOption = new(value); } }
+        public Dictionary<string, Object>? ServiceKeysToAdditionalTags { get { return this.ServiceKeysToAdditionalTagsOption; } set { this.ServiceKeysToAdditionalTagsOption = new(value); } }
 
         /// <summary>
         /// Used to track the state of FilterableTags
@@ -265,7 +265,7 @@ namespace HydrusAPI.NET.Model
             Option<string?> deletedFileServiceKey = default;
             Option<List<string>?> deletedFileServiceKeys = default;
             Option<bool?> showDestinationPage = default;
-            Option<Dictionary<string, List<string>>?> serviceKeysToAdditionalTags = default;
+            Option<Dictionary<string, Object>?> serviceKeysToAdditionalTags = default;
             Option<List<string>?> filterableTags = default;
 
             while (utf8JsonReader.Read())
@@ -308,7 +308,7 @@ namespace HydrusAPI.NET.Model
                             showDestinationPage = new Option<bool?>(utf8JsonReader.TokenType == JsonTokenType.Null ? (bool?)null : utf8JsonReader.GetBoolean());
                             break;
                         case "service_keys_to_additional_tags":
-                            serviceKeysToAdditionalTags = new Option<Dictionary<string, List<string>>?>(JsonSerializer.Deserialize<Dictionary<string, List<string>>>(ref utf8JsonReader, jsonSerializerOptions)!);
+                            serviceKeysToAdditionalTags = new Option<Dictionary<string, Object>?>(JsonSerializer.Deserialize<Dictionary<string, Object>>(ref utf8JsonReader, jsonSerializerOptions));
                             break;
                         case "filterable_tags":
                             filterableTags = new Option<List<string>?>(JsonSerializer.Deserialize<List<string>>(ref utf8JsonReader, jsonSerializerOptions)!);
@@ -342,9 +342,6 @@ namespace HydrusAPI.NET.Model
 
             if (showDestinationPage.IsSet && showDestinationPage.Value == null)
                 throw new ArgumentNullException(nameof(showDestinationPage), "Property is not nullable for class AddUrlsAddUrlRequest.");
-
-            if (serviceKeysToAdditionalTags.IsSet && serviceKeysToAdditionalTags.Value == null)
-                throw new ArgumentNullException(nameof(serviceKeysToAdditionalTags), "Property is not nullable for class AddUrlsAddUrlRequest.");
 
             if (filterableTags.IsSet && filterableTags.Value == null)
                 throw new ArgumentNullException(nameof(filterableTags), "Property is not nullable for class AddUrlsAddUrlRequest.");
@@ -397,9 +394,6 @@ namespace HydrusAPI.NET.Model
             if (addUrlsAddUrlRequest.DeletedFileServiceKeysOption.IsSet && addUrlsAddUrlRequest.DeletedFileServiceKeys == null)
                 throw new ArgumentNullException(nameof(addUrlsAddUrlRequest.DeletedFileServiceKeys), "Property is required for class AddUrlsAddUrlRequest.");
 
-            if (addUrlsAddUrlRequest.ServiceKeysToAdditionalTagsOption.IsSet && addUrlsAddUrlRequest.ServiceKeysToAdditionalTags == null)
-                throw new ArgumentNullException(nameof(addUrlsAddUrlRequest.ServiceKeysToAdditionalTags), "Property is required for class AddUrlsAddUrlRequest.");
-
             if (addUrlsAddUrlRequest.FilterableTagsOption.IsSet && addUrlsAddUrlRequest.FilterableTags == null)
                 throw new ArgumentNullException(nameof(addUrlsAddUrlRequest.FilterableTags), "Property is required for class AddUrlsAddUrlRequest.");
 
@@ -432,10 +426,13 @@ namespace HydrusAPI.NET.Model
                 writer.WriteBoolean("show_destination_page", addUrlsAddUrlRequest.ShowDestinationPageOption.Value!.Value);
 
             if (addUrlsAddUrlRequest.ServiceKeysToAdditionalTagsOption.IsSet)
-            {
-                writer.WritePropertyName("service_keys_to_additional_tags");
-                JsonSerializer.Serialize(writer, addUrlsAddUrlRequest.ServiceKeysToAdditionalTags, jsonSerializerOptions);
-            }
+                if (addUrlsAddUrlRequest.ServiceKeysToAdditionalTagsOption.Value != null)
+                {
+                    writer.WritePropertyName("service_keys_to_additional_tags");
+                    JsonSerializer.Serialize(writer, addUrlsAddUrlRequest.ServiceKeysToAdditionalTags, jsonSerializerOptions);
+                }
+                else
+                    writer.WriteNull("service_keys_to_additional_tags");
             if (addUrlsAddUrlRequest.FilterableTagsOption.IsSet)
             {
                 writer.WritePropertyName("filterable_tags");

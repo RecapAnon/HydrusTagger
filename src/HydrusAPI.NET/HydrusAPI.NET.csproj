@@ -12,7 +12,7 @@
     <Description>Hydrus API client library generated from an OpenAPI schema.</Description>
     <Copyright>No Copyright</Copyright>
     <RootNamespace>HydrusAPI.NET</RootNamespace>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\HydrusAPI.NET.xml</DocumentationFile>
     <RepositoryUrl>https://github.com/RecapAnon/HydrusAPI.NET.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>

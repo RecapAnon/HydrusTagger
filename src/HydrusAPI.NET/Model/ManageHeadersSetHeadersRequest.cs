@@ -142,7 +142,7 @@ namespace HydrusAPI.NET.Model
                             domain = new Option<string?>(utf8JsonReader.GetString()!);
                             break;
                         case "headers":
-                            headers = new Option<Dictionary<string, ManageHeadersSetHeadersRequestHeadersValue>?>(JsonSerializer.Deserialize<Dictionary<string, ManageHeadersSetHeadersRequestHeadersValue>>(ref utf8JsonReader, jsonSerializerOptions)!);
+                            headers = new Option<Dictionary<string, ManageHeadersSetHeadersRequestHeadersValue>?>(JsonSerializer.Deserialize<Dictionary<string, ManageHeadersSetHeadersRequestHeadersValue>>(ref utf8JsonReader, jsonSerializerOptions));
                             break;
                         default:
                             break;
@@ -152,9 +152,6 @@ namespace HydrusAPI.NET.Model
 
             if (domain.IsSet && domain.Value == null)
                 throw new ArgumentNullException(nameof(domain), "Property is not nullable for class ManageHeadersSetHeadersRequest.");
-
-            if (headers.IsSet && headers.Value == null)
-                throw new ArgumentNullException(nameof(headers), "Property is not nullable for class ManageHeadersSetHeadersRequest.");
 
             return new ManageHeadersSetHeadersRequest(domain, headers);
         }
@@ -186,17 +183,17 @@ namespace HydrusAPI.NET.Model
             if (manageHeadersSetHeadersRequest.DomainOption.IsSet && manageHeadersSetHeadersRequest.Domain == null)
                 throw new ArgumentNullException(nameof(manageHeadersSetHeadersRequest.Domain), "Property is required for class ManageHeadersSetHeadersRequest.");
 
-            if (manageHeadersSetHeadersRequest.HeadersOption.IsSet && manageHeadersSetHeadersRequest.Headers == null)
-                throw new ArgumentNullException(nameof(manageHeadersSetHeadersRequest.Headers), "Property is required for class ManageHeadersSetHeadersRequest.");
-
             if (manageHeadersSetHeadersRequest.DomainOption.IsSet)
                 writer.WriteString("domain", manageHeadersSetHeadersRequest.Domain);
 
             if (manageHeadersSetHeadersRequest.HeadersOption.IsSet)
-            {
-                writer.WritePropertyName("headers");
-                JsonSerializer.Serialize(writer, manageHeadersSetHeadersRequest.Headers, jsonSerializerOptions);
-            }
+                if (manageHeadersSetHeadersRequest.HeadersOption.Value != null)
+                {
+                    writer.WritePropertyName("headers");
+                    JsonSerializer.Serialize(writer, manageHeadersSetHeadersRequest.Headers, jsonSerializerOptions);
+                }
+                else
+                    writer.WriteNull("headers");
         }
     }
 

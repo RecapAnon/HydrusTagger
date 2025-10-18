@@ -36,7 +36,7 @@ namespace HydrusAPI.NET.Model
         /// </summary>
         /// <param name="fileRelationships">fileRelationships</param>
         [JsonConstructor]
-        public FileRelationshipsResponse(Dictionary<string, FileRelationship> fileRelationships)
+        public FileRelationshipsResponse(Dictionary<string, FileRelationship>? fileRelationships = default)
         {
             FileRelationships = fileRelationships;
             OnCreated();
@@ -48,7 +48,7 @@ namespace HydrusAPI.NET.Model
         /// Gets or Sets FileRelationships
         /// </summary>
         [JsonPropertyName("file_relationships")]
-        public Dictionary<string, FileRelationship> FileRelationships { get; set; }
+        public Dictionary<string, FileRelationship>? FileRelationships { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -114,7 +114,7 @@ namespace HydrusAPI.NET.Model
                     switch (localVarJsonPropertyName)
                     {
                         case "file_relationships":
-                            fileRelationships = new Option<Dictionary<string, FileRelationship>?>(JsonSerializer.Deserialize<Dictionary<string, FileRelationship>>(ref utf8JsonReader, jsonSerializerOptions)!);
+                            fileRelationships = new Option<Dictionary<string, FileRelationship>?>(JsonSerializer.Deserialize<Dictionary<string, FileRelationship>>(ref utf8JsonReader, jsonSerializerOptions));
                             break;
                         default:
                             break;
@@ -124,9 +124,6 @@ namespace HydrusAPI.NET.Model
 
             if (!fileRelationships.IsSet)
                 throw new ArgumentException("Property is required for class FileRelationshipsResponse.", nameof(fileRelationships));
-
-            if (fileRelationships.IsSet && fileRelationships.Value == null)
-                throw new ArgumentNullException(nameof(fileRelationships), "Property is not nullable for class FileRelationshipsResponse.");
 
             return new FileRelationshipsResponse(fileRelationships.Value!);
         }
@@ -155,11 +152,13 @@ namespace HydrusAPI.NET.Model
         /// <exception cref="NotImplementedException"></exception>
         public void WriteProperties(Utf8JsonWriter writer, FileRelationshipsResponse fileRelationshipsResponse, JsonSerializerOptions jsonSerializerOptions)
         {
-            if (fileRelationshipsResponse.FileRelationships == null)
-                throw new ArgumentNullException(nameof(fileRelationshipsResponse.FileRelationships), "Property is required for class FileRelationshipsResponse.");
-
-            writer.WritePropertyName("file_relationships");
-            JsonSerializer.Serialize(writer, fileRelationshipsResponse.FileRelationships, jsonSerializerOptions);
+            if (fileRelationshipsResponse.FileRelationships != null)
+            {
+                writer.WritePropertyName("file_relationships");
+                JsonSerializer.Serialize(writer, fileRelationshipsResponse.FileRelationships, jsonSerializerOptions);
+            }
+            else
+                writer.WriteNull("file_relationships");
         }
     }
 

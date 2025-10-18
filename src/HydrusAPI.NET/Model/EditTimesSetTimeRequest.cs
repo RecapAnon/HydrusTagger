@@ -328,6 +328,12 @@ namespace HydrusAPI.NET.Model
             if (hashes.IsSet && hashes.Value == null)
                 throw new ArgumentNullException(nameof(hashes), "Property is not nullable for class EditTimesSetTimeRequest.");
 
+            if (timestamp.IsSet && timestamp.Value == null)
+                throw new ArgumentNullException(nameof(timestamp), "Property is not nullable for class EditTimesSetTimeRequest.");
+
+            if (timestampMs.IsSet && timestampMs.Value == null)
+                throw new ArgumentNullException(nameof(timestampMs), "Property is not nullable for class EditTimesSetTimeRequest.");
+
             if (fileServiceKey.IsSet && fileServiceKey.Value == null)
                 throw new ArgumentNullException(nameof(fileServiceKey), "Property is not nullable for class EditTimesSetTimeRequest.");
 
@@ -398,16 +404,10 @@ namespace HydrusAPI.NET.Model
                 JsonSerializer.Serialize(writer, editTimesSetTimeRequest.Hashes, jsonSerializerOptions);
             }
             if (editTimesSetTimeRequest.TimestampOption.IsSet)
-                if (editTimesSetTimeRequest.TimestampOption.Value != null)
-                    writer.WriteNumber("timestamp", editTimesSetTimeRequest.TimestampOption.Value!.Value);
-                else
-                    writer.WriteNull("timestamp");
+                writer.WriteNumber("timestamp", editTimesSetTimeRequest.TimestampOption.Value!.Value);
 
             if (editTimesSetTimeRequest.TimestampMsOption.IsSet)
-                if (editTimesSetTimeRequest.TimestampMsOption.Value != null)
-                    writer.WriteNumber("timestamp_ms", editTimesSetTimeRequest.TimestampMsOption.Value!.Value);
-                else
-                    writer.WriteNull("timestamp_ms");
+                writer.WriteNumber("timestamp_ms", editTimesSetTimeRequest.TimestampMsOption.Value!.Value);
 
             if (editTimesSetTimeRequest.FileServiceKeyOption.IsSet)
                 writer.WriteString("file_service_key", editTimesSetTimeRequest.FileServiceKey);

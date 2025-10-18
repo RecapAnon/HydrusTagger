@@ -46,10 +46,6 @@ namespace HydrusAPI.NET.Client
 
                     AvailableTokens.Add(header, global::System.Threading.Channels.Channel.CreateBounded<TTokenBase>(options));
                 }
-
-                foreach (TTokenBase token in _tokens)
-                    if (token is ApiKeyToken apiKeyToken && AvailableTokens.TryGetValue(ClientUtils.ApiKeyHeaderToString(apiKeyToken.Header), out var tokens))
-                        token.TokenBecameAvailable += (sender) => tokens.Writer.TryWrite((TTokenBase) sender);
             }
             else
             {
@@ -59,14 +55,25 @@ namespace HydrusAPI.NET.Client
                 };
 
                 AvailableTokens.Add(string.Empty, global::System.Threading.Channels.Channel.CreateBounded<TTokenBase>(options));
-
-                foreach(global::System.Threading.Channels.Channel<TTokenBase> tokens in AvailableTokens.Values)
-                    for (int i = 0; i < _tokens.Length; i++)
-                        _tokens[i].TokenBecameAvailable += ((sender) => tokens.Writer.TryWrite((TTokenBase) sender));
             }
+
+            foreach (var availableToken in AvailableTokens)
+                foreach(TTokenBase token in _tokens)
+                {
+                    if (token is ApiKeyToken apiKeyToken)
+                    {
+                        if (ClientUtils.ApiKeyHeaderToString(apiKeyToken.Header) == availableToken.Key)
+                        {
+                            token.TokenBecameAvailable += ((sender) => availableToken.Value.Writer.TryWrite((TTokenBase)sender));
+                        }
+                    } else
+                    {
+                        token.TokenBecameAvailable += ((sender) => availableToken.Value.Writer.TryWrite((TTokenBase)sender));
+                    }
+                }
         }
 
-        public override async System.Threading.Tasks.ValueTask<TTokenBase> GetAsync(string header = "", System.Threading.CancellationToken cancellation = default)
+        internal override async System.Threading.Tasks.ValueTask<TTokenBase> GetAsync(string header = "", System.Threading.CancellationToken cancellation = default)
         {
             if (!AvailableTokens.TryGetValue(header, out global::System.Threading.Channels.Channel<TTokenBase>? tokens))
                 throw new KeyNotFoundException($"Could not locate a token for header '{header}'.");

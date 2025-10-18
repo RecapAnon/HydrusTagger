@@ -35,20 +35,20 @@ namespace HydrusAPI.NET.Model
         /// Initializes a new instance of the <see cref="EditRatingsSetRatingRequest" /> class.
         /// </summary>
         /// <param name="ratingServiceKey">Hexadecimal key of the rating service.</param>
+        /// <param name="rating">rating</param>
         /// <param name="hash">SHA256 hash of the file.</param>
         /// <param name="hashes">List of SHA256 hashes of the files.</param>
         /// <param name="fileId">Numerical ID of the file.</param>
         /// <param name="fileIds">List of numerical IDs of the files.</param>
-        /// <param name="rating">rating</param>
         [JsonConstructor]
-        public EditRatingsSetRatingRequest(string ratingServiceKey, Option<string?> hash = default, Option<List<string>?> hashes = default, Option<int?> fileId = default, Option<List<int>?> fileIds = default, EditRatingsSetRatingRequestRating? rating = default)
+        public EditRatingsSetRatingRequest(string ratingServiceKey, EditRatingsSetRatingRequestRating rating, Option<string?> hash = default, Option<List<string>?> hashes = default, Option<int?> fileId = default, Option<List<int>?> fileIds = default)
         {
             RatingServiceKey = ratingServiceKey;
+            Rating = rating;
             HashOption = hash;
             HashesOption = hashes;
             FileIdOption = fileId;
             FileIdsOption = fileIds;
-            Rating = rating;
             OnCreated();
         }
 
@@ -61,6 +61,12 @@ namespace HydrusAPI.NET.Model
         /* <example>282303611ba853659aa60aeaa5b6312d40e05b58822c52c57ae5e320882ba26e</example> */
         [JsonPropertyName("rating_service_key")]
         public string RatingServiceKey { get; set; }
+
+        /// <summary>
+        /// Gets or Sets Rating
+        /// </summary>
+        [JsonPropertyName("rating")]
+        public EditRatingsSetRatingRequestRating Rating { get; set; }
 
         /// <summary>
         /// Used to track the state of Hash
@@ -88,7 +94,7 @@ namespace HydrusAPI.NET.Model
         /// List of SHA256 hashes of the files.
         /// </summary>
         /// <value>List of SHA256 hashes of the files.</value>
-        /* <example>[&quot;3b820114f658d768550e4e3d4f1dced3ff8db77443472b5ad93700647ad2d3ba&quot;,&quot;9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08&quot;]</example> */
+        /* <example>[3b820114f658d768550e4e3d4f1dced3ff8db77443472b5ad93700647ad2d3ba, 9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08]</example> */
         [JsonPropertyName("hashes")]
         public List<string>? Hashes { get { return this.HashesOption; } set { this.HashesOption = new(value); } }
 
@@ -118,15 +124,9 @@ namespace HydrusAPI.NET.Model
         /// List of numerical IDs of the files.
         /// </summary>
         /// <value>List of numerical IDs of the files.</value>
-        /* <example>[12345,67890]</example> */
+        /* <example>[12345, 67890]</example> */
         [JsonPropertyName("file_ids")]
         public List<int>? FileIds { get { return this.FileIdsOption; } set { this.FileIdsOption = new(value); } }
-
-        /// <summary>
-        /// Gets or Sets Rating
-        /// </summary>
-        [JsonPropertyName("rating")]
-        public EditRatingsSetRatingRequestRating? Rating { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -137,11 +137,11 @@ namespace HydrusAPI.NET.Model
             StringBuilder sb = new StringBuilder();
             sb.Append("class EditRatingsSetRatingRequest {\n");
             sb.Append("  RatingServiceKey: ").Append(RatingServiceKey).Append("\n");
+            sb.Append("  Rating: ").Append(Rating).Append("\n");
             sb.Append("  Hash: ").Append(Hash).Append("\n");
             sb.Append("  Hashes: ").Append(Hashes).Append("\n");
             sb.Append("  FileId: ").Append(FileId).Append("\n");
             sb.Append("  FileIds: ").Append(FileIds).Append("\n");
-            sb.Append("  Rating: ").Append(Rating).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -180,11 +180,11 @@ namespace HydrusAPI.NET.Model
             JsonTokenType startingTokenType = utf8JsonReader.TokenType;
 
             Option<string?> ratingServiceKey = default;
+            Option<EditRatingsSetRatingRequestRating?> rating = default;
             Option<string?> hash = default;
             Option<List<string>?> hashes = default;
             Option<int?> fileId = default;
             Option<List<int>?> fileIds = default;
-            Option<EditRatingsSetRatingRequestRating?> rating = default;
 
             while (utf8JsonReader.Read())
             {
@@ -204,6 +204,9 @@ namespace HydrusAPI.NET.Model
                         case "rating_service_key":
                             ratingServiceKey = new Option<string?>(utf8JsonReader.GetString()!);
                             break;
+                        case "rating":
+                            rating = new Option<EditRatingsSetRatingRequestRating?>(JsonSerializer.Deserialize<EditRatingsSetRatingRequestRating>(ref utf8JsonReader, jsonSerializerOptions)!);
+                            break;
                         case "hash":
                             hash = new Option<string?>(utf8JsonReader.GetString()!);
                             break;
@@ -215,9 +218,6 @@ namespace HydrusAPI.NET.Model
                             break;
                         case "file_ids":
                             fileIds = new Option<List<int>?>(JsonSerializer.Deserialize<List<int>>(ref utf8JsonReader, jsonSerializerOptions)!);
-                            break;
-                        case "rating":
-                            rating = new Option<EditRatingsSetRatingRequestRating?>(JsonSerializer.Deserialize<EditRatingsSetRatingRequestRating>(ref utf8JsonReader, jsonSerializerOptions));
                             break;
                         default:
                             break;
@@ -234,6 +234,9 @@ namespace HydrusAPI.NET.Model
             if (ratingServiceKey.IsSet && ratingServiceKey.Value == null)
                 throw new ArgumentNullException(nameof(ratingServiceKey), "Property is not nullable for class EditRatingsSetRatingRequest.");
 
+            if (rating.IsSet && rating.Value == null)
+                throw new ArgumentNullException(nameof(rating), "Property is not nullable for class EditRatingsSetRatingRequest.");
+
             if (hash.IsSet && hash.Value == null)
                 throw new ArgumentNullException(nameof(hash), "Property is not nullable for class EditRatingsSetRatingRequest.");
 
@@ -246,7 +249,7 @@ namespace HydrusAPI.NET.Model
             if (fileIds.IsSet && fileIds.Value == null)
                 throw new ArgumentNullException(nameof(fileIds), "Property is not nullable for class EditRatingsSetRatingRequest.");
 
-            return new EditRatingsSetRatingRequest(ratingServiceKey.Value!, hash, hashes, fileId, fileIds, rating.Value!);
+            return new EditRatingsSetRatingRequest(ratingServiceKey.Value!, rating.Value!, hash, hashes, fileId, fileIds);
         }
 
         /// <summary>
@@ -276,6 +279,9 @@ namespace HydrusAPI.NET.Model
             if (editRatingsSetRatingRequest.RatingServiceKey == null)
                 throw new ArgumentNullException(nameof(editRatingsSetRatingRequest.RatingServiceKey), "Property is required for class EditRatingsSetRatingRequest.");
 
+            if (editRatingsSetRatingRequest.Rating == null)
+                throw new ArgumentNullException(nameof(editRatingsSetRatingRequest.Rating), "Property is required for class EditRatingsSetRatingRequest.");
+
             if (editRatingsSetRatingRequest.HashOption.IsSet && editRatingsSetRatingRequest.Hash == null)
                 throw new ArgumentNullException(nameof(editRatingsSetRatingRequest.Hash), "Property is required for class EditRatingsSetRatingRequest.");
 
@@ -287,6 +293,8 @@ namespace HydrusAPI.NET.Model
 
             writer.WriteString("rating_service_key", editRatingsSetRatingRequest.RatingServiceKey);
 
+            writer.WritePropertyName("rating");
+            JsonSerializer.Serialize(writer, editRatingsSetRatingRequest.Rating, jsonSerializerOptions);
             if (editRatingsSetRatingRequest.HashOption.IsSet)
                 writer.WriteString("hash", editRatingsSetRatingRequest.Hash);
 
@@ -303,13 +311,6 @@ namespace HydrusAPI.NET.Model
                 writer.WritePropertyName("file_ids");
                 JsonSerializer.Serialize(writer, editRatingsSetRatingRequest.FileIds, jsonSerializerOptions);
             }
-            if (editRatingsSetRatingRequest.Rating != null)
-            {
-                writer.WritePropertyName("rating");
-                JsonSerializer.Serialize(writer, editRatingsSetRatingRequest.Rating, jsonSerializerOptions);
-            }
-            else
-                writer.WriteNull("rating");
         }
     }
 

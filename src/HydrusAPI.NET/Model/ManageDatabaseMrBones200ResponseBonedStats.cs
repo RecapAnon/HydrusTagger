@@ -174,7 +174,7 @@ namespace HydrusAPI.NET.Model
         /// <summary>
         /// Gets or Sets TotalViewtime
         /// </summary>
-        /* <example>[3280,41621,2932,83021]</example> */
+        /* <example>[3280, 41621, 2932, 83021]</example> */
         [JsonPropertyName("total_viewtime")]
         public List<int>? TotalViewtime { get { return this.TotalViewtimeOption; } set { this.TotalViewtimeOption = new(value); } }
 

@@ -37,7 +37,7 @@ namespace HydrusAPI.NET.Model
         /// <param name="varVersion">varVersion</param>
         /// <param name="hydrusVersion">hydrusVersion</param>
         [JsonConstructor]
-        public ApiVersion200Response(int varVersion, int? hydrusVersion = default)
+        public ApiVersion200Response(int varVersion, int hydrusVersion)
         {
             VarVersion = varVersion;
             HydrusVersion = hydrusVersion;
@@ -56,7 +56,7 @@ namespace HydrusAPI.NET.Model
         /// Gets or Sets HydrusVersion
         /// </summary>
         [JsonPropertyName("hydrus_version")]
-        public int? HydrusVersion { get; set; }
+        public int HydrusVersion { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -144,7 +144,10 @@ namespace HydrusAPI.NET.Model
             if (varVersion.IsSet && varVersion.Value == null)
                 throw new ArgumentNullException(nameof(varVersion), "Property is not nullable for class ApiVersion200Response.");
 
-            return new ApiVersion200Response(varVersion.Value!.Value!, hydrusVersion.Value!);
+            if (hydrusVersion.IsSet && hydrusVersion.Value == null)
+                throw new ArgumentNullException(nameof(hydrusVersion), "Property is not nullable for class ApiVersion200Response.");
+
+            return new ApiVersion200Response(varVersion.Value!.Value!, hydrusVersion.Value!.Value!);
         }
 
         /// <summary>
@@ -173,10 +176,7 @@ namespace HydrusAPI.NET.Model
         {
             writer.WriteNumber("version", apiVersion200Response.VarVersion);
 
-            if (apiVersion200Response.HydrusVersion != null)
-                writer.WriteNumber("hydrus_version", apiVersion200Response.HydrusVersion.Value);
-            else
-                writer.WriteNull("hydrus_version");
+            writer.WriteNumber("hydrus_version", apiVersion200Response.HydrusVersion);
         }
     }
 

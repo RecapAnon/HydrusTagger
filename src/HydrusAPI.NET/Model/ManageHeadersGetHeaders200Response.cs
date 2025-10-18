@@ -37,7 +37,7 @@ namespace HydrusAPI.NET.Model
         /// <param name="networkContext">networkContext</param>
         /// <param name="headers">headers</param>
         [JsonConstructor]
-        public ManageHeadersGetHeaders200Response(ManageHeadersGetHeaders200ResponseNetworkContext networkContext, Dictionary<string, ManageHeadersGetHeaders200ResponseHeadersValue> headers)
+        public ManageHeadersGetHeaders200Response(ManageHeadersGetHeaders200ResponseNetworkContext networkContext, Dictionary<string, ManageHeadersGetHeaders200ResponseHeadersValue>? headers = default)
         {
             NetworkContext = networkContext;
             Headers = headers;
@@ -56,7 +56,7 @@ namespace HydrusAPI.NET.Model
         /// Gets or Sets Headers
         /// </summary>
         [JsonPropertyName("headers")]
-        public Dictionary<string, ManageHeadersGetHeaders200ResponseHeadersValue> Headers { get; set; }
+        public Dictionary<string, ManageHeadersGetHeaders200ResponseHeadersValue>? Headers { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -127,7 +127,7 @@ namespace HydrusAPI.NET.Model
                             networkContext = new Option<ManageHeadersGetHeaders200ResponseNetworkContext?>(JsonSerializer.Deserialize<ManageHeadersGetHeaders200ResponseNetworkContext>(ref utf8JsonReader, jsonSerializerOptions)!);
                             break;
                         case "headers":
-                            headers = new Option<Dictionary<string, ManageHeadersGetHeaders200ResponseHeadersValue>?>(JsonSerializer.Deserialize<Dictionary<string, ManageHeadersGetHeaders200ResponseHeadersValue>>(ref utf8JsonReader, jsonSerializerOptions)!);
+                            headers = new Option<Dictionary<string, ManageHeadersGetHeaders200ResponseHeadersValue>?>(JsonSerializer.Deserialize<Dictionary<string, ManageHeadersGetHeaders200ResponseHeadersValue>>(ref utf8JsonReader, jsonSerializerOptions));
                             break;
                         default:
                             break;
@@ -143,9 +143,6 @@ namespace HydrusAPI.NET.Model
 
             if (networkContext.IsSet && networkContext.Value == null)
                 throw new ArgumentNullException(nameof(networkContext), "Property is not nullable for class ManageHeadersGetHeaders200Response.");
-
-            if (headers.IsSet && headers.Value == null)
-                throw new ArgumentNullException(nameof(headers), "Property is not nullable for class ManageHeadersGetHeaders200Response.");
 
             return new ManageHeadersGetHeaders200Response(networkContext.Value!, headers.Value!);
         }
@@ -177,13 +174,15 @@ namespace HydrusAPI.NET.Model
             if (manageHeadersGetHeaders200Response.NetworkContext == null)
                 throw new ArgumentNullException(nameof(manageHeadersGetHeaders200Response.NetworkContext), "Property is required for class ManageHeadersGetHeaders200Response.");
 
-            if (manageHeadersGetHeaders200Response.Headers == null)
-                throw new ArgumentNullException(nameof(manageHeadersGetHeaders200Response.Headers), "Property is required for class ManageHeadersGetHeaders200Response.");
-
             writer.WritePropertyName("network_context");
             JsonSerializer.Serialize(writer, manageHeadersGetHeaders200Response.NetworkContext, jsonSerializerOptions);
-            writer.WritePropertyName("headers");
-            JsonSerializer.Serialize(writer, manageHeadersGetHeaders200Response.Headers, jsonSerializerOptions);
+            if (manageHeadersGetHeaders200Response.Headers != null)
+            {
+                writer.WritePropertyName("headers");
+                JsonSerializer.Serialize(writer, manageHeadersGetHeaders200Response.Headers, jsonSerializerOptions);
+            }
+            else
+                writer.WriteNull("headers");
         }
     }
 

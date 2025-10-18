@@ -34,29 +34,29 @@ namespace HydrusAPI.NET.Model
         /// <summary>
         /// Initializes a new instance of the <see cref="ManageHeadersGetHeaders200ResponseNetworkContext" /> class.
         /// </summary>
-        /// <param name="data">data</param>
         /// <param name="type">type</param>
+        /// <param name="data">data</param>
         [JsonConstructor]
-        public ManageHeadersGetHeaders200ResponseNetworkContext(string data, int? type = default)
+        public ManageHeadersGetHeaders200ResponseNetworkContext(int type, string data)
         {
-            Data = data;
             Type = type;
+            Data = data;
             OnCreated();
         }
 
         partial void OnCreated();
 
         /// <summary>
+        /// Gets or Sets Type
+        /// </summary>
+        [JsonPropertyName("type")]
+        public int Type { get; set; }
+
+        /// <summary>
         /// Gets or Sets Data
         /// </summary>
         [JsonPropertyName("data")]
         public string Data { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [JsonPropertyName("type")]
-        public int? Type { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -66,8 +66,8 @@ namespace HydrusAPI.NET.Model
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("class ManageHeadersGetHeaders200ResponseNetworkContext {\n");
-            sb.Append("  Data: ").Append(Data).Append("\n");
             sb.Append("  Type: ").Append(Type).Append("\n");
+            sb.Append("  Data: ").Append(Data).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -105,8 +105,8 @@ namespace HydrusAPI.NET.Model
 
             JsonTokenType startingTokenType = utf8JsonReader.TokenType;
 
-            Option<string?> data = default;
             Option<int?> type = default;
+            Option<string?> data = default;
 
             while (utf8JsonReader.Read())
             {
@@ -123,11 +123,11 @@ namespace HydrusAPI.NET.Model
 
                     switch (localVarJsonPropertyName)
                     {
-                        case "data":
-                            data = new Option<string?>(utf8JsonReader.GetString()!);
-                            break;
                         case "type":
                             type = new Option<int?>(utf8JsonReader.TokenType == JsonTokenType.Null ? (int?)null : utf8JsonReader.GetInt32());
+                            break;
+                        case "data":
+                            data = new Option<string?>(utf8JsonReader.GetString()!);
                             break;
                         default:
                             break;
@@ -135,16 +135,19 @@ namespace HydrusAPI.NET.Model
                 }
             }
 
+            if (!type.IsSet)
+                throw new ArgumentException("Property is required for class ManageHeadersGetHeaders200ResponseNetworkContext.", nameof(type));
+
             if (!data.IsSet)
                 throw new ArgumentException("Property is required for class ManageHeadersGetHeaders200ResponseNetworkContext.", nameof(data));
 
-            if (!type.IsSet)
-                throw new ArgumentException("Property is required for class ManageHeadersGetHeaders200ResponseNetworkContext.", nameof(type));
+            if (type.IsSet && type.Value == null)
+                throw new ArgumentNullException(nameof(type), "Property is not nullable for class ManageHeadersGetHeaders200ResponseNetworkContext.");
 
             if (data.IsSet && data.Value == null)
                 throw new ArgumentNullException(nameof(data), "Property is not nullable for class ManageHeadersGetHeaders200ResponseNetworkContext.");
 
-            return new ManageHeadersGetHeaders200ResponseNetworkContext(data.Value!, type.Value!);
+            return new ManageHeadersGetHeaders200ResponseNetworkContext(type.Value!.Value!, data.Value!);
         }
 
         /// <summary>
@@ -174,12 +177,9 @@ namespace HydrusAPI.NET.Model
             if (manageHeadersGetHeaders200ResponseNetworkContext.Data == null)
                 throw new ArgumentNullException(nameof(manageHeadersGetHeaders200ResponseNetworkContext.Data), "Property is required for class ManageHeadersGetHeaders200ResponseNetworkContext.");
 
-            writer.WriteString("data", manageHeadersGetHeaders200ResponseNetworkContext.Data);
+            writer.WriteNumber("type", manageHeadersGetHeaders200ResponseNetworkContext.Type);
 
-            if (manageHeadersGetHeaders200ResponseNetworkContext.Type != null)
-                writer.WriteNumber("type", manageHeadersGetHeaders200ResponseNetworkContext.Type.Value);
-            else
-                writer.WriteNull("type");
+            writer.WriteString("data", manageHeadersGetHeaders200ResponseNetworkContext.Data);
         }
     }
 

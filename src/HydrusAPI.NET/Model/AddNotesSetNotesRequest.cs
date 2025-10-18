@@ -41,7 +41,7 @@ namespace HydrusAPI.NET.Model
         /// <param name="extendExistingNoteIfPossible">extendExistingNoteIfPossible (default to true)</param>
         /// <param name="conflictResolution">conflictResolution (default to ConflictResolutionEnum.NUMBER_3)</param>
         [JsonConstructor]
-        public AddNotesSetNotesRequest(Dictionary<string, string> notes, Option<Object?> hash = default, Option<Object?> fileId = default, Option<bool?> mergeCleverly = default, Option<bool?> extendExistingNoteIfPossible = default, Option<ConflictResolutionEnum?> conflictResolution = default)
+        public AddNotesSetNotesRequest(Dictionary<string, string>? notes = default, Option<Object?> hash = default, Option<Object?> fileId = default, Option<bool?> mergeCleverly = default, Option<bool?> extendExistingNoteIfPossible = default, Option<ConflictResolutionEnum?> conflictResolution = default)
         {
             Notes = notes;
             HashOption = hash;
@@ -152,7 +152,7 @@ namespace HydrusAPI.NET.Model
         /// Gets or Sets Notes
         /// </summary>
         [JsonPropertyName("notes")]
-        public Dictionary<string, string> Notes { get; set; }
+        public Dictionary<string, string>? Notes { get; set; }
 
         /// <summary>
         /// Used to track the state of Hash
@@ -282,7 +282,7 @@ namespace HydrusAPI.NET.Model
                     switch (localVarJsonPropertyName)
                     {
                         case "notes":
-                            notes = new Option<Dictionary<string, string>?>(JsonSerializer.Deserialize<Dictionary<string, string>>(ref utf8JsonReader, jsonSerializerOptions)!);
+                            notes = new Option<Dictionary<string, string>?>(JsonSerializer.Deserialize<Dictionary<string, string>>(ref utf8JsonReader, jsonSerializerOptions));
                             break;
                         case "hash":
                             hash = new Option<Object?>(JsonSerializer.Deserialize<Object>(ref utf8JsonReader, jsonSerializerOptions)!);
@@ -307,9 +307,6 @@ namespace HydrusAPI.NET.Model
 
             if (!notes.IsSet)
                 throw new ArgumentException("Property is required for class AddNotesSetNotesRequest.", nameof(notes));
-
-            if (notes.IsSet && notes.Value == null)
-                throw new ArgumentNullException(nameof(notes), "Property is not nullable for class AddNotesSetNotesRequest.");
 
             if (hash.IsSet && hash.Value == null)
                 throw new ArgumentNullException(nameof(hash), "Property is not nullable for class AddNotesSetNotesRequest.");
@@ -353,17 +350,19 @@ namespace HydrusAPI.NET.Model
         /// <exception cref="NotImplementedException"></exception>
         public void WriteProperties(Utf8JsonWriter writer, AddNotesSetNotesRequest addNotesSetNotesRequest, JsonSerializerOptions jsonSerializerOptions)
         {
-            if (addNotesSetNotesRequest.Notes == null)
-                throw new ArgumentNullException(nameof(addNotesSetNotesRequest.Notes), "Property is required for class AddNotesSetNotesRequest.");
-
             if (addNotesSetNotesRequest.HashOption.IsSet && addNotesSetNotesRequest.Hash == null)
                 throw new ArgumentNullException(nameof(addNotesSetNotesRequest.Hash), "Property is required for class AddNotesSetNotesRequest.");
 
             if (addNotesSetNotesRequest.FileIdOption.IsSet && addNotesSetNotesRequest.FileId == null)
                 throw new ArgumentNullException(nameof(addNotesSetNotesRequest.FileId), "Property is required for class AddNotesSetNotesRequest.");
 
-            writer.WritePropertyName("notes");
-            JsonSerializer.Serialize(writer, addNotesSetNotesRequest.Notes, jsonSerializerOptions);
+            if (addNotesSetNotesRequest.Notes != null)
+            {
+                writer.WritePropertyName("notes");
+                JsonSerializer.Serialize(writer, addNotesSetNotesRequest.Notes, jsonSerializerOptions);
+            }
+            else
+                writer.WriteNull("notes");
             if (addNotesSetNotesRequest.HashOption.IsSet)
             {
                 writer.WritePropertyName("hash");

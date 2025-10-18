@@ -43,7 +43,7 @@ namespace HydrusAPI.NET.Model
         /// <param name="overridePreviouslyDeletedMappings">If true, allows overriding mappings previously deleted. If false, skips adding previously deleted mappings. (default to true)</param>
         /// <param name="createNewDeletedMappings">If true, creates delete records even for tags not currently on the file. If false, only deletes existing mappings. (default to true)</param>
         [JsonConstructor]
-        public AddTagsAddTagsRequest(Option<int?> fileId = default, Option<List<int>?> fileIds = default, Option<string?> hash = default, Option<List<string>?> hashes = default, Option<Dictionary<string, List<string>>?> serviceKeysToTags = default, Option<Dictionary<string, Dictionary<string, List<AddTagsAddTagsRequestServiceKeysToActionsToTagsValueValueInner>>>?> serviceKeysToActionsToTags = default, Option<bool?> overridePreviouslyDeletedMappings = default, Option<bool?> createNewDeletedMappings = default)
+        public AddTagsAddTagsRequest(Option<int?> fileId = default, Option<List<int>?> fileIds = default, Option<string?> hash = default, Option<List<string>?> hashes = default, Option<Dictionary<string, Object>?> serviceKeysToTags = default, Option<Dictionary<string, Dictionary<string, Object>>?> serviceKeysToActionsToTags = default, Option<bool?> overridePreviouslyDeletedMappings = default, Option<bool?> createNewDeletedMappings = default)
         {
             FileIdOption = fileId;
             FileIdsOption = fileIds;
@@ -119,27 +119,27 @@ namespace HydrusAPI.NET.Model
         /// </summary>
         [JsonIgnore]
         [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-        public Option<Dictionary<string, List<string>>?> ServiceKeysToTagsOption { get; private set; }
+        public Option<Dictionary<string, Object>?> ServiceKeysToTagsOption { get; private set; }
 
         /// <summary>
         /// Maps service keys to lists of tags to be added to the files.
         /// </summary>
         /// <value>Maps service keys to lists of tags to be added to the files.</value>
         [JsonPropertyName("service_keys_to_tags")]
-        public Dictionary<string, List<string>>? ServiceKeysToTags { get { return this.ServiceKeysToTagsOption; } set { this.ServiceKeysToTagsOption = new(value); } }
+        public Dictionary<string, Object>? ServiceKeysToTags { get { return this.ServiceKeysToTagsOption; } set { this.ServiceKeysToTagsOption = new(value); } }
 
         /// <summary>
         /// Used to track the state of ServiceKeysToActionsToTags
         /// </summary>
         [JsonIgnore]
         [global::System.ComponentModel.EditorBrowsable(global::System.ComponentModel.EditorBrowsableState.Never)]
-        public Option<Dictionary<string, Dictionary<string, List<AddTagsAddTagsRequestServiceKeysToActionsToTagsValueValueInner>>>?> ServiceKeysToActionsToTagsOption { get; private set; }
+        public Option<Dictionary<string, Dictionary<string, Object>>?> ServiceKeysToActionsToTagsOption { get; private set; }
 
         /// <summary>
         /// Gets or Sets ServiceKeysToActionsToTags
         /// </summary>
         [JsonPropertyName("service_keys_to_actions_to_tags")]
-        public Dictionary<string, Dictionary<string, List<AddTagsAddTagsRequestServiceKeysToActionsToTagsValueValueInner>>>? ServiceKeysToActionsToTags { get { return this.ServiceKeysToActionsToTagsOption; } set { this.ServiceKeysToActionsToTagsOption = new(value); } }
+        public Dictionary<string, Dictionary<string, Object>>? ServiceKeysToActionsToTags { get { return this.ServiceKeysToActionsToTagsOption; } set { this.ServiceKeysToActionsToTagsOption = new(value); } }
 
         /// <summary>
         /// Used to track the state of OverridePreviouslyDeletedMappings
@@ -226,8 +226,8 @@ namespace HydrusAPI.NET.Model
             Option<List<int>?> fileIds = default;
             Option<string?> hash = default;
             Option<List<string>?> hashes = default;
-            Option<Dictionary<string, List<string>>?> serviceKeysToTags = default;
-            Option<Dictionary<string, Dictionary<string, List<AddTagsAddTagsRequestServiceKeysToActionsToTagsValueValueInner>>>?> serviceKeysToActionsToTags = default;
+            Option<Dictionary<string, Object>?> serviceKeysToTags = default;
+            Option<Dictionary<string, Dictionary<string, Object>>?> serviceKeysToActionsToTags = default;
             Option<bool?> overridePreviouslyDeletedMappings = default;
             Option<bool?> createNewDeletedMappings = default;
 
@@ -259,10 +259,10 @@ namespace HydrusAPI.NET.Model
                             hashes = new Option<List<string>?>(JsonSerializer.Deserialize<List<string>>(ref utf8JsonReader, jsonSerializerOptions)!);
                             break;
                         case "service_keys_to_tags":
-                            serviceKeysToTags = new Option<Dictionary<string, List<string>>?>(JsonSerializer.Deserialize<Dictionary<string, List<string>>>(ref utf8JsonReader, jsonSerializerOptions)!);
+                            serviceKeysToTags = new Option<Dictionary<string, Object>?>(JsonSerializer.Deserialize<Dictionary<string, Object>>(ref utf8JsonReader, jsonSerializerOptions));
                             break;
                         case "service_keys_to_actions_to_tags":
-                            serviceKeysToActionsToTags = new Option<Dictionary<string, Dictionary<string, List<AddTagsAddTagsRequestServiceKeysToActionsToTagsValueValueInner>>>?>(JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, List<AddTagsAddTagsRequestServiceKeysToActionsToTagsValueValueInner>>>>(ref utf8JsonReader, jsonSerializerOptions)!);
+                            serviceKeysToActionsToTags = new Option<Dictionary<string, Dictionary<string, Object>>?>(JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, Object>>>(ref utf8JsonReader, jsonSerializerOptions));
                             break;
                         case "override_previously_deleted_mappings":
                             overridePreviouslyDeletedMappings = new Option<bool?>(utf8JsonReader.TokenType == JsonTokenType.Null ? (bool?)null : utf8JsonReader.GetBoolean());
@@ -287,12 +287,6 @@ namespace HydrusAPI.NET.Model
 
             if (hashes.IsSet && hashes.Value == null)
                 throw new ArgumentNullException(nameof(hashes), "Property is not nullable for class AddTagsAddTagsRequest.");
-
-            if (serviceKeysToTags.IsSet && serviceKeysToTags.Value == null)
-                throw new ArgumentNullException(nameof(serviceKeysToTags), "Property is not nullable for class AddTagsAddTagsRequest.");
-
-            if (serviceKeysToActionsToTags.IsSet && serviceKeysToActionsToTags.Value == null)
-                throw new ArgumentNullException(nameof(serviceKeysToActionsToTags), "Property is not nullable for class AddTagsAddTagsRequest.");
 
             if (overridePreviouslyDeletedMappings.IsSet && overridePreviouslyDeletedMappings.Value == null)
                 throw new ArgumentNullException(nameof(overridePreviouslyDeletedMappings), "Property is not nullable for class AddTagsAddTagsRequest.");
@@ -336,12 +330,6 @@ namespace HydrusAPI.NET.Model
             if (addTagsAddTagsRequest.HashesOption.IsSet && addTagsAddTagsRequest.Hashes == null)
                 throw new ArgumentNullException(nameof(addTagsAddTagsRequest.Hashes), "Property is required for class AddTagsAddTagsRequest.");
 
-            if (addTagsAddTagsRequest.ServiceKeysToTagsOption.IsSet && addTagsAddTagsRequest.ServiceKeysToTags == null)
-                throw new ArgumentNullException(nameof(addTagsAddTagsRequest.ServiceKeysToTags), "Property is required for class AddTagsAddTagsRequest.");
-
-            if (addTagsAddTagsRequest.ServiceKeysToActionsToTagsOption.IsSet && addTagsAddTagsRequest.ServiceKeysToActionsToTags == null)
-                throw new ArgumentNullException(nameof(addTagsAddTagsRequest.ServiceKeysToActionsToTags), "Property is required for class AddTagsAddTagsRequest.");
-
             if (addTagsAddTagsRequest.FileIdOption.IsSet)
                 writer.WriteNumber("file_id", addTagsAddTagsRequest.FileIdOption.Value!.Value);
 
@@ -359,15 +347,21 @@ namespace HydrusAPI.NET.Model
                 JsonSerializer.Serialize(writer, addTagsAddTagsRequest.Hashes, jsonSerializerOptions);
             }
             if (addTagsAddTagsRequest.ServiceKeysToTagsOption.IsSet)
-            {
-                writer.WritePropertyName("service_keys_to_tags");
-                JsonSerializer.Serialize(writer, addTagsAddTagsRequest.ServiceKeysToTags, jsonSerializerOptions);
-            }
+                if (addTagsAddTagsRequest.ServiceKeysToTagsOption.Value != null)
+                {
+                    writer.WritePropertyName("service_keys_to_tags");
+                    JsonSerializer.Serialize(writer, addTagsAddTagsRequest.ServiceKeysToTags, jsonSerializerOptions);
+                }
+                else
+                    writer.WriteNull("service_keys_to_tags");
             if (addTagsAddTagsRequest.ServiceKeysToActionsToTagsOption.IsSet)
-            {
-                writer.WritePropertyName("service_keys_to_actions_to_tags");
-                JsonSerializer.Serialize(writer, addTagsAddTagsRequest.ServiceKeysToActionsToTags, jsonSerializerOptions);
-            }
+                if (addTagsAddTagsRequest.ServiceKeysToActionsToTagsOption.Value != null)
+                {
+                    writer.WritePropertyName("service_keys_to_actions_to_tags");
+                    JsonSerializer.Serialize(writer, addTagsAddTagsRequest.ServiceKeysToActionsToTags, jsonSerializerOptions);
+                }
+                else
+                    writer.WriteNull("service_keys_to_actions_to_tags");
             if (addTagsAddTagsRequest.OverridePreviouslyDeletedMappingsOption.IsSet)
                 writer.WriteBoolean("override_previously_deleted_mappings", addTagsAddTagsRequest.OverridePreviouslyDeletedMappingsOption.Value!.Value);
 

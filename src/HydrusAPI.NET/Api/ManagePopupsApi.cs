@@ -72,7 +72,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="managePopupsAddPopuipRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IManagePopupsAddPopuipApiResponse"/>&gt;</returns>
-        Task<IManagePopupsAddPopuipApiResponse> ManagePopupsAddPopuipAsync(ManagePopupsAddPopuipRequest? managePopupsAddPopuipRequest = default, System.Threading.CancellationToken cancellationToken = default);
+        Task<IManagePopupsAddPopuipApiResponse> ManagePopupsAddPopuipAsync(ManagePopupsAddPopuipRequest managePopupsAddPopuipRequest, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Add a popup
@@ -83,7 +83,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="managePopupsAddPopuipRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IManagePopupsAddPopuipApiResponse"/>?&gt;</returns>
-        Task<IManagePopupsAddPopuipApiResponse?> ManagePopupsAddPopuipOrDefaultAsync(ManagePopupsAddPopuipRequest? managePopupsAddPopuipRequest = default, System.Threading.CancellationToken cancellationToken = default);
+        Task<IManagePopupsAddPopuipApiResponse?> ManagePopupsAddPopuipOrDefaultAsync(ManagePopupsAddPopuipRequest managePopupsAddPopuipRequest, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Call the user callable function of a popup
@@ -929,11 +929,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<GetPopupApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<GetPopupApiResponse>();
+                        GetPopupApiResponse apiResponseLocalVar;
 
-                        GetPopupApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_popups/get_popup", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_popups/get_popup", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterGetPopupDefaultImplementation(apiResponseLocalVar, key, hydrusClientAPIAccessKey, hydrusClientAPISessionKey);
 
@@ -976,6 +982,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public GetPopupApiResponse(ILogger<GetPopupApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="GetPopupApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public GetPopupApiResponse(ILogger<GetPopupApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -1056,14 +1078,25 @@ namespace HydrusAPI.NET.Api
             partial void OnDeserializationError(ref bool suppressDefaultLog, Exception exception, HttpStatusCode httpStatusCode);
         }
 
-        partial void FormatManagePopupsAddPopuip(ManagePopupsAddPopuipRequest? managePopupsAddPopuipRequest);
+        partial void FormatManagePopupsAddPopuip(ManagePopupsAddPopuipRequest managePopupsAddPopuipRequest);
+
+        /// <summary>
+        /// Validates the request parameters
+        /// </summary>
+        /// <param name="managePopupsAddPopuipRequest"></param>
+        /// <returns></returns>
+        private void ValidateManagePopupsAddPopuip(ManagePopupsAddPopuipRequest managePopupsAddPopuipRequest)
+        {
+            if (managePopupsAddPopuipRequest == null)
+                throw new ArgumentNullException(nameof(managePopupsAddPopuipRequest));
+        }
 
         /// <summary>
         /// Processes the server response
         /// </summary>
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="managePopupsAddPopuipRequest"></param>
-        private void AfterManagePopupsAddPopuipDefaultImplementation(IManagePopupsAddPopuipApiResponse apiResponseLocalVar, ManagePopupsAddPopuipRequest? managePopupsAddPopuipRequest)
+        private void AfterManagePopupsAddPopuipDefaultImplementation(IManagePopupsAddPopuipApiResponse apiResponseLocalVar, ManagePopupsAddPopuipRequest managePopupsAddPopuipRequest)
         {
             bool suppressDefaultLog = false;
             AfterManagePopupsAddPopuip(ref suppressDefaultLog, apiResponseLocalVar, managePopupsAddPopuipRequest);
@@ -1077,7 +1110,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="suppressDefaultLog"></param>
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="managePopupsAddPopuipRequest"></param>
-        partial void AfterManagePopupsAddPopuip(ref bool suppressDefaultLog, IManagePopupsAddPopuipApiResponse apiResponseLocalVar, ManagePopupsAddPopuipRequest? managePopupsAddPopuipRequest);
+        partial void AfterManagePopupsAddPopuip(ref bool suppressDefaultLog, IManagePopupsAddPopuipApiResponse apiResponseLocalVar, ManagePopupsAddPopuipRequest managePopupsAddPopuipRequest);
 
         /// <summary>
         /// Logs exceptions that occur while retrieving the server response
@@ -1086,7 +1119,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="pathFormatLocalVar"></param>
         /// <param name="pathLocalVar"></param>
         /// <param name="managePopupsAddPopuipRequest"></param>
-        private void OnErrorManagePopupsAddPopuipDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, ManagePopupsAddPopuipRequest? managePopupsAddPopuipRequest)
+        private void OnErrorManagePopupsAddPopuipDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, ManagePopupsAddPopuipRequest managePopupsAddPopuipRequest)
         {
             bool suppressDefaultLogLocalVar = false;
             OnErrorManagePopupsAddPopuip(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, managePopupsAddPopuipRequest);
@@ -1102,7 +1135,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="pathFormatLocalVar"></param>
         /// <param name="pathLocalVar"></param>
         /// <param name="managePopupsAddPopuipRequest"></param>
-        partial void OnErrorManagePopupsAddPopuip(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, ManagePopupsAddPopuipRequest? managePopupsAddPopuipRequest);
+        partial void OnErrorManagePopupsAddPopuip(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, ManagePopupsAddPopuipRequest managePopupsAddPopuipRequest);
 
         /// <summary>
         /// Add a popup Adds a new popup job status object. Requires Manage Popups permission.
@@ -1110,7 +1143,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="managePopupsAddPopuipRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IManagePopupsAddPopuipApiResponse"/>&gt;</returns>
-        public async Task<IManagePopupsAddPopuipApiResponse?> ManagePopupsAddPopuipOrDefaultAsync(ManagePopupsAddPopuipRequest? managePopupsAddPopuipRequest = default, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IManagePopupsAddPopuipApiResponse?> ManagePopupsAddPopuipOrDefaultAsync(ManagePopupsAddPopuipRequest managePopupsAddPopuipRequest, System.Threading.CancellationToken cancellationToken = default)
         {
             try
             {
@@ -1129,12 +1162,14 @@ namespace HydrusAPI.NET.Api
         /// <param name="managePopupsAddPopuipRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IManagePopupsAddPopuipApiResponse"/>&gt;</returns>
-        public async Task<IManagePopupsAddPopuipApiResponse> ManagePopupsAddPopuipAsync(ManagePopupsAddPopuipRequest? managePopupsAddPopuipRequest = default, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IManagePopupsAddPopuipApiResponse> ManagePopupsAddPopuipAsync(ManagePopupsAddPopuipRequest managePopupsAddPopuipRequest, System.Threading.CancellationToken cancellationToken = default)
         {
             UriBuilder uriBuilderLocalVar = new UriBuilder();
 
             try
             {
+                ValidateManagePopupsAddPopuip(managePopupsAddPopuipRequest);
+
                 FormatManagePopupsAddPopuip(managePopupsAddPopuipRequest);
 
                 using (HttpRequestMessage httpRequestMessageLocalVar = new HttpRequestMessage())
@@ -1185,11 +1220,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<ManagePopupsAddPopuipApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<ManagePopupsAddPopuipApiResponse>();
+                        ManagePopupsAddPopuipApiResponse apiResponseLocalVar;
 
-                        ManagePopupsAddPopuipApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_popups/add_popup", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_popups/add_popup", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterManagePopupsAddPopuipDefaultImplementation(apiResponseLocalVar, managePopupsAddPopuipRequest);
 
@@ -1232,6 +1273,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public ManagePopupsAddPopuipApiResponse(ILogger<ManagePopupsAddPopuipApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="ManagePopupsAddPopuipApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public ManagePopupsAddPopuipApiResponse(ILogger<ManagePopupsAddPopuipApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -1445,11 +1502,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<ManagePopupsCallUserCallableApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<ManagePopupsCallUserCallableApiResponse>();
+                        ManagePopupsCallUserCallableApiResponse apiResponseLocalVar;
 
-                        ManagePopupsCallUserCallableApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_popups/call_user_callable", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_popups/call_user_callable", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterManagePopupsCallUserCallableDefaultImplementation(apiResponseLocalVar, managePopupsCallUserCallableRequest);
 
@@ -1492,6 +1555,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public ManagePopupsCallUserCallableApiResponse(ILogger<ManagePopupsCallUserCallableApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="ManagePopupsCallUserCallableApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public ManagePopupsCallUserCallableApiResponse(ILogger<ManagePopupsCallUserCallableApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -1679,11 +1758,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<ManagePopupsCancelPopupApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<ManagePopupsCancelPopupApiResponse>();
+                        ManagePopupsCancelPopupApiResponse apiResponseLocalVar;
 
-                        ManagePopupsCancelPopupApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_popups/cancel_popup", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_popups/cancel_popup", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterManagePopupsCancelPopupDefaultImplementation(apiResponseLocalVar, managePopupsCancelPopupRequest);
 
@@ -1726,6 +1811,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public ManagePopupsCancelPopupApiResponse(ILogger<ManagePopupsCancelPopupApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="ManagePopupsCancelPopupApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public ManagePopupsCancelPopupApiResponse(ILogger<ManagePopupsCancelPopupApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -1883,11 +1984,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<ManagePopupsDismissPopupApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<ManagePopupsDismissPopupApiResponse>();
+                        ManagePopupsDismissPopupApiResponse apiResponseLocalVar;
 
-                        ManagePopupsDismissPopupApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_popups/dismiss_popup", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_popups/dismiss_popup", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterManagePopupsDismissPopupDefaultImplementation(apiResponseLocalVar, managePopupsDismissPopupRequest);
 
@@ -1930,6 +2037,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public ManagePopupsDismissPopupApiResponse(ILogger<ManagePopupsDismissPopupApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="ManagePopupsDismissPopupApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public ManagePopupsDismissPopupApiResponse(ILogger<ManagePopupsDismissPopupApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -2117,11 +2240,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<ManagePopupsFinishAndDismissPopupApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<ManagePopupsFinishAndDismissPopupApiResponse>();
+                        ManagePopupsFinishAndDismissPopupApiResponse apiResponseLocalVar;
 
-                        ManagePopupsFinishAndDismissPopupApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_popups/finish_and_dismiss_popup", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_popups/finish_and_dismiss_popup", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterManagePopupsFinishAndDismissPopupDefaultImplementation(apiResponseLocalVar, managePopupsFinishAndDismissPopupRequest);
 
@@ -2164,6 +2293,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public ManagePopupsFinishAndDismissPopupApiResponse(ILogger<ManagePopupsFinishAndDismissPopupApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="ManagePopupsFinishAndDismissPopupApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public ManagePopupsFinishAndDismissPopupApiResponse(ILogger<ManagePopupsFinishAndDismissPopupApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -2351,11 +2496,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<ManagePopupsFinishPopupApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<ManagePopupsFinishPopupApiResponse>();
+                        ManagePopupsFinishPopupApiResponse apiResponseLocalVar;
 
-                        ManagePopupsFinishPopupApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_popups/finish_popup", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_popups/finish_popup", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterManagePopupsFinishPopupDefaultImplementation(apiResponseLocalVar, managePopupsFinishPopupRequest);
 
@@ -2398,6 +2549,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public ManagePopupsFinishPopupApiResponse(ILogger<ManagePopupsFinishPopupApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="ManagePopupsFinishPopupApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public ManagePopupsFinishPopupApiResponse(ILogger<ManagePopupsFinishPopupApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -2545,11 +2712,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<ManagePopupsGetPopupsApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<ManagePopupsGetPopupsApiResponse>();
+                        ManagePopupsGetPopupsApiResponse apiResponseLocalVar;
 
-                        ManagePopupsGetPopupsApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_popups/get_popups", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_popups/get_popups", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterManagePopupsGetPopupsDefaultImplementation(apiResponseLocalVar, onlyInView);
 
@@ -2592,6 +2765,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public ManagePopupsGetPopupsApiResponse(ILogger<ManagePopupsGetPopupsApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="ManagePopupsGetPopupsApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public ManagePopupsGetPopupsApiResponse(ILogger<ManagePopupsGetPopupsApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -2802,11 +2991,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<ManagePopupsUpdatePopuipApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<ManagePopupsUpdatePopuipApiResponse>();
+                        ManagePopupsUpdatePopuipApiResponse apiResponseLocalVar;
 
-                        ManagePopupsUpdatePopuipApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_popups/update_popup", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/manage_popups/update_popup", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterManagePopupsUpdatePopuipDefaultImplementation(apiResponseLocalVar, managePopupsUpdatePopuipRequest);
 
@@ -2849,6 +3044,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public ManagePopupsUpdatePopuipApiResponse(ILogger<ManagePopupsUpdatePopuipApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="ManagePopupsUpdatePopuipApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public ManagePopupsUpdatePopuipApiResponse(ILogger<ManagePopupsUpdatePopuipApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);

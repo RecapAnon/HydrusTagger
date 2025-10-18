@@ -367,11 +367,23 @@ namespace HydrusAPI.NET.Model
             if (hasError.IsSet && hasError.Value == null)
                 throw new ArgumentNullException(nameof(hasError), "Property is not nullable for class NetworkJobMetadata.");
 
+            if (totalDataUsed.IsSet && totalDataUsed.Value == null)
+                throw new ArgumentNullException(nameof(totalDataUsed), "Property is not nullable for class NetworkJobMetadata.");
+
             if (isDone.IsSet && isDone.Value == null)
                 throw new ArgumentNullException(nameof(isDone), "Property is not nullable for class NetworkJobMetadata.");
 
             if (statusText.IsSet && statusText.Value == null)
                 throw new ArgumentNullException(nameof(statusText), "Property is not nullable for class NetworkJobMetadata.");
+
+            if (currentSpeed.IsSet && currentSpeed.Value == null)
+                throw new ArgumentNullException(nameof(currentSpeed), "Property is not nullable for class NetworkJobMetadata.");
+
+            if (bytesRead.IsSet && bytesRead.Value == null)
+                throw new ArgumentNullException(nameof(bytesRead), "Property is not nullable for class NetworkJobMetadata.");
+
+            if (bytesToRead.IsSet && bytesToRead.Value == null)
+                throw new ArgumentNullException(nameof(bytesToRead), "Property is not nullable for class NetworkJobMetadata.");
 
             return new NetworkJobMetadata(url, waitingOnConnectionError, domainOk, waitingOnServersideBandwidth, noEngineYet, hasError, totalDataUsed, isDone, statusText, currentSpeed, bytesRead, bytesToRead);
         }
@@ -425,10 +437,7 @@ namespace HydrusAPI.NET.Model
                 writer.WriteBoolean("has_error", networkJobMetadata.HasErrorOption.Value!.Value);
 
             if (networkJobMetadata.TotalDataUsedOption.IsSet)
-                if (networkJobMetadata.TotalDataUsedOption.Value != null)
-                    writer.WriteNumber("total_data_used", networkJobMetadata.TotalDataUsedOption.Value!.Value);
-                else
-                    writer.WriteNull("total_data_used");
+                writer.WriteNumber("total_data_used", networkJobMetadata.TotalDataUsedOption.Value!.Value);
 
             if (networkJobMetadata.IsDoneOption.IsSet)
                 writer.WriteBoolean("is_done", networkJobMetadata.IsDoneOption.Value!.Value);
@@ -437,22 +446,13 @@ namespace HydrusAPI.NET.Model
                 writer.WriteString("status_text", networkJobMetadata.StatusText);
 
             if (networkJobMetadata.CurrentSpeedOption.IsSet)
-                if (networkJobMetadata.CurrentSpeedOption.Value != null)
-                    writer.WriteNumber("current_speed", networkJobMetadata.CurrentSpeedOption.Value!.Value);
-                else
-                    writer.WriteNull("current_speed");
+                writer.WriteNumber("current_speed", networkJobMetadata.CurrentSpeedOption.Value!.Value);
 
             if (networkJobMetadata.BytesReadOption.IsSet)
-                if (networkJobMetadata.BytesReadOption.Value != null)
-                    writer.WriteNumber("bytes_read", networkJobMetadata.BytesReadOption.Value!.Value);
-                else
-                    writer.WriteNull("bytes_read");
+                writer.WriteNumber("bytes_read", networkJobMetadata.BytesReadOption.Value!.Value);
 
             if (networkJobMetadata.BytesToReadOption.IsSet)
-                if (networkJobMetadata.BytesToReadOption.Value != null)
-                    writer.WriteNumber("bytes_to_read", networkJobMetadata.BytesToReadOption.Value!.Value);
-                else
-                    writer.WriteNull("bytes_to_read");
+                writer.WriteNumber("bytes_to_read", networkJobMetadata.BytesToReadOption.Value!.Value);
         }
     }
 

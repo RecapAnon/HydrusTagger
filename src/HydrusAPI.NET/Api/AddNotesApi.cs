@@ -45,7 +45,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="addNotesDeleteNotesRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IAddNotesDeleteNotesApiResponse"/>&gt;</returns>
-        Task<IAddNotesDeleteNotesApiResponse> AddNotesDeleteNotesAsync(AddNotesDeleteNotesRequest? addNotesDeleteNotesRequest = default, System.Threading.CancellationToken cancellationToken = default);
+        Task<IAddNotesDeleteNotesApiResponse> AddNotesDeleteNotesAsync(AddNotesDeleteNotesRequest addNotesDeleteNotesRequest, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Remove notes associated with a file
@@ -56,7 +56,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="addNotesDeleteNotesRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IAddNotesDeleteNotesApiResponse"/>?&gt;</returns>
-        Task<IAddNotesDeleteNotesApiResponse?> AddNotesDeleteNotesOrDefaultAsync(AddNotesDeleteNotesRequest? addNotesDeleteNotesRequest = default, System.Threading.CancellationToken cancellationToken = default);
+        Task<IAddNotesDeleteNotesApiResponse?> AddNotesDeleteNotesOrDefaultAsync(AddNotesDeleteNotesRequest addNotesDeleteNotesRequest, System.Threading.CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Add or update notes associated with a file
@@ -253,14 +253,25 @@ namespace HydrusAPI.NET.Api
             ApiKeyProvider = apiKeyProvider;
         }
 
-        partial void FormatAddNotesDeleteNotes(AddNotesDeleteNotesRequest? addNotesDeleteNotesRequest);
+        partial void FormatAddNotesDeleteNotes(AddNotesDeleteNotesRequest addNotesDeleteNotesRequest);
+
+        /// <summary>
+        /// Validates the request parameters
+        /// </summary>
+        /// <param name="addNotesDeleteNotesRequest"></param>
+        /// <returns></returns>
+        private void ValidateAddNotesDeleteNotes(AddNotesDeleteNotesRequest addNotesDeleteNotesRequest)
+        {
+            if (addNotesDeleteNotesRequest == null)
+                throw new ArgumentNullException(nameof(addNotesDeleteNotesRequest));
+        }
 
         /// <summary>
         /// Processes the server response
         /// </summary>
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="addNotesDeleteNotesRequest"></param>
-        private void AfterAddNotesDeleteNotesDefaultImplementation(IAddNotesDeleteNotesApiResponse apiResponseLocalVar, AddNotesDeleteNotesRequest? addNotesDeleteNotesRequest)
+        private void AfterAddNotesDeleteNotesDefaultImplementation(IAddNotesDeleteNotesApiResponse apiResponseLocalVar, AddNotesDeleteNotesRequest addNotesDeleteNotesRequest)
         {
             bool suppressDefaultLog = false;
             AfterAddNotesDeleteNotes(ref suppressDefaultLog, apiResponseLocalVar, addNotesDeleteNotesRequest);
@@ -274,7 +285,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="suppressDefaultLog"></param>
         /// <param name="apiResponseLocalVar"></param>
         /// <param name="addNotesDeleteNotesRequest"></param>
-        partial void AfterAddNotesDeleteNotes(ref bool suppressDefaultLog, IAddNotesDeleteNotesApiResponse apiResponseLocalVar, AddNotesDeleteNotesRequest? addNotesDeleteNotesRequest);
+        partial void AfterAddNotesDeleteNotes(ref bool suppressDefaultLog, IAddNotesDeleteNotesApiResponse apiResponseLocalVar, AddNotesDeleteNotesRequest addNotesDeleteNotesRequest);
 
         /// <summary>
         /// Logs exceptions that occur while retrieving the server response
@@ -283,7 +294,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="pathFormatLocalVar"></param>
         /// <param name="pathLocalVar"></param>
         /// <param name="addNotesDeleteNotesRequest"></param>
-        private void OnErrorAddNotesDeleteNotesDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, AddNotesDeleteNotesRequest? addNotesDeleteNotesRequest)
+        private void OnErrorAddNotesDeleteNotesDefaultImplementation(Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, AddNotesDeleteNotesRequest addNotesDeleteNotesRequest)
         {
             bool suppressDefaultLogLocalVar = false;
             OnErrorAddNotesDeleteNotes(ref suppressDefaultLogLocalVar, exceptionLocalVar, pathFormatLocalVar, pathLocalVar, addNotesDeleteNotesRequest);
@@ -299,7 +310,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="pathFormatLocalVar"></param>
         /// <param name="pathLocalVar"></param>
         /// <param name="addNotesDeleteNotesRequest"></param>
-        partial void OnErrorAddNotesDeleteNotes(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, AddNotesDeleteNotesRequest? addNotesDeleteNotesRequest);
+        partial void OnErrorAddNotesDeleteNotes(ref bool suppressDefaultLogLocalVar, Exception exceptionLocalVar, string pathFormatLocalVar, string pathLocalVar, AddNotesDeleteNotesRequest addNotesDeleteNotesRequest);
 
         /// <summary>
         /// Remove notes associated with a file Deletes one or more named notes from a specified file by hash or file ID.
@@ -307,7 +318,7 @@ namespace HydrusAPI.NET.Api
         /// <param name="addNotesDeleteNotesRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IAddNotesDeleteNotesApiResponse"/>&gt;</returns>
-        public async Task<IAddNotesDeleteNotesApiResponse?> AddNotesDeleteNotesOrDefaultAsync(AddNotesDeleteNotesRequest? addNotesDeleteNotesRequest = default, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IAddNotesDeleteNotesApiResponse?> AddNotesDeleteNotesOrDefaultAsync(AddNotesDeleteNotesRequest addNotesDeleteNotesRequest, System.Threading.CancellationToken cancellationToken = default)
         {
             try
             {
@@ -326,12 +337,14 @@ namespace HydrusAPI.NET.Api
         /// <param name="addNotesDeleteNotesRequest"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel the request.</param>
         /// <returns><see cref="Task"/>&lt;<see cref="IAddNotesDeleteNotesApiResponse"/>&gt;</returns>
-        public async Task<IAddNotesDeleteNotesApiResponse> AddNotesDeleteNotesAsync(AddNotesDeleteNotesRequest? addNotesDeleteNotesRequest = default, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<IAddNotesDeleteNotesApiResponse> AddNotesDeleteNotesAsync(AddNotesDeleteNotesRequest addNotesDeleteNotesRequest, System.Threading.CancellationToken cancellationToken = default)
         {
             UriBuilder uriBuilderLocalVar = new UriBuilder();
 
             try
             {
+                ValidateAddNotesDeleteNotes(addNotesDeleteNotesRequest);
+
                 FormatAddNotesDeleteNotes(addNotesDeleteNotesRequest);
 
                 using (HttpRequestMessage httpRequestMessageLocalVar = new HttpRequestMessage())
@@ -373,11 +386,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<AddNotesDeleteNotesApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<AddNotesDeleteNotesApiResponse>();
+                        AddNotesDeleteNotesApiResponse apiResponseLocalVar;
 
-                        AddNotesDeleteNotesApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/add_notes/delete_notes", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/add_notes/delete_notes", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterAddNotesDeleteNotesDefaultImplementation(apiResponseLocalVar, addNotesDeleteNotesRequest);
 
@@ -420,6 +439,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public AddNotesDeleteNotesApiResponse(ILogger<AddNotesDeleteNotesApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="AddNotesDeleteNotesApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public AddNotesDeleteNotesApiResponse(ILogger<AddNotesDeleteNotesApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);
@@ -616,11 +651,17 @@ namespace HydrusAPI.NET.Api
 
                     using (HttpResponseMessage httpResponseMessageLocalVar = await HttpClient.SendAsync(httpRequestMessageLocalVar, cancellationToken).ConfigureAwait(false))
                     {
-                        string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-
                         ILogger<AddNotesSetNotesApiResponse> apiResponseLoggerLocalVar = LoggerFactory.CreateLogger<AddNotesSetNotesApiResponse>();
+                        AddNotesSetNotesApiResponse apiResponseLocalVar;
 
-                        AddNotesSetNotesApiResponse apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/add_notes/set_notes", requestedAtLocalVar, _jsonSerializerOptions);
+                        switch ((int)httpResponseMessageLocalVar.StatusCode) {
+                            default: {
+                                string responseContentLocalVar = await httpResponseMessageLocalVar.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                                apiResponseLocalVar = new(apiResponseLoggerLocalVar, httpRequestMessageLocalVar, httpResponseMessageLocalVar, responseContentLocalVar, "/add_notes/set_notes", requestedAtLocalVar, _jsonSerializerOptions);
+
+                                break;
+                            }
+                        }
 
                         AfterAddNotesSetNotesDefaultImplementation(apiResponseLocalVar, addNotesSetNotesRequest);
 
@@ -663,6 +704,22 @@ namespace HydrusAPI.NET.Api
             /// <param name="requestedAt"></param>
             /// <param name="jsonSerializerOptions"></param>
             public AddNotesSetNotesApiResponse(ILogger<AddNotesSetNotesApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, string rawContent, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, rawContent, path, requestedAt, jsonSerializerOptions)
+            {
+                Logger = logger;
+                OnCreated(httpRequestMessage, httpResponseMessage);
+            }
+
+            /// <summary>
+            /// The <see cref="AddNotesSetNotesApiResponse"/>
+            /// </summary>
+            /// <param name="logger"></param>
+            /// <param name="httpRequestMessage"></param>
+            /// <param name="httpResponseMessage"></param>
+            /// <param name="contentStream"></param>
+            /// <param name="path"></param>
+            /// <param name="requestedAt"></param>
+            /// <param name="jsonSerializerOptions"></param>
+            public AddNotesSetNotesApiResponse(ILogger<AddNotesSetNotesApiResponse> logger, System.Net.Http.HttpRequestMessage httpRequestMessage, System.Net.Http.HttpResponseMessage httpResponseMessage, System.IO.Stream contentStream, string path, DateTime requestedAt, System.Text.Json.JsonSerializerOptions jsonSerializerOptions) : base(httpRequestMessage, httpResponseMessage, contentStream, path, requestedAt, jsonSerializerOptions)
             {
                 Logger = logger;
                 OnCreated(httpRequestMessage, httpResponseMessage);

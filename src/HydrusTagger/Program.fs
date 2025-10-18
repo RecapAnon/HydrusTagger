@@ -70,7 +70,7 @@ let getFileBytesAndType (logger: ILogger) (getFilesApi: IGetFilesApi) (fileId: i
                 | Error _ ->
                     let! fileResponse =
                         tryCallHydrusApi logger "GetFilesFile" (fun () ->
-                            getFilesApi.GetFilesFileAsync(new ApiOption<Nullable<int>>(fileId)))
+                            getFilesApi.GetFilesFileAsync(new ApiOption<int>(fileId)))
 
                     let response = fileResponse :?> GetFilesApi.GetFilesFileApiResponse
                     let bytes = response.ContentBytes
@@ -187,10 +187,15 @@ let applyTagsToHydrusFile
         | Some serviceKey -> serviceKeysToTags[serviceKey] <- allTags.ToList()
         | None -> ()
 
+        let convertDict (inputDict: Dictionary<string, List<string>>) : Dictionary<string, obj> =
+            let outputDict = new Dictionary<string, obj>()
+            inputDict |> Seq.iter (fun kvp -> outputDict.Add(kvp.Key, kvp.Value :> obj))
+            outputDict
+
         let request =
             AddTagsAddTagsRequest(
                 fileId = ApiOption<Nullable<int>>(fileId),
-                serviceKeysToTags = ApiOption<Dictionary<string, List<string>>>(serviceKeysToTags)
+                serviceKeysToTags = ApiOption<Dictionary<string, obj>>(convertDict serviceKeysToTags)
             )
 
         let! result = tryCallHydrusApi logger "AddTagsAddTags" (fun () -> addTagsApi.AddTagsAddTagsAsync(request))
